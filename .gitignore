@@ -46,3 +46,16 @@
 
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
+
+#phpstorm project dir
+/.idea/
+Supprimerait .idea/
+Supprimerait app/
+Supprimerait bin/
+Supprimerait composer.json
+Supprimerait composer.lock
+Supprimerait phpunit.xml.dist
+Supprimerait src/
+Supprimerait tests/
+Supprimerait var/
+Supprimerait web/
