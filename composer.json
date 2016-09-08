@@ -1,7 +1,8 @@
 {
-    "name": "nicolas/oc.projet3",
+    "name": "nicolas-pin/oc.projet3",
     "license": "proprietary",
     "type": "project",
+    "description": "Ce projet est le projet 3 du parcours Chef de projet multimédia - développement de la formation en ligne Open Classrooms",
     "autoload": {
         "psr-4": {
             "": "src/"

@@ -31,14 +31,15 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cumque laborum nulla odio quo ratione sunt? Consectetur consequatur ipsum mollitia repellat ut veniam! Deserunt, eaque et impedit pariatur provident tempore?</p>
             </div>
         </div>
+        <form>
         <div class="row">
-            <div class="col-lg-6 border-right">
+            <div class="col-lg-6">
                 <h2><i class="glyphicon glyphicon-calendar"></i> Choisissez une date</h2>
                 <div class="text-center">
                     <input type="date" id="reservation_date" pattern="Y-m-d" value="">
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 border-left">
                 <h2><i class="glyphicon glyphicon-time"></i> Choisissez le type de billet</h2>
                 <div class="text-center">
                     <select class="form-control">
@@ -48,7 +49,7 @@
                 </div>
                 <h2><i class="glyphicon glyphicon-bookmark"></i> Choisissez le nombre de billet</h2>
                 <div class="text-center">
-                    <table>
+                    <table class="table table-responsive">
                         <caption>Musée du Louvre</caption>
                         <thead>
                         <tr>
@@ -62,7 +63,7 @@
                                 <p>Tarif unique</p>
                             </td>
                             <td>
-                                <select>
+                                <select class="form-control">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -74,14 +75,17 @@
                                     <option value="9">9</option>
                                 </select>
                             </td>
-                            <td>
+                            <td class="amount">
                                 10,00 €
                             </td>
                         </tr>
                         </tbody>
                     </table>
+                    <p class="pull-right"><button type="submit" class="btn btn-default">Continuer</button></p>
+
                 </div>
             </div>
         </div>
+        </form>
     </div>
 {% endblock %}

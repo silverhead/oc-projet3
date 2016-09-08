@@ -26,8 +26,8 @@ header p{
     font-size: 3rem;
 }
 
-.body-content .border-right{
-    border-right: 1px solid #000;
+.body-content .border-left{
+    border-left: 1px solid #000;
 }
 
 .body-content h2{
@@ -41,6 +41,20 @@ header p{
 .body-content .col-lg-6 h2:nth-child(3){
     margin-top:10px;
 }
+
+.body-content p{
+    text-align: left;
+}
+
+.body-content table caption{
+    font-size: 1.6rem;
+    color: #000;
+}
+
+.body-content table td.amount{
+    font-size: 2rem;
+}
+
 
 footer{
     border-bottom-right-radius: 5px;
