@@ -1,13 +1,38 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Billetterie du musée du Louvre {% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('css/common.css') }}" />
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+<div class="container">
+    <header class="row">
+        <div class="col-lg-2">
+            <a href="#"><img src="{{ asset('images/logo-louvre.jpg') }}"></a>
+        </div>
+        <div class="col-lg-10">
+            <p class="site-title">OC-Projet3 : Billeterie du musée du Louvre</p>
+        </div>
+    </header>
+    {% block body %}{% endblock %}
+    <footer class="row">
+        <div class="col-lg-2"><a href="#">Tarifs</a></div>
+        <div class="col-lg-8">
+            <p><i class="glyphicon glyphicon-credit-card"></i> Paiment 100% sécurisé via PayPal ou Stripe</p>
+        </div>
+        <div class="col-lg-2 text-right">
+            <a href="#">&copy; 2016 Sud Agency</a>
+        </div>
+    </footer>
+</div>
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+{% endblock %}
+</body>
 </html>
