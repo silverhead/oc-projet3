@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ parent() }} - Choix billet {% endblock  %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -35,16 +36,16 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cumque laborum nulla odio quo ratione sunt? Consectetur consequatur ipsum mollitia repellat ut veniam! Deserunt, eaque et impedit pariatur provident tempore?</p>
             </div>
         </div>
-        <form>
+        <form action="{{ path('user-informations') }}" method="post">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-md-6">
                 <h2><i class="glyphicon glyphicon-calendar"></i> Choisissez une date</h2>
                 <div class="text-center">
                     <input type="date" id="reservation_date" pattern="d/m/Y" value="">
                     <div id="reservation_calendar"></div>
                 </div>
             </div>
-            <div class="col-lg-6 border-left">
+            <div class="col-md-6 border-left">
                 <h2><i class="glyphicon glyphicon-time"></i> Choisissez le type de billet</h2>
                 <div class="text-center">
                     <select class="form-control">

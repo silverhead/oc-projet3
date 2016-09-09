@@ -13,7 +13,33 @@ class MainController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
         return $this->render('main/index.html.twig');
     }
+
+    /**
+     * @Route("/vos-coordonnees", name="user-informations", methods={"POST"})
+     */
+    public function userInformationsAction(){
+        return $this->render('main/user-informations.html.twig');
+    }
+
+    /**
+     * @Route("/verification-commande", name="check-order", methods={"POST"})
+     */
+    public function checkOrderAction(){}
+
+    /**
+     * @Route("/choix-paiement", name="paiement-choice", methods={"POST"})
+     */
+    public function paymentChoiceAction(){}
+
+    /**
+     * @Route("/confirmation-commande", name="order-confirmed", methods={"POST"})
+     */
+    public function orderConfirmedAction(){}
+
+    /**
+     * @Route("/annulation-commande", name="order-canceled", methods={"POST"})
+     */
+    public function orderCanceledAction(){}
 }
