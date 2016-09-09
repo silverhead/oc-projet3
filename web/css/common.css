@@ -1,22 +1,22 @@
 body{
-    background: url('../images/louvreBackground.jpg') no-repeat;
-    background-size: 100%;
+    background: url('../images/louvreBackground.jpg') no-repeat center center fixed;
+    background-size: cover;
     font-size: 12px;
 }
 
 .container{
     margin-top: 150px;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.75);
 }
 
 header{
-    border-top-right-radius: 5px;
-   border-top-left-radius: 5px;
+    border-top-right-radius: 2px;
+   border-top-left-radius: 2px;
     height: 60px;
     line-height: 60px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9);
     padding: 0;
 }
 
@@ -56,12 +56,16 @@ header p{
 }
 
 
+.bootstrap-datetimepicker-widget table td.active, .bootstrap-datetimepicker-widget table td.active:hover{
+
+}
+
 footer{
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
     height: 30px;
     line-height: 30px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9);
     padding: 0;
     margin: 0;
 }
