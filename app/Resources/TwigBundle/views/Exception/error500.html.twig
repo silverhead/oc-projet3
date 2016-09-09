@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ parent() - Erreur 500 }}{% endblock %}
+{% block body %}
+    <h1>Oops! Une erreur est arrivée!</h1>
+    <h2>Le serveur a retourné un  "{{ status_code }} {{ status_text }}".</h2>
+
+    <div>
+        Quelque chose est cassé. Veuillez nous communiquer l'erreur pour que l'on puisse le régler, merci.
+        Nous allons réparer dès que possible. Désolé pour la gène occasionnée.
+    </div>
+{% endblock %}
