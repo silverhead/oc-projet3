@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ parent() }} - Bénéficiaires des billets {% endblock  %}
 {% block body %}
-<div class="body-content" id="basket">
+<div class="body-content" id="user-informations">
     <div class="row">
         <div class="col-lg-12">
             <h1>Bénéficiaires des billets</h1>
@@ -10,8 +10,8 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>Bénéficiaires des billets</h2>
-            <form action="{{ path('user-informations') }}" method="post" class="form-horizontal">
+            <h2><i class="glyphicon glyphicon-check"></i> Bénéficiaires des billets</h2>
+            <form action="{{ path('check-order') }}" method="post" class="form-horizontal">
                 {% include 'main/form_block.html.twig' %}
                 {% include 'main/form_block.html.twig' %}
                 <div class="row">

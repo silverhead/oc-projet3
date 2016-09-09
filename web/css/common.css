@@ -99,8 +99,53 @@ form div.form-block h3::before{
     margin-left: -30px;
 }
 
-
 /** end user-informations **/
+
+/** check-order **/
+
+#check-order ul{
+    margin: 0;
+    padding: 0 15px;
+    list-style: none;
+}
+
+#check-order ul li:not(:first-child){
+    border-top: 1px dashed #777;
+}
+
+#check-order .total-amount-line{
+    padding: 0 15px;
+    border-top: 2px solid #000;
+}
+
+#check-order .button-line{
+    margin-top: 15px;
+}
+
+/** end check-order **/
+
+/** payment-choice **/
+
+#paymentchoice ul{
+    list-style: none;
+    padding: 0;
+    margin: 80px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#paymentchoice ul li{
+    margin:10px 0;
+}
+
+#paymentchoice ul li img{
+    height: 60px;
+}
+
+/** end payment-choice **/
+
 footer{
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;

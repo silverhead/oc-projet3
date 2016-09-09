@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ parent() }} - Validation de la commande {% endblock  %}
+{% block body %}
+    <div class="body-content" id="check-order">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Validation de la commande</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cumque laborum nulla odio quo ratione sunt? Consectetur consequatur ipsum mollitia repellat ut veniam! Deserunt, eaque et impedit pariatur provident tempore?</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2><i class="glyphicon glyphicon-check"></i> Vérifier votre commande</h2>
+                <ul>
+                    {% include 'main/check-order-line.html.twig' %}
+                    {% include 'main/check-order-line.html.twig' %}
+                </ul>
+                <div class="row total-amount-line">
+                    <div class="col-md-4 col-md-offset-4">
+                        <h3>Montant de votre commande </h3>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <h3>32,00 €</h3>
+                    </div>
+                </div>
+                <form action="{{ path('payment-choice') }}" method="post">
+                    <div class="row">
+                        <div class="col-md12">
+                            <label class="col-md-4">Saisir votre e-mail où vous allez recevoir votre/vos billet(s) * :</label>
+                            <div class="col-md-8">
+                                <input type="email" placeholder="Votre e-mail" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-line">
+                        <div class="col-md-6">
+                            <a href="{{ path('user-informations') }}" class="btn btn-default">Retour informations billet</a>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" class="btn btn-default">Payez</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -26,12 +26,16 @@ class MainController extends Controller
     /**
      * @Route("/verification-commande", name="check-order", methods={"POST"})
      */
-    public function checkOrderAction(){}
+    public function checkOrderAction(){
+        return $this->render('main/check-order.html.twig');
+    }
 
     /**
-     * @Route("/choix-paiement", name="paiement-choice", methods={"POST"})
+     * @Route("/choix-paiement", name="payment-choice", methods={"POST"})
      */
-    public function paymentChoiceAction(){}
+    public function paymentChoiceAction(){
+        return $this->render('main/payment-choice.html.twig');
+    }
 
     /**
      * @Route("/confirmation-commande", name="order-confirmed", methods={"POST"})
