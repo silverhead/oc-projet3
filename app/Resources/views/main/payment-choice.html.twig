@@ -12,9 +12,14 @@
             <div class="col-md-12">
                 <h2><i class="glyphicon glyphicon-credit-card"></i> Choisir votre moyen de paiement</h2>
                 <ul>
-                    <li><a href="#"><img src="{{ asset('images/payment/PayPal.png') }}"></a></li>
-                    <li><a href="#"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
+                    <li><a href="{{ path('order-confirmed') }}"><img src="{{ asset('images/payment/PayPal.png') }}"></a></li>
+                    <li><a href="{{ path('order-canceled') }}"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
                 </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ path('check-order') }}" class="btn btn-default">Retour</a>
             </div>
         </div>
     </div>

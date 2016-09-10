@@ -38,12 +38,16 @@ class MainController extends Controller
     }
 
     /**
-     * @Route("/confirmation-commande", name="order-confirmed", methods={"POST"})
+     * @Route("/confirmation-commande", name="order-confirmed", methods={"GET"})
      */
-    public function orderConfirmedAction(){}
+    public function orderConfirmedAction(){
+        return $this->render('main/order-confirmed.html.twig');
+    }
 
     /**
-     * @Route("/annulation-commande", name="order-canceled", methods={"POST"})
+     * @Route("/annulation-commande", name="order-canceled", methods={"GET"})
      */
-    public function orderCanceledAction(){}
+    public function orderCanceledAction(){
+        return $this->render('main/order-canceled.html.twig');
+    }
 }

@@ -35,10 +35,16 @@ header p{
 
 .body-content h2{
     margin: 0 -15px 10px -15px;
-    padding: 5px 10px;
+    padding: 0 10px;
     background: rgba(0, 0, 0, 0.8);
     color: white;
     font-size: 2rem;
+    height:50px;
+    line-height:50px;
+}
+
+.body-content h2 .btn{
+    margin: 7px 0;
 }
 
 .body-content .col-md-6 h2:nth-child(3){

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ parent() }} - Paiement annulé {% endblock  %}
+{% block body %}
+    <div class="body-content" id="check-order">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Paiement annulé</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cumque laborum nulla odio quo ratione sunt? Consectetur consequatur ipsum mollitia repellat ut veniam! Deserunt, eaque et impedit pariatur provident tempore?</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    <i class="glyphicon glyphicon-credit-card"></i> Votre paiement a été annulé
+                </h2>
+                <h4>Nous sommes désolé votre paiement a été annulé</h4>
+                <p>Vous pouvez modifier vos informations et refaire un paiement en cliquant sur le bouton "Retour choix billet".</p>
+            </div>
+        </div>
+        <div class="row button-line">
+            <div class="col-md-12">
+                <a href="{{ path('homepage') }}" class="btn btn-default">Retour choix billet</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
