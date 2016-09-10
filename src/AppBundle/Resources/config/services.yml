@@ -1,0 +1,11 @@
+services:
+    app.form.type.reservation:
+        class:     AppBundle\Form\Type\ReservationType
+        arguments: ["AppBundle\Form\Model\Reservation"]
+        tags:
+            - { name: form.type}
+#        calls:
+#            - [setService, ["@service_id"]]
+#        tags:
+#            - { name: twig.extension }
+#            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

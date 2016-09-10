@@ -11,7 +11,7 @@ class MainController extends Controller
     /**
      * @Route("/", name="homepage", methods={"GET"})
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         return $this->render('main/index.html.twig');
     }
