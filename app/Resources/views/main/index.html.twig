@@ -36,12 +36,14 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cumque laborum nulla odio quo ratione sunt? Consectetur consequatur ipsum mollitia repellat ut veniam! Deserunt, eaque et impedit pariatur provident tempore?</p>
             </div>
         </div>
-        <form action="{{ path('user-informations') }}" method="post">
+        {{ form_start(form) }}
+        {#<form action="{{ path('user-informations') }}" method="post">#}
         <div class="row">
             <div class="col-md-6">
                 <h2><i class="glyphicon glyphicon-calendar"></i> Choisissez une date</h2>
                 <div class="text-center">
-                    <input type="date" id="reservation_date" pattern="d/m/Y" value="">
+                    {#<input type="date" id="reservation_date" pattern="d/m/Y" value="">#}
+                    {{ form_widget(form.reservationDate) }}
                     <div id="reservation_calendar"></div>
                 </div>
             </div>
@@ -92,6 +94,7 @@
                 </div>
             </div>
         </div>
-        </form>
+        {#</form>#}
+        {{ form_end(form) }}
     </div>
 {% endblock %}

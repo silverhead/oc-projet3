@@ -15,8 +15,11 @@ class ReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("reservationDate", DateTimeType::class)
-            ->add("type", EntityType::class, [
+            ->add("reservationDate", DateTimeType::class, [
+                'date_widget' => 'single_text',
+                'days' => array('9')
+            ])
+            ->add("ticketType", EntityType::class, [
                 'class' => 'AppBundle\Entity\TicketType',
                 'choice_label' => "Type"
             ])

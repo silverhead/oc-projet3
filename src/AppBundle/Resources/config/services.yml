@@ -1,9 +1,9 @@
 services:
-    app.form.type.reservation:
-        class:     AppBundle\Form\Type\ReservationType
-        arguments: ["AppBundle\Form\Model\Reservation"]
-        tags:
-            - { name: form.type}
+    app.form.model.reservation:
+        class: AppBundle\Form\Model\Reservation
+    app.form.handler.reservation:
+        class: AppBundle\Form\Handler\ReservationHandler
+        arguments: ["@form.factory", "@app.form.model.reservation", "@request_stack"]
 #        calls:
 #            - [setService, ["@service_id"]]
 #        tags:

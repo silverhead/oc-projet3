@@ -13,7 +13,12 @@ class MainController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('main/index.html.twig');
+        $reservationHandler = $this->get('app.form.handler.reservation');
+        $form = $reservationHandler->getForm();
+
+        return $this->render('main/index.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 
     /**

@@ -15,7 +15,7 @@ use AppBundle\Entity\TicketType;
  *
  * Model object for Reservation Form
  */
-class Reservation
+class Reservation implements Reservable
 {
     /**
      * @var \DateTime

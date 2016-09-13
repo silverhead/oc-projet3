@@ -7,8 +7,12 @@
 
 namespace AppBundle\Form\Handler;
 
+use AppBundle\Form\Model\Reservable;
+use AppBundle\Form\Type\ReservationType;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ReservationHandler
@@ -31,10 +35,17 @@ class ReservationHandler
     private $request;
 
 
-    public function __construct(Form $form, Request $request)
+    public function __construct(FormFactory $formFactory, Reservable $reservationModel , RequestStack $request)
     {
-        $this->form = $form;
-        $this->request = $request;
+        $this->form = $formFactory->create(ReservationType::class, $reservationModel);
+        $this->request = $request->getCurrentRequest();
+    }
+
+    /**
+     * @return Form|\Symfony\Component\Form\FormInterface
+     */
+    public function getForm(){
+        return  $this->form;
     }
 
     public function process(){
