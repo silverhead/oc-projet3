@@ -4,8 +4,10 @@ namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,15 +17,16 @@ class ReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("reservationDate", DateTimeType::class, [
-                'date_widget' => 'single_text',
-                'days' => array('9')
+            ->add("reservationDate", DateType::class, [
+                'widget' => 'single_text',
             ])
             ->add("ticketType", EntityType::class, [
                 'class' => 'AppBundle\Entity\TicketType',
                 'choice_label' => "Type"
             ])
-            ->add("quantity", IntegerType::class)
+            ->add("quantity", ChoiceType::class, [
+                'choices' => array(1, 2, 3, 4, 5, 6, 7, 8, 9)
+            ])
         ;
     }
 

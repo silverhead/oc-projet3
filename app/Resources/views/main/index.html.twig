@@ -20,9 +20,9 @@
                 sideBySide: true
             });
             $("#reservation_calendar").on("dp.change", function (e) {
-                $('#reservation_date').val(e.date.format('YYYY-MM-DD'));
+                $('#reservation_reservationDate').val(e.date.format('YYYY-MM-DD'));
             });
-            $('#reservation_date').css('display', 'none');
+            $('#reservation_reservationDate').css('display', 'none');
         });
         // ]]>
     </script>
@@ -50,10 +50,11 @@
             <div class="col-md-6 border-left">
                 <h2><i class="glyphicon glyphicon-time"></i> Choisissez le type de billet</h2>
                 <div class="text-center">
-                    <select class="form-control">
-                        <option value="1">Journée</option>
-                        <option value="2">Demi-journée</option>
-                    </select>
+                    {{ form_widget(form.ticketType, {'attr': {'class': 'form-control'}}) }}
+                    {#<select class="form-control">#}
+                        {#<option value="1">Journée</option>#}
+                        {#<option value="2">Demi-journée</option>#}
+                    {#</select>#}
                 </div>
                 <h2><i class="glyphicon glyphicon-bookmark"></i> Choisissez le nombre de billet</h2>
                 <div class="text-center">
@@ -71,17 +72,18 @@
                                 <p>Tarif unique</p>
                             </td>
                             <td>
-                                <select class="form-control">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                </select>
+                                {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                                {#<select class="form-control">#}
+                                    {#<option value="1">1</option>#}
+                                    {#<option value="2">2</option>#}
+                                    {#<option value="3">3</option>#}
+                                    {#<option value="4">4</option>#}
+                                    {#<option value="5">5</option>#}
+                                    {#<option value="6">6</option>#}
+                                    {#<option value="7">7</option>#}
+                                    {#<option value="8">8</option>#}
+                                    {#<option value="9">9</option>#}
+                                {#</select>#}
                             </td>
                             <td class="amount">
                                 10,00 €
