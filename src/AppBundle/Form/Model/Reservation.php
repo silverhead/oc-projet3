@@ -8,6 +8,9 @@
 namespace AppBundle\Form\Model;
 
 use AppBundle\Entity\TicketType;
+use Yasumi\Yasumi;
+
+
 
 /**
  * Class Reservation
@@ -86,5 +89,26 @@ class Reservation implements Reservable
         return $this;
     }
 
+    /**
+     * Verif if the date is a holiday date, in case, it's a forbidden date
+     *
+     * @param \DateTime $date
+     * @param string $country
+     * @param string $locale
+     *
+     * @return bool
+     */
+    public function isForbiddenDay(\DateTime $date, $country = 'France', $locale = 'fr_FR'){
+        //If it's a Sunday or Tuesday, it's not authorized date
+        if(  0 == $date->format('w') || 2 == $date->format('w') ){
+            return true;
+        }
+        //get The holidays dates by country and verif if the date is a holiday date
+        $holidays = Yasumi::create($country, $date->format('Y'), $locale);
+        return $holidays->isHoliday($date);
+    }
 
+    public function isOverReservationDay(){
+
+    }
 }

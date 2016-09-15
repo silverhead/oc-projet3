@@ -4,9 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9be52a3ce395f33bb3dfe84e591232de",
-    "content-hash": "c9ce54757557386e64fdfb1e4ee2acbc",
+    "hash": "2684cb70c5141fe26d0ed1532b4c0a40",
+    "content-hash": "f8608b2ef4110168a3c00ba1a102c9ec",
     "packages": [
+        {
+            "name": "azuyalabs/yasumi",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/azuyalabs/yasumi.git",
+                "reference": "ea4cf185ccbfff74be1d502642cb08c735b48ef8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/azuyalabs/yasumi/zipball/ea4cf185ccbfff74be1d502642cb08c735b48ef8",
+                "reference": "ea4cf185ccbfff74be1d502642cb08c735b48ef8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.11",
+                "fzaninotto/faker": "~1.4",
+                "guzzlehttp/guzzle": "~4.0|~5.0|~6.0",
+                "mikey179/vfsstream": "~1.5",
+                "phpunit/phpunit": "~4.7|~5.3",
+                "symfony/console": "~2.3|~3.0",
+                "symfony/process": "~2.3|~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yasumi\\": "src/Yasumi/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sacha Telgenhof",
+                    "email": "me@sachatelgenhof.nl"
+                }
+            ],
+            "description": "Yasumi is an easy PHP Library for calculating national holidays.",
+            "keywords": [
+                "Bank",
+                "calculation",
+                "calendar",
+                "celebration",
+                "date",
+                "holiday",
+                "holidays",
+                "national",
+                "time"
+            ],
+            "time": "2016-06-04 01:36:49"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.7",

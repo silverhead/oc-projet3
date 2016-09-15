@@ -17,7 +17,9 @@
                 format: 'YYYY-MM-DD',
                 locale: 'fr',
                 inline: true,
-                sideBySide: true
+                sideBySide: true,
+                daysOfWeekDisabled: [0, 2],
+                minDate: new Date()
             });
             $("#reservation_calendar").on("dp.change", function (e) {
                 $('#reservation_reservationDate').val(e.date.format('YYYY-MM-DD'));
