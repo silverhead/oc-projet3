@@ -8,8 +8,9 @@
 namespace AppBundle\Form\Model;
 
 use AppBundle\Entity\TicketType;
+use Yasumi\Provider\AbstractProvider;
 use Yasumi\Yasumi;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -20,7 +21,20 @@ use Yasumi\Yasumi;
  */
 class Reservation implements Reservable
 {
-    /**
+
+	/**
+	 * @var AbstractProvider
+	 */
+	private $holidayDates;
+
+	private $repoOrder;
+
+	public function __construct()
+	{
+
+	}
+
+	/**
      * @var \DateTime
      */
     private $reservationDate;
@@ -49,6 +63,9 @@ class Reservation implements Reservable
      */
     public function setReservationDate($reservationDate)
     {
+    	$this->isForbiddenDate($reservationDate);
+	    $this->isLimitReachedTicketSoldDate($reservationDate);
+
         $this->reservationDate = $reservationDate;
         return $this;
     }
@@ -89,26 +106,29 @@ class Reservation implements Reservable
         return $this;
     }
 
-    /**
-     * Verif if the date is a holiday date, in case, it's a forbidden date
-     *
-     * @param \DateTime $date
-     * @param string $country
-     * @param string $locale
-     *
-     * @return bool
-     */
-    public function isForbiddenDay(\DateTime $date, $country = 'France', $locale = 'fr_FR'){
+	/**
+	 * @Assert\IsFalse(message= "La date choisie est un jour férié, veuillez choisir une autre date !")
+	 *
+	 * @param \DateTime $date
+	 * @return bool
+	 */
+    public function isForbiddenDate(\DateTime $date){
         //If it's a Sunday or Tuesday, it's not authorized date
         if(  0 == $date->format('w') || 2 == $date->format('w') ){
             return true;
         }
         //get The holidays dates by country and verif if the date is a holiday date
-        $holidays = Yasumi::create($country, $date->format('Y'), $locale);
+        $holidays = Yasumi::create('France', $date->format('Y'), 'fr_FR');
         return $holidays->isHoliday($date);
     }
 
-    public function isOverReservationDay(){
+	/**
+	 * @Assert\IsFalse(message= "Nous sommes désolés mais le nombre maximum de billet vendu pour cette date a été atteint !")
+	 *
+	 * @param \DateTime $date
+	 * @return bool
+	 */
+    public function isLimitReachedTicketSoldDate(\DateTime $date){
 
     }
 }

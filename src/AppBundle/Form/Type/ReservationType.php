@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\IsTrue;
 
 class ReservationType extends AbstractType
 {
@@ -18,11 +19,12 @@ class ReservationType extends AbstractType
     {
         $builder
             ->add("reservationDate", DateType::class, [
-                'widget' => 'single_text',
+                'widget' => 'single_text'
             ])
             ->add("ticketType", EntityType::class, [
                 'class' => 'AppBundle\Entity\TicketType',
-                'choice_label' => "Type"
+                'choice_label' => "Label",
+	            'placeholder' => 'Choisissez le type de ticket'
             ])
             ->add("quantity", ChoiceType::class, [
                 'choices' => array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9)

@@ -40,4 +40,62 @@ class TicketType
      * @ORM\Column(type="float", length=5, scale=2, nullable=false)
      */
     protected $percent;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set label
+     *
+     * @param string $label
+     *
+     * @return TicketType
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * Get label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Set percent
+     *
+     * @param float $percent
+     *
+     * @return TicketType
+     */
+    public function setPercent($percent)
+    {
+        $this->percent = $percent;
+
+        return $this;
+    }
+
+    /**
+     * Get percent
+     *
+     * @return float
+     */
+    public function getPercent()
+    {
+        return $this->percent;
+    }
 }

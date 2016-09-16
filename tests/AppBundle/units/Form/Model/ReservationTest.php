@@ -21,7 +21,7 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
 
         $date = \DateTime::createFromFormat('d-m-Y', '25-12-2016');
 
-        $forbiddenDay = $reservation->isForbiddenDay($date);
+        $forbiddenDay = $reservation->isForbiddenDate($date);
 
         $this->assertTrue($forbiddenDay);
     }
@@ -36,7 +36,7 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
 
         $date = \DateTime::createFromFormat('d-m-Y', '20-09-2016');//This a Tuesday
 
-        $forbiddenDay = $reservation->isForbiddenDay($date);
+        $forbiddenDay = $reservation->isForbiddenDate($date);
 
         $this->assertTrue($forbiddenDay);
     }
@@ -51,7 +51,7 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
 
         $date = \DateTime::createFromFormat('d-m-Y', '11-09-2016');//This a Sunday
 
-        $forbiddenDay = $reservation->isForbiddenDay($date);
+        $forbiddenDay = $reservation->isForbiddenDate($date);
 
         $this->assertTrue($forbiddenDay);
     }
@@ -66,18 +66,11 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
 
         $date = \DateTime::createFromFormat('d-m-Y', '05-12-2016');
 
-        $forbiddenDay = $reservation->isForbiddenDay($date);
+        $forbiddenDay = $reservation->isForbiddenDate($date);
 
         $this->assertFalse($forbiddenDay);
     }
 
     public function testOverReservationDate(){
-        $reservation = new Reservation();
-
-        $date = \DateTime::createFromFormat('d-m-Y', '05-12-2016');
-
-        $forbiddenDay = $reservation->isOverReservationDay();
-
-        $this->assertFalse($forbiddenDay);
     }
 }
