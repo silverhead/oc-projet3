@@ -16,12 +16,13 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
      * Test forbidden date : chrismas day
      * Have to return true
      */
-    public function testForbiddenDay(){
+    public function testHolidayDate(){
         $reservation = new Reservation();
 
-        $date = \DateTime::createFromFormat('d-m-Y', '25-12-2016');
+        $date = \DateTime::createFromFormat('d-m-Y', '01-05-2017');
+        $reservation->setReservationDate($date);
 
-        $forbiddenDay = $reservation->isForbiddenDate($date);
+        $forbiddenDay = $reservation->isHolidaysDate();
 
         $this->assertTrue($forbiddenDay);
     }
@@ -36,7 +37,8 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
 
         $date = \DateTime::createFromFormat('d-m-Y', '20-09-2016');//This a Tuesday
 
-        $forbiddenDay = $reservation->isForbiddenDate($date);
+        $reservation->setReservationDate($date);
+        $forbiddenDay = $reservation->isNotReservationWeekDayDate();
 
         $this->assertTrue($forbiddenDay);
     }
@@ -51,7 +53,9 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
 
         $date = \DateTime::createFromFormat('d-m-Y', '11-09-2016');//This a Sunday
 
-        $forbiddenDay = $reservation->isForbiddenDate($date);
+        $reservation->setReservationDate($date);
+
+        $forbiddenDay = $reservation->isNotReservationWeekDayDate();
 
         $this->assertTrue($forbiddenDay);
     }
@@ -61,12 +65,14 @@ class ReservationTest extends  \PHPUnit_Framework_TestCase
      * Test authorized date
      * Have to return false
      */
-    public function testNotForbiddenDay(){
+    public function testNotHolidayDate(){
         $reservation = new Reservation();
 
         $date = \DateTime::createFromFormat('d-m-Y', '05-12-2016');
 
-        $forbiddenDay = $reservation->isForbiddenDate($date);
+        $reservation->setReservationDate($date);
+
+        $forbiddenDay = $reservation->isHolidaysDate();
 
         $this->assertFalse($forbiddenDay);
     }

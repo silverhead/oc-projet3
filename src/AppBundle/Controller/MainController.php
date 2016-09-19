@@ -9,12 +9,19 @@ use Symfony\Component\HttpFoundation\Request;
 class MainController extends Controller
 {
     /**
-     * @Route("/", name="homepage", methods={"GET"})
+     * @Route("/", name="homepage", methods={"GET", "POST"})
      */
     public function indexAction()
     {
         $reservationHandler = $this->get('app.form.handler.reservation');
         $form = $reservationHandler->getForm();
+
+        if($reservationHandler->process()){
+            $data = $reservationHandler->getData();
+            $this->get('session')->set('reservation', $data);
+            return $this->redirectToRoute('user-informations');
+        }
+
 
         return $this->render('main/index.html.twig', array(
             'form' => $form->createView()
@@ -22,7 +29,7 @@ class MainController extends Controller
     }
 
     /**
-     * @Route("/vos-coordonnees", name="user-informations", methods={"POST"})
+     * @Route("/vos-coordonnees", name="user-informations", methods={"GET"})
      */
     public function userInformationsAction(){
         return $this->render('main/user-informations.html.twig');

@@ -34,6 +34,10 @@ class ReservationHandler
      */
     private $request;
 
+    /**
+     * @var array
+     */
+    private $data;
 
     public function __construct(FormFactory $formFactory, Reservable $reservationModel , RequestStack $request)
     {
@@ -59,6 +63,13 @@ class ReservationHandler
             return false;
         }
 
+        $this->data = $this->form->getData();
+
         return true;
+    }
+
+
+    public function getData(){
+        return $this->data;
     }
 }

@@ -1,9 +1,27 @@
 {% extends 'base.html.twig' %}
+{% form_theme form _self %}
+{% block form_row %}
+    <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{% endblock form_row %}
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+        {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
+        <ul class="list-unstyled">
+        {%- for error in errors -%}
+            <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+        {% if form.parent %}</span>{% else %}</div>{% endif %}
+    {%- endif %}
+{%- endblock form_errors %}
+
 {% block title %}{{ parent() }} - Choix billet {% endblock  %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {#<link href="{{ asset('css/jquery.datetimepicker.min.css') }}" rel="stylesheet">#}
     <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
 {% endblock %}
 {% block javascripts %}
@@ -13,18 +31,28 @@
     <script type="text/javascript">
         // <![CDATA[
         $(function(){
-            $('#reservation_calendar').datetimepicker({
+            var $calendar = $("#reservation_calendar");
+            var $reservationDate = $('#reservation_reservationDate');
+
+            $calendar.datetimepicker({
                 format: 'YYYY-MM-DD',
                 locale: 'fr',
                 inline: true,
                 sideBySide: true,
                 daysOfWeekDisabled: [0, 2],
-                minDate: new Date()
+                minDate: new Date(),
+                useCurrent: true,
+                defaultDate: moment($reservationDate.val(), 'YYYY-MM-DD')
             });
-            $("#reservation_calendar").on("dp.change", function (e) {
-                $('#reservation_reservationDate').val(e.date.format('YYYY-MM-DD'));
+
+            $calendar.on("dp.change", function (e) {
+                $reservationDate.val(e.date.format('YYYY-MM-DD'));
             });
-            $('#reservation_reservationDate').css('display', 'none');
+            $reservationDate.css('display', 'none');
+
+            if($reservationDate.parent('div.form-group').hasClass('has-error')){
+                $calendar.find('.day.active').addClass('bg-error');
+            }
         });
         // ]]>
     </script>
@@ -39,24 +67,20 @@
             </div>
         </div>
         {{ form_start(form) }}
-        {#<form action="{{ path('user-informations') }}" method="post">#}
+        {{ form_errors(form) }}
         <div class="row">
             <div class="col-md-6">
                 <h2><i class="glyphicon glyphicon-calendar"></i> Choisissez une date</h2>
                 <div class="text-center">
-                    {#<input type="date" id="reservation_date" pattern="d/m/Y" value="">#}
-                    {{ form_widget(form.reservationDate) }}
+                    {{ form_row(form.reservationDate) }}
+                    {#{{ form_errors(form.reservationDate) }}#}
                     <div id="reservation_calendar"></div>
                 </div>
             </div>
             <div class="col-md-6 border-left">
                 <h2><i class="glyphicon glyphicon-time"></i> Choisissez le type de billet</h2>
                 <div class="text-center">
-                    {{ form_widget(form.ticketType, {'attr': {'class': 'form-control'}}) }}
-                    {#<select class="form-control">#}
-                        {#<option value="1">Journée</option>#}
-                        {#<option value="2">Demi-journée</option>#}
-                    {#</select>#}
+                    {{ form_row(form.ticketType, {'attr': {'class': 'form-control'}}) }}
                 </div>
                 <h2><i class="glyphicon glyphicon-bookmark"></i> Choisissez le nombre de billet</h2>
                 <div class="text-center">
@@ -74,18 +98,7 @@
                                 <p>Tarif unique</p>
                             </td>
                             <td>
-                                {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
-                                {#<select class="form-control">#}
-                                    {#<option value="1">1</option>#}
-                                    {#<option value="2">2</option>#}
-                                    {#<option value="3">3</option>#}
-                                    {#<option value="4">4</option>#}
-                                    {#<option value="5">5</option>#}
-                                    {#<option value="6">6</option>#}
-                                    {#<option value="7">7</option>#}
-                                    {#<option value="8">8</option>#}
-                                    {#<option value="9">9</option>#}
-                                {#</select>#}
+                                {{ form_row(form.quantity, {'attr': {'class': 'form-control'}}) }}
                             </td>
                             <td class="amount">
                                 10,00 €
@@ -98,7 +111,6 @@
                 </div>
             </div>
         </div>
-        {#</form>#}
         {{ form_end(form) }}
     </div>
 {% endblock %}
