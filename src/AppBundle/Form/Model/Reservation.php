@@ -19,8 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * Model object for Reservation Form
  *
- * @Assert\Callback(callback="isNotReservationWeekDayDate")
- * @Assert\Callback(callback="isHolidaysDate")
+ * @Assert\Callback(callback="isNotReservationWeekDayDateConstraint")
+ * @Assert\Callback(callback="isHolidaysDateConstraint")
  * //, "isHolidaysDate"
  */
 class Reservation implements Reservable
@@ -41,10 +41,9 @@ class Reservation implements Reservable
      */
     private $quantity;
 
-
     public function __construct()
     {
-        $this->reservationDate = new \DateTime();
+        $this->setGoodDefaultDate();
     }
 
     /**
@@ -101,15 +100,22 @@ class Reservation implements Reservable
         return $this;
     }
 
+    public function setGoodDefaultDate()
+    {
+        $this->reservationDate = new \DateTime();
+
+        while($this->isNotReservationWeekDayDate() || $this->isHolidaysDate()){
+            $this->reservationDate->add( new \DateInterval("P1D"));
+        }
+    }
+
     /**
-     * Verified if the reservation date is not a Tuesday or Sunday date and return true if is it.
-     *
-     * @param ExecutionContext $context
+     * @param ExecutionContextInterface $context
      */
-    public function isNotReservationWeekDayDate(ExecutionContextInterface $context)
+    public function isNotReservationWeekDayDateConstraint(ExecutionContextInterface $context)
     {
         //If it's a Sunday or Tuesday, it's not authorized date
-        if(  0 == $this->reservationDate->format('w') || 2 == $this->reservationDate->format('w') ){
+        if($this->isNotReservationWeekDayDate()){
             $context->buildViolation('La date choisie est un jour non autorisé pour la réservation !')
                 ->atPath('reservationDate')
                 ->addViolation();
@@ -121,19 +127,50 @@ class Reservation implements Reservable
      *
      * @param ExecutionContext $context
      */
-    public function isHolidaysDate(ExecutionContextInterface $context)
+    public function isHolidaysDateConstraint(ExecutionContextInterface $context)
     {
-        //get The holidays dates by country and verif if the date is a holiday date
-        $holidays = Yasumi::create('France', $this->reservationDate->format('Y'), 'fr_FR');
-        if($holidays->isHoliday($this->reservationDate)){
-            $context->buildViolation('La date choisie est un jour férié, veuillez choisir une autre date !')
+        if($this->isHolidaysDate()){
+            $context
+                ->buildViolation('La date choisie est un jour férié, veuillez choisir une autre date !')
                 ->atPath('reservationDate')
                 ->addViolation();
         }
     }
 
+    /**
+     * Verified if the reservation date is not a Tuesday or Sunday date and return true if is it.
+     *
+
+     */
+    public function isNotReservationWeekDayDate()
+    {
+        return (0 == $this->reservationDate->format('w') || 2 == $this->reservationDate->format('w'));
+    }
+
+    /**
+     * Verified if the reservation date is a holiday and return true if is it.
+     *
+     */
+    public function isHolidaysDate()
+    {
+        //get The holidays dates by country and verif if the date is a holiday date
+        $holidays = Yasumi::create('France', $this->reservationDate->format('Y'), 'fr_FR');
+        return $holidays->isHoliday($this->reservationDate);
+    }
+
     public function isLimitReachedTicketSoldDate()
     {
 
+    }
+
+
+    public function getForbiddenDates(){
+        //get The holidays dates by country and verif if the date is a holiday date
+        $holidays = Yasumi::create('France', $this->reservationDate->format('Y'), 'fr_FR');
+
+        return [
+            'weekDates' => [0, 2],
+            'holidaysDates' => $holidays->getHolidayDates()
+        ];
     }
 }

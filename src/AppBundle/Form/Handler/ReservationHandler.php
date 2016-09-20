@@ -35,12 +35,18 @@ class ReservationHandler
     private $request;
 
     /**
+     * @var Reservable
+     */
+    private $model;
+
+    /**
      * @var array
      */
     private $data;
 
     public function __construct(FormFactory $formFactory, Reservable $reservationModel , RequestStack $request)
     {
+        $this->model = $reservationModel;
         $this->form = $formFactory->create(ReservationType::class, $reservationModel);
         $this->request = $request->getCurrentRequest();
     }
@@ -68,8 +74,13 @@ class ReservationHandler
         return true;
     }
 
+    public function getForbiddenDates()
+    {
+       return $this->model->getForbiddenDates();
+    }
 
-    public function getData(){
+    public function getData()
+    {
         return $this->data;
     }
 }

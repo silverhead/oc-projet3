@@ -44,22 +44,8 @@ interface Reservable
      */
     public function setQuantity($quantity);
 
-//
-//	/**
-//	 * Verify if the date is a forbidden date
-//	 *
-//	 * @param \DateTime $date
-//	 *
-//	 * @return bool
-//	 */
-//	public function isForbiddenDate(\DateTime $date);
-//
-//	/**
-//	 * Verify if the number limit of sold tickets are reached
-//	 *
-//	 * @param \DateTime $date
-//	 *
-//	 * @return bool
-//	 */
-//	public function isLimitReachedTicketSoldDate(\DateTime $date);
+    /**
+     * @return mixed
+     */
+    public function getForbiddenDates();
 }

@@ -15,6 +15,7 @@ class MainController extends Controller
     {
         $reservationHandler = $this->get('app.form.handler.reservation');
         $form = $reservationHandler->getForm();
+        $forbiddenDates = $reservationHandler->getForbiddenDates();
 
         if($reservationHandler->process()){
             $data = $reservationHandler->getData();
@@ -24,7 +25,8 @@ class MainController extends Controller
 
 
         return $this->render('main/index.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'forbiddenDates' => $forbiddenDates
         ));
     }
 

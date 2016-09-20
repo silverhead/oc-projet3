@@ -39,7 +39,8 @@
                 locale: 'fr',
                 inline: true,
                 sideBySide: true,
-                daysOfWeekDisabled: [0, 2],
+                daysOfWeekDisabled: [{{ forbiddenDates.weekDates|join(', ') }}],
+                disabledDates: ['{{ forbiddenDates.holidaysDates|join("', '")|raw }}'],
                 minDate: new Date(),
                 useCurrent: true,
                 defaultDate: moment($reservationDate.val(), 'YYYY-MM-DD')
