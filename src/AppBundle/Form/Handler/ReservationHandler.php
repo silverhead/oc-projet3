@@ -79,6 +79,17 @@ class ReservationHandler
        return $this->model->getForbiddenDates();
     }
 
+	public function setData(Reservable $reservation)
+	{
+		if(null === $reservation){
+			return;
+		}
+
+		$this->model->setReservationDate($reservation->getReservationDate());
+		$this->model->setQuantity($reservation->getQuantity());
+		$this->model->setTicketType($reservation->getTicketType());
+	}
+
     public function getData()
     {
         return $this->data;

@@ -41,9 +41,8 @@
                 sideBySide: true,
                 daysOfWeekDisabled: [{{ forbiddenDates.weekDates|join(', ') }}],
                 disabledDates: ['{{ forbiddenDates.holidaysDates|join("', '")|raw }}'],
-                minDate: new Date(),
-                useCurrent: true,
-                defaultDate: moment($reservationDate.val(), 'YYYY-MM-DD')
+                minDate: new moment().format('YYYY-MM-DD 00:00'), //I have to put a hour them I can't set the current date
+                defaultDate: moment( $reservationDate.val() , 'YYYY-MM-DD HH:SS')// I use a hour-
             });
 
             $calendar.on("dp.change", function (e) {

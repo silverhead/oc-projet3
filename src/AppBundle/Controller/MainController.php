@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Yasumi\Provider\AbstractProvider;
 
 class MainController extends Controller
 {
@@ -13,9 +14,13 @@ class MainController extends Controller
      */
     public function indexAction()
     {
-        $reservationHandler = $this->get('app.form.handler.reservation');
+        $reservationHandler = $this->get('app.form.handler.reservation', '');
         $form = $reservationHandler->getForm();
         $forbiddenDates = $reservationHandler->getForbiddenDates();
+
+	    $reservation = $this->get('session')->get('reservation');
+	    $reservationHandler->setData($reservation);
+
 
         if($reservationHandler->process()){
             $data = $reservationHandler->getData();
