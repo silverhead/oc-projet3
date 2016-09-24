@@ -31,26 +31,26 @@
     <script type="text/javascript">
         // <![CDATA[
         $(function(){
-            var $calendar = $("#reservation_calendar");
-            var $reservationDate = $('#reservation_reservationDate');
+            var $calendar = $("#booking_calendar");
+            var $bookingDate = $('#booking_bookingDate');
 
             $calendar.datetimepicker({
                 format: 'YYYY-MM-DD',
                 locale: 'fr',
                 inline: true,
                 sideBySide: true,
-                daysOfWeekDisabled: [{{ forbiddenDates.weekDates|join(', ') }}],
-                disabledDates: ['{{ forbiddenDates.holidaysDates|join("', '")|raw }}'],
+                daysOfWeekDisabled: $bookingDate.data('forbidden-weekdays').split(', '),
+                disabledDates: $bookingDate.data('forbidden-dates').split(', '),
                 minDate: new moment().format('YYYY-MM-DD 00:00'), //I have to put a hour them I can't set the current date
-                defaultDate: moment( $reservationDate.val() , 'YYYY-MM-DD HH:SS')// I use a hour-
+                defaultDate: moment( $bookingDate.val() , 'YYYY-MM-DD HH:SS')// I use a hour-
             });
 
             $calendar.on("dp.change", function (e) {
-                $reservationDate.val(e.date.format('YYYY-MM-DD'));
+                $bookingDate.val(e.date.format('YYYY-MM-DD'));
             });
-            $reservationDate.css('display', 'none');
+            $bookingDate.css('display', 'none');
 
-            if($reservationDate.parent('div.form-group').hasClass('has-error')){
+            if($bookingDate.parent('div.form-group').hasClass('has-error')){
                 $calendar.find('.day.active').addClass('bg-error');
             }
         });
@@ -72,9 +72,8 @@
             <div class="col-md-6">
                 <h2><i class="glyphicon glyphicon-calendar"></i> Choisissez une date</h2>
                 <div class="text-center">
-                    {{ form_row(form.reservationDate) }}
-                    {#{{ form_errors(form.reservationDate) }}#}
-                    <div id="reservation_calendar"></div>
+                    {{ form_row(form.bookingDate) }}
+                    <div id="booking_calendar"></div>
                 </div>
             </div>
             <div class="col-md-6 border-left">
@@ -98,7 +97,7 @@
                                 <p>Tarif unique</p>
                             </td>
                             <td>
-                                {{ form_row(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_row(form.ticketQuantity, {'attr': {'class': 'form-control'}}) }}
                             </td>
                             <td class="amount">
                                 10,00 €

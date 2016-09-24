@@ -7,10 +7,11 @@
 
 namespace AppBundle\Form\Handler;
 
-use AppBundle\Form\Model\Reservable;
-use AppBundle\Form\Type\ReservationType;
+use AppBundle\Entity\BookingInterface;
+use AppBundle\Manager\BookingManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -21,11 +22,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Use for control the reservation page
  *
  */
-class ReservationHandler
+class BookingFormHandler
 {
+    /**
+     * @var BookingManager
+     */
+    private $bookingManager;
 
     /**
-     * @var Form
+     * @var FormFactory
+     */
+    private $formFactory;
+
+    /**
+     * @var FormInterface
      */
     private $form;
 
@@ -35,20 +45,29 @@ class ReservationHandler
     private $request;
 
     /**
-     * @var Reservable
-     */
-    private $model;
-
-    /**
      * @var array
      */
     private $data;
 
-    public function __construct(FormFactory $formFactory, Reservable $reservationModel , RequestStack $request)
+    public function __construct(BookingManager $bookingManager ,FormFactory $formFactory, RequestStack $request)
     {
-        $this->model = $reservationModel;
-        $this->form = $formFactory->create(ReservationType::class, $reservationModel);
+        $this->bookingManager = $bookingManager;
+
+        $this->formFactory = $formFactory;
+
         $this->request = $request->getCurrentRequest();
+
+        $this->setForm();
+    }
+
+    private function setForm(){
+        $this->form = $this->formFactory->create(
+            get_class($this->bookingManager->getFormType()),
+            $this->bookingManager->getEntity(),
+            [
+                'booking_manager' => $this->bookingManager
+            ]
+        );
     }
 
     /**
@@ -69,26 +88,10 @@ class ReservationHandler
             return false;
         }
 
-        $this->data = $this->form->getData();
+        $this->bookingManager->save($this->form->getData());
 
         return true;
     }
-
-    public function getForbiddenDates()
-    {
-       return $this->model->getForbiddenDates();
-    }
-
-	public function setData(Reservable $reservation)
-	{
-		if(null === $reservation){
-			return;
-		}
-
-		$this->model->setReservationDate($reservation->getReservationDate());
-		$this->model->setQuantity($reservation->getQuantity());
-		$this->model->setTicketType($reservation->getTicketType());
-	}
 
     public function getData()
     {

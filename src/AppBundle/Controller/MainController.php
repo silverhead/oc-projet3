@@ -14,24 +14,15 @@ class MainController extends Controller
      */
     public function indexAction()
     {
-        $reservationHandler = $this->get('app.form.handler.reservation', '');
-        $form = $reservationHandler->getForm();
-        $forbiddenDates = $reservationHandler->getForbiddenDates();
+        $bookingHandler = $this->get('app.form.handler.booking');
+        $form = $bookingHandler->getForm();
 
-	    $reservation = $this->get('session')->get('reservation');
-	    $reservationHandler->setData($reservation);
-
-
-        if($reservationHandler->process()){
-            $data = $reservationHandler->getData();
-            $this->get('session')->set('reservation', $data);
+        if($bookingHandler->process()){
             return $this->redirectToRoute('user-informations');
         }
 
-
         return $this->render('main/index.html.twig', array(
-            'form' => $form->createView(),
-            'forbiddenDates' => $forbiddenDates
+            'form' => $form->createView()
         ));
     }
 
