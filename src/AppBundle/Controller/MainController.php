@@ -5,16 +5,21 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Yasumi\Provider\AbstractProvider;
 
 class MainController extends Controller
 {
     /**
-     * @Route("/", name="homepage", methods={"GET"})
+     * @Route("/", name="homepage", methods={"GET", "POST"})
      */
     public function indexAction()
     {
-        $reservationHandler = $this->get('app.form.handler.reservation');
-        $form = $reservationHandler->getForm();
+        $bookingHandler = $this->get('app.form.handler.booking');
+        $form = $bookingHandler->getForm();
+
+        if($bookingHandler->process()){
+            return $this->redirectToRoute('user-informations');
+        }
 
         return $this->render('main/index.html.twig', array(
             'form' => $form->createView()
@@ -22,7 +27,7 @@ class MainController extends Controller
     }
 
     /**
-     * @Route("/vos-coordonnees", name="user-informations", methods={"POST"})
+     * @Route("/vos-coordonnees", name="user-informations", methods={"GET"})
      */
     public function userInformationsAction(){
         return $this->render('main/user-informations.html.twig');

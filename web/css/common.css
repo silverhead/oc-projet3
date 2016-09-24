@@ -26,6 +26,9 @@ header p{
     font-size: 2rem;
 }
 
+.bg-error{
+   background-color: #a94442 !important;
+}
 
 /** tickets choice **/
 

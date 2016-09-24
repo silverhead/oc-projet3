@@ -1,11 +1,12 @@
 services:
-    app.form.model.reservation:
-        class: AppBundle\Form\Model\Reservation
-    app.form.handler.reservation:
-        class: AppBundle\Form\Handler\ReservationHandler
-        arguments: ["@form.factory", "@app.form.model.reservation", "@request_stack"]
-#        calls:
-#            - [setService, ["@service_id"]]
-#        tags:
-#            - { name: twig.extension }
-#            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    app.entity.booking:
+        class: AppBundle\Entity\Booking
+    app.form.type.booking:
+        class: AppBundle\Form\Type\BookingType
+    app.manager.booking:
+        class: AppBundle\Manager\BookingManager
+        arguments: ["@doctrine.orm.entity_manager", "@app.form.type.booking" ,"@app.entity.booking"]
+    app.form.handler.booking:
+        class: AppBundle\Form\Handler\BookingFormHandler
+        arguments: ["@app.manager.booking", "@form.factory", "@request_stack"]
+
