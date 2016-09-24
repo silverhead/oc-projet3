@@ -5,8 +5,8 @@ services:
         class: AppBundle\Form\Type\BookingType
     app.manager.booking:
         class: AppBundle\Manager\BookingManager
-        arguments: ["@doctrine.orm.entity_manager", "@app.form.type.booking" ,"@app.entity.booking"]
+        arguments: ["@doctrine.orm.entity_manager"]
     app.form.handler.booking:
         class: AppBundle\Form\Handler\BookingFormHandler
-        arguments: ["@app.manager.booking", "@form.factory", "@request_stack"]
+        arguments: ["@app.manager.booking", "@form.factory", "@app.form.type.booking" ,"@app.entity.booking"]
 

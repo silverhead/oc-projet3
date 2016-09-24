@@ -20,38 +20,9 @@ class BookingManager
      */
     private $em;
 
-    /**
-     * @var Booked
-     */
-    private $bookingEntity;
-
-    /**
-     * @var FormTypeInterface
-     */
-    private $bookingFormType;
-
-    public function __construct
-    (
-        EntityManagerInterface $em,
-        FormTypeInterface $bookingFormType,
-        BookingEntityInterface $bookingEntity
-    )
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-
-        $this->bookingFormType = $bookingFormType;
-
-        $this->bookingEntity = $bookingEntity;
-    }
-
-    public function getFormType()
-    {
-        return $this->bookingFormType;
-    }
-
-    public function getEntity()
-    {
-        return $this->bookingEntity;
     }
 
     public function getForbiddenWeekDays()
@@ -61,10 +32,7 @@ class BookingManager
 
     public function getForbiddenDates()
     {
-        $holidays = $this->getHolidays();
-        $fullBookingDates = $this->getFullBookingDates();
-
-        return array_merge($holidays, $fullBookingDates);
+        return $this->getFullBookingDates();
     }
 
     public function save(BookingEntityInterface $bookingEntityFormData){
@@ -73,17 +41,16 @@ class BookingManager
 //        $this->em->flush();
     }
 
+    public function getHolidayDates(\DateTime $bookingDate){
+        $holidayProvider = Yasumi::create('France', $bookingDate->format('Y'));
+        return $holidayProvider->getHolidayDates();
+    }
+
 
     private function getFullBookingDates()
     {
         return array();
     }
 
-    private function getHolidays()
-    {
-        //get The holidays dates by country and verif if the date is a holiday date
-        $holidays  = Yasumi::create('France', $this->bookingEntity->getBookingDate()->format('Y'), 'fr_FR');
 
-        return $holidays->getHolidayDates();
-    }
 }

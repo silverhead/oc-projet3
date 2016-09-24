@@ -5,19 +5,18 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Yasumi\Provider\AbstractProvider;
 
 class MainController extends Controller
 {
     /**
      * @Route("/", name="homepage", methods={"GET", "POST"})
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $bookingHandler = $this->get('app.form.handler.booking');
         $form = $bookingHandler->getForm();
 
-        if($bookingHandler->process()){
+        if($bookingHandler->process($request)){
             return $this->redirectToRoute('user-informations');
         }
 

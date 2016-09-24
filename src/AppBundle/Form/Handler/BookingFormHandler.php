@@ -7,11 +7,13 @@
 
 namespace AppBundle\Form\Handler;
 
+use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Entity\BookingInterface;
 use AppBundle\Manager\BookingManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -40,30 +42,37 @@ class BookingFormHandler
     private $form;
 
     /**
-     * @var Request
+     * @var FormTypeInterface
      */
-    private $request;
+    private $bookingFormType;
+
+    /**
+     * @var BookingEntityInterface
+     */
+    private $bookingEntity;
 
     /**
      * @var array
      */
     private $data;
 
-    public function __construct(BookingManager $bookingManager ,FormFactory $formFactory, RequestStack $request)
+    public function __construct(BookingManager $bookingManager ,FormFactory $formFactory, FormTypeInterface $bookingFormType, BookingEntityInterface $bookingEntity)
     {
         $this->bookingManager = $bookingManager;
 
         $this->formFactory = $formFactory;
 
-        $this->request = $request->getCurrentRequest();
+        $this->bookingFormType = $bookingFormType;
+
+        $this->bookingEntity = $bookingEntity;
 
         $this->setForm();
     }
 
     private function setForm(){
         $this->form = $this->formFactory->create(
-            get_class($this->bookingManager->getFormType()),
-            $this->bookingManager->getEntity(),
+            get_class($this->bookingFormType),
+            $this->bookingEntity,
             [
                 'booking_manager' => $this->bookingManager
             ]
@@ -77,12 +86,12 @@ class BookingFormHandler
         return  $this->form;
     }
 
-    public function process(){
-        if('POST' !== $this->request->getMethod()){
+    public function process(Request $request){
+        if('POST' !== $request->getMethod()){
             return false;
         }
 
-        $this->form->handleRequest($this->request);
+        $this->form->handleRequest($request);
 
         if(!$this->form->isSubmitted() || !$this->form->isValid()){
             return false;
