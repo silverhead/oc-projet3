@@ -70,6 +70,11 @@ class BookingFormHandler
     }
 
     private function setForm(){
+        $this->bookingManager->updateData($this->bookingEntity);//Set if the entity has stocked in memory
+
+
+        dump($this->bookingEntity);
+
         $this->form = $this->formFactory->create(
             get_class($this->bookingFormType),
             $this->bookingEntity,

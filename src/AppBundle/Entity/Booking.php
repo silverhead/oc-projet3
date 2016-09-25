@@ -7,36 +7,51 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\TicketType;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * Class Booking
  * @package AppBundle\Entity
  *
- *
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\BookingRepository")
  */
 class Booking implements BookingEntityInterface
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id()
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
      * @var \DateTime
+     * @ORM\Column(type="date", nullable=false)
      */
     private $bookingDate;
 
     /**
      * @var TicketType
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TicketType")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $ticketType;
 
     /**
      * @var integer
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $ticketQuantity;
 
 
     public function __construct()
     {
-//        $this->setGoodDefaultDate();
         $this->bookingDate = new \DateTime();
     }
 
@@ -48,10 +63,10 @@ class Booking implements BookingEntityInterface
     }
 
     /**
-     * @param \DateTime $BookingDate
+     * @param \DateTime $bookingDate
      */
-    public function setBookingDate(\DateTime $BookingDate){
-        $this->BookingDate = $BookingDate;
+    public function setBookingDate(\DateTime $bookingDate){
+        $this->bookingDate = $bookingDate;
         return $this;
     }
 
@@ -85,14 +100,13 @@ class Booking implements BookingEntityInterface
         return $this;
     }
 
-
-
-//    public function setGoodDefaultDate()
-//    {
-//        $this->bookingDate = new \DateTime();
-//
-//        while($this->isNotReservationWeekDayDate() || $this->isHolidaysDate()){
-//            $this->bookingDate->add( new \DateInterval("P1D"));
-//        }
-//    }
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }
