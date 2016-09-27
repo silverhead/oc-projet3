@@ -1,11 +1,20 @@
 services:
+    app.service.save.booking:
+        class: AppBundle\Service\BookingSave
+        arguments: ['@doctrine.orm.entity_manager', '@session']
+    app.service.find.booking:
+        class: AppBundle\Service\FindBooking
+        arguments: ['@doctrine.orm.entity_manager']
+    app.service.provider.holider:
+        class: AppBundle\Service\HolidayProvider
+        arguments: ['@doctrine.orm.entity_manager']
     app.entity.booking:
         class: AppBundle\Entity\Booking
     app.form.type.booking:
         class: AppBundle\Form\Type\BookingType
     app.manager.booking:
         class: AppBundle\Manager\BookingManager
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@app.service.save.booking", "@app.service.find.booking", "@app.service.provider.holider"]
     app.form.handler.booking:
         class: AppBundle\Form\Handler\BookingFormHandler
         arguments: ["@app.manager.booking", "@form.factory", "@app.form.type.booking" ,"@app.entity.booking"]

@@ -30,5 +30,4 @@ class BookingRepository extends EntityRepository
 
         return $qb->getQuery()->getArrayResult();
     }
-
 }

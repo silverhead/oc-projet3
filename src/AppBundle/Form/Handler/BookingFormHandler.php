@@ -15,7 +15,6 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ReservationHandler
@@ -71,9 +70,6 @@ class BookingFormHandler
 
     private function setForm(){
         $this->bookingManager->updateData($this->bookingEntity);//Set if the entity has stocked in memory
-
-
-        dump($this->bookingEntity);
 
         $this->form = $this->formFactory->create(
             get_class($this->bookingFormType),

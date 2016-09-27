@@ -3,7 +3,6 @@
 namespace AppBundle\Form\Type;
 
 use AppBundle\Validator\Constraints\ForbiddenHolidayDates;
-use AppBundle\Validator\Constraints\ForbiddenHolidayDatesValidator;
 use AppBundle\Validator\Constraints\ForbiddenWeekDays;
 use AppBundle\Validator\Constraints\ForbiddenDates;
 use Symfony\Component\Form\AbstractType;

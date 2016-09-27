@@ -10,5 +10,4 @@ namespace AppBundle\Entity;
 
 interface BookingEntityInterface
 {
-
 }

@@ -8,8 +8,10 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\BookingEntityInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Yasumi\Yasumi;
+use AppBundle\Service\BookingSaveInterface;
+use AppBundle\Service\FindBookingsInterface;
+use AppBundle\Service\HolidayProviderInterface;
+
 
 /**
  * Class BookingManager
@@ -22,13 +24,27 @@ class BookingManager
     const MAX_NUMBER_OF_BOOKED_TICKETS = 1000;
 
     /**
-     * @var EntityManagerInterface
+     * @var BookingSaveInterface
      */
-    private $em;
+    private $bookingSave;
 
-    public function __construct(EntityManagerInterface $em)
+    /**
+     * @var FindBookingsInterface
+     */
+    private $findBooking;
+
+    /**
+     * @var HolidayProviderInterface
+     */
+    private $holidayProvider;
+
+    public function __construct(BookingSaveInterface $bookingSave, FindBookingsInterface $findBooking, HolidayProviderInterface $holidayProvider)
     {
-        $this->em = $em;
+        $this->bookingSave = $bookingSave;
+
+        $this->findBooking = $findBooking;
+
+        $this->holidayProvider = $holidayProvider;
     }
 
     /**
@@ -86,8 +102,7 @@ class BookingManager
      * @param BookingEntityInterface $bookingEntityFromForm
      */
     public function save(BookingEntityInterface $bookingEntityFromForm){
-        $this->em->persist($bookingEntityFromForm);
-        $this->em->flush();
+        $this->bookingSave->save($bookingEntityFromForm);
     }
 
     /**
@@ -97,8 +112,7 @@ class BookingManager
      * @return array
      */
     public function getHolidayDates(\DateTime $bookingDate){
-        $holidayProvider = Yasumi::create('France', $bookingDate->format('Y'));
-        return $holidayProvider->getHolidayDates();
+        return $this->holidayProvider->getHolidayDatesFor($bookingDate->format('Y'));
     }
 
     /**
@@ -110,8 +124,24 @@ class BookingManager
         $start = new \DateTime();
         $end = $start->add(new \DateInterval("P1Y"));//By default the end period is current date + 1 year;
 
-        return $this->em->getRepository("AppBundle:Booking")->findAllFullBookingInPeriod($start, $end, self::MAX_NUMBER_OF_BOOKED_TICKETS);
+        return $this->findBooking->findAllFullBookingInPeriod($start, $end, self::MAX_NUMBER_OF_BOOKED_TICKETS);
     }
 
+    /**
+     * check if the selected date is forbidden or not
+     */
+    public function isForbiddenDate(\DateTime $date){
+        $forbiddenWeekDay = $this->getForbiddenWeekDays();
+        $forbiddenDates = $this->getForbiddenDates();
 
+        if(in_array($date->format('w'), $forbiddenWeekDay)){
+            return true;
+        }
+
+        if(in_array($date->format('Y-m-d'), $forbiddenDates)){
+            return true;
+        }
+
+        return false;
+    }
 }
