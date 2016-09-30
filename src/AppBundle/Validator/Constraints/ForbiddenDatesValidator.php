@@ -7,21 +7,36 @@
 
 namespace AppBundle\Validator\Constraints;
 
+use AppBundle\Manager\BookingManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ForbiddenDatesValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+	/**
+	 * @var BookingManagerInterface
+	 */
+	private $bookingManager;
+
+	public function __construct(BookingManagerInterface $bookingManager)
+	{
+		$this->bookingManager = $bookingManager;
+	}
+
+
+	public function validate($value, Constraint $constraint)
     {
         if( !($value instanceof \DateTime)){
             throw new \Exception("The value must be a instance of \DateTime");
         }
 
-        if(in_array($value->format('Y-m-d'), $constraint->getForbiddenDates())){
-            $this->context->buildViolation($constraint->getMessage())
-                ->setParameter("%date%", $value->format('Y-m-d'))
-                ->addViolation();
+        if($this->bookingManager->isForbiddenDate($value)){
+
+        	$message =  implode(", ", $this->bookingManager->getErrorMessages());
+
+	        $this->context->buildViolation($message)
+		        ->setParameter("%date%", $value->format('Y-m-d'))
+		        ->addViolation();
         }
     }
 }

@@ -8,8 +8,7 @@
 namespace AppBundle\Form\Handler;
 
 use AppBundle\Entity\BookingEntityInterface;
-use AppBundle\Entity\BookingInterface;
-use AppBundle\Manager\BookingManager;
+use AppBundle\Manager\BookingManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
@@ -26,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class BookingFormHandler
 {
     /**
-     * @var BookingManager
+     * @var BookingManagerInterface
      */
     private $bookingManager;
 
@@ -55,7 +54,7 @@ class BookingFormHandler
      */
     private $data;
 
-    public function __construct(BookingManager $bookingManager ,FormFactory $formFactory, FormTypeInterface $bookingFormType, BookingEntityInterface $bookingEntity)
+    public function __construct(BookingManagerInterface $bookingManager ,FormFactory $formFactory, FormTypeInterface $bookingFormType, BookingEntityInterface $bookingEntity)
     {
         $this->bookingManager = $bookingManager;
 
@@ -101,10 +100,5 @@ class BookingFormHandler
         $this->bookingManager->save($this->form->getData());
 
         return true;
-    }
-
-    public function getData()
-    {
-        return $this->data;
     }
 }

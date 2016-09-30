@@ -21,13 +21,14 @@ class BookingRepository extends EntityRepository
      */
     public function findAllFullBookingInPeriod(\DateTime $start, \DateTime $end, $maxNumberOfBookedTickets)
     {
-        $qb = $this->createQueryBuilder("b")
+        return $this->createQueryBuilder("b")
+	        ->select('b.bookingDate')
             ->where("b.bookingDate >= :start")->setParameter(':start', $start)
             ->andWhere("b.bookingDate <= :end")->setParameter(':end', $end)
             ->groupBy("b.bookingDate")
             ->having("sum(b.ticketQuantity) >= :maxNumberOfBookedTickets")->setParameter(":maxNumberOfBookedTickets", $maxNumberOfBookedTickets)
+	        ->getQuery()
+	        ->getArrayResult()
         ;
-
-        return $qb->getQuery()->getArrayResult();
     }
 }

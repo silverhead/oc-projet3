@@ -8,6 +8,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class TicketType
@@ -30,7 +31,7 @@ class TicketType
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=false)
-     *
+     * @Assert\NotBlank()
      */
     protected $label;
 
@@ -38,6 +39,8 @@ class TicketType
      * @var float
      *
      * @ORM\Column(type="float", length=5, scale=2, nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Regex("/^[0-9]+/")
      */
     protected $percent;
 

@@ -2,8 +2,6 @@
 
 namespace AppBundle\Form\Type;
 
-use AppBundle\Validator\Constraints\ForbiddenHolidayDates;
-use AppBundle\Validator\Constraints\ForbiddenWeekDays;
 use AppBundle\Validator\Constraints\ForbiddenDates;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,25 +16,15 @@ class BookingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $bookingManager = $options['booking_manager'];
-        $forbiddenDates = $bookingManager->getForbiddenDates();
-        $holidayDates   = $bookingManager->getHolidayDates($builder->getData()->getBookingDate());
 
         $builder
             ->add("bookingDate", DateType::class, [
                 'widget' => 'single_text',
                 'constraints' => [
-                    new ForbiddenDates([
-                        'forbiddenDates' => array_merge($forbiddenDates, $holidayDates),
-//                        'message' => ''
-                    ]),
-                    new ForbiddenWeekDays([
-                        'forbiddenWeekDays' => $bookingManager->getForbiddenWeekDays(),
-//                        'message' => ''
-                    ]),
-                    new ForbiddenHolidayDates()
+                    new ForbiddenDates(),
                 ],
                 'attr' => [
-                    'data-forbidden-dates'      =>  implode(", ", array_merge($forbiddenDates, $holidayDates)),
+                    'data-forbidden-dates'      =>  implode(", ", $bookingManager->getForbiddenDates()),
                     'data-forbidden-weekdays'   =>  implode(", ",$bookingManager->getForbiddenWeekDays()),
                 ]
             ])

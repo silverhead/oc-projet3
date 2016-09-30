@@ -19,7 +19,7 @@ use AppBundle\Service\HolidayProviderInterface;
  *
  * This class contain all business application logic
  */
-class BookingManager
+class BookingManager implements BookingManagerInterface
 {
     const MAX_NUMBER_OF_BOOKED_TICKETS = 1000;
 
@@ -38,7 +38,13 @@ class BookingManager
      */
     private $holidayProvider;
 
-    public function __construct(BookingSaveInterface $bookingSave, FindBookingsInterface $findBooking, HolidayProviderInterface $holidayProvider)
+	private $errorMessages = [];
+
+
+    public function __construct(
+    	BookingSaveInterface $bookingSave,
+	    FindBookingsInterface $findBooking,
+	    HolidayProviderInterface $holidayProvider)
     {
         $this->bookingSave = $bookingSave;
 
@@ -132,16 +138,38 @@ class BookingManager
      */
     public function isForbiddenDate(\DateTime $date){
         $forbiddenWeekDay = $this->getForbiddenWeekDays();
+        $holidayDates = $this->getHolidayDates($date);
         $forbiddenDates = $this->getForbiddenDates();
 
+	    $today = new \DateTime();
+
+	    //if the user select a date inferior on today
+	    if($date->format('Y-m-d') < $today->format('Y-m-d')){
+		    $this->errorMessages[] = "Vous ne pouvez pas réserver une date inférieur à la date du jour !";
+		    return true;
+	    }
+
+
         if(in_array($date->format('w'), $forbiddenWeekDay)){
+	        $this->errorMessages[] = "Le musée est fermé le mardi et le dimanche !";
+            return true;
+        }
+
+        if(in_array($date->format('Y-m-d'), $holidayDates)){
+	        $this->errorMessages[] = "Le ".$date->format('d/m/Y')." est un jour férié !";
             return true;
         }
 
         if(in_array($date->format('Y-m-d'), $forbiddenDates)){
+	        $this->errorMessages[] = "Désolé les réservations sont complètes pour le ".$date->format('d/m/Y')." !";
             return true;
         }
 
         return false;
     }
+
+	public function getErrorMessages()
+	{
+		return $this->errorMessages;
+	}
 }
