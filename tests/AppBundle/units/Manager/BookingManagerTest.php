@@ -12,8 +12,6 @@ use AppBundle\Manager\BookingManager;
 use AppBundle\Service\BookingSaveAndGetErrorsInterface;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Service\HolidayProviderInterface;
-use Carbon\Carbon;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class DummyBookingSaveAndGetErrors implements BookingSaveAndGetErrorsInterface
 {

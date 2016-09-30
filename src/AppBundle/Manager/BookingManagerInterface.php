@@ -14,9 +14,9 @@ interface BookingManagerInterface
 	/**
 	 * Define Booking entity data if they already has recorded and/or apply some constraints
 	 *
-	 * @param BookingEntityInterface $bookingEntity
+	 * @return BookingEntityInterface $bookingEntity
 	 */
-	public function updateData(BookingEntityInterface $bookingEntity);
+	public function getCurrentBooking();
 
 	/**
 	 * Define the forbidden week days constraints

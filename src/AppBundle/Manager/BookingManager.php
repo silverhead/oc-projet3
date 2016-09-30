@@ -11,6 +11,7 @@ use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Service\BookingSaveInterface;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Service\HolidayProviderInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 /**
@@ -53,16 +54,13 @@ class BookingManager implements BookingManagerInterface
         $this->holidayProvider = $holidayProvider;
     }
 
-    /**
-     * Define Booking entity data if they already has recorded and/or apply some constraints
-     *
-     * @param BookingEntityInterface $bookingEntity
-     */
-    public function updateData(BookingEntityInterface $bookingEntity){
-        $bookingDate = $bookingEntity->getBookingDate();
-        $updatedBookingDate = $this->getNextGoodDate($bookingDate);
+    public function getCurrentBooking()
+    {
+        $booking = $this->findBooking->getCurrentBooking();
+        $bookingDate =  $this->getNextGoodDate($booking->getBookingDate());
+        $booking->setBookingDate($bookingDate);
 
-        $bookingEntity->setBookingDate($updatedBookingDate);
+        return $booking;
     }
 
     /**
@@ -73,10 +71,7 @@ class BookingManager implements BookingManagerInterface
      */
     public function getNextGoodDate(\DateTime $bookingDate)
     {
-        $forbiddenWeekDays = $this->getForbiddenWeekDays();
-        $forbiddenDates = $this->getForbiddenDates();
-
-        while(in_array($bookingDate->format('Y-m-d'), $forbiddenDates) || in_array($bookingDate->format('w'), $forbiddenWeekDays)){
+        while($this->isForbiddenDate($bookingDate)){
             $bookingDate->add( new \DateInterval("P1D"));
         }
 
@@ -100,7 +95,10 @@ class BookingManager implements BookingManagerInterface
      */
     public function getForbiddenDates()
     {
-        return $this->getFullBookingDates();
+        $fullBookingDates =  $this->getFullBookingDates();
+        $holidayDates =  $this->getHolidayDates();
+
+        return array_merge($fullBookingDates, $holidayDates);
     }
 
     /**
@@ -117,7 +115,10 @@ class BookingManager implements BookingManagerInterface
      * @param \DateTime $bookingDate
      * @return array
      */
-    public function getHolidayDates(\DateTime $bookingDate){
+    public function getHolidayDates(\DateTime $bookingDate = null){
+        if(null === $bookingDate){
+            $bookingDate = new \DateTime();
+        }
         return $this->holidayProvider->getHolidayDatesFor($bookingDate->format('Y'));
     }
 
@@ -164,6 +165,8 @@ class BookingManager implements BookingManagerInterface
 	        $this->errorMessages[] = "Désolé les réservations sont complètes pour le ".$date->format('d/m/Y')." !";
             return true;
         }
+
+        $this->errorMessages = [];//re-init error messages
 
         return false;
     }

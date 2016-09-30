@@ -7,7 +7,6 @@
 
 namespace AppBundle\Form\Handler;
 
-use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Manager\BookingManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -44,17 +43,11 @@ class BookingFormHandler
      */
     private $bookingFormType;
 
-    /**
-     * @var BookingEntityInterface
-     */
-    private $bookingEntity;
-
-    /**
-     * @var array
-     */
-    private $data;
-
-    public function __construct(BookingManagerInterface $bookingManager ,FormFactory $formFactory, FormTypeInterface $bookingFormType, BookingEntityInterface $bookingEntity)
+    public function __construct(
+        BookingManagerInterface $bookingManager ,
+        FormFactory $formFactory,
+        FormTypeInterface $bookingFormType
+    )
     {
         $this->bookingManager = $bookingManager;
 
@@ -62,17 +55,15 @@ class BookingFormHandler
 
         $this->bookingFormType = $bookingFormType;
 
-        $this->bookingEntity = $bookingEntity;
-
         $this->setForm();
     }
 
     private function setForm(){
-        $this->bookingManager->updateData($this->bookingEntity);//Set if the entity has stocked in memory
+        $bookingEntity = $this->bookingManager->getCurrentBooking();
 
         $this->form = $this->formFactory->create(
             get_class($this->bookingFormType),
-            $this->bookingEntity,
+            $bookingEntity,
             [
                 'booking_manager' => $this->bookingManager
             ]

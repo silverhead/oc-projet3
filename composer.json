@@ -34,8 +34,7 @@
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
-        "doctrine/doctrine-fixtures-bundle": "2.3.0",
-        "nesbot/carbon": "1.21.0"
+        "doctrine/doctrine-fixtures-bundle": "2.3.0"
     },
     "scripts": {
         "post-install-cmd": [
