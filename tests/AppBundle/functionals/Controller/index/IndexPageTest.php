@@ -89,10 +89,15 @@ class IndexPageTest extends WebTestCase
 
 		$form     = $crawler->filter("form")->form();
 
+		$object = (object) [
+			'bookingDate' =>  (new \DateTime('next Monday'))->format('Y-m-d'),
+			'ticketType' =>  $this->tiketTypes[0]->getId(),
+			'ticketQuantity' =>  1,
+		];
 
-		$form['booking[bookingDate]'] =  (new \DateTime('next Monday'))->format('Y-m-d');//make a Tuesday date for test if error
-		$form['booking[ticketType]'] = $this->tiketTypes[0]->getId();
-		$form['booking[ticketQuantity]'] = 1;
+		$form['booking[bookingDate]'] = $object->bookingDate;
+		$form['booking[ticketType]'] = $object->ticketType;
+		$form['booking[ticketQuantity]']  = $object->ticketQuantity;
 
 		$client->submit($form);
 
@@ -101,5 +106,14 @@ class IndexPageTest extends WebTestCase
 		$crawler = $client->followRedirect();
 
 		$this->assertContains('Bénéficiaires des billets', $crawler->filter('h1')->text());
+
+
+		$crawlerNext  = $client->request('GET', self::HOME);
+
+		$form     = $crawlerNext->filter("form")->form();
+
+		$this->assertEquals($form['booking[bookingDate]']->getValue(), $object->bookingDate);
+		$this->assertEquals($form['booking[ticketType]']->getValue(), $object->ticketType);
+		$this->assertEquals($form['booking[ticketQuantity]']->getValue(), $object->ticketQuantity);
 	}
 }

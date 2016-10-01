@@ -7,7 +7,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Entity\BookingEntityInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -29,7 +28,11 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
      */
     private $errorMessages;
 
-    public function __construct(EntityManagerInterface $em, SessionInterface $session)
+    public function __construct
+    (
+    	EntityManagerInterface $em,
+	    SessionInterface $session
+    )
     {
         $this->em  = $em;
         $this->session  = $session;
@@ -49,8 +52,11 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
 
             return true;
         }
-        catch(Exception $e){
-            $this->errorMessages[] = "Une erreur est intervenue lors de l'enregistrement dans la base ! Si le problème persiste veuillez contacter l'administrateur du site";
+        catch(\Exception $e){
+            $this->errorMessages[] = "Une erreur est intervenue lors de ".
+	                                "l'enregistrement dans la base ! Si le ".
+									"problème persiste veuillez contacter ".
+                                    "l'administrateur du site";
             return false;
         }
     }

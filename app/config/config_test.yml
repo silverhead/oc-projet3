@@ -1,5 +1,6 @@
 imports:
     - { resource: config_dev.yml }
+    - { resource: parameters_test.yml }
 
 framework:
     test: ~
@@ -17,7 +18,7 @@ swiftmailer:
 doctrine:
     # ...
     dbal:
-        host:     localhost
-        dbname:   testdb
-        user:     root
-        password: null
+        host:     '%database_host%'
+        dbname:   '%database_name%'
+        user:     '%database_user%'
+        password: '%database_password%'
