@@ -14,10 +14,12 @@ class LoadTicketTypeData implements FixtureInterface{
 			(object) [
 				'label'     => 'Tarif journée',
 				'percent'   => 100,
+                'limitHour' => 0
 			],
 			(object) [
 				'label'     => 'Tarif demi-journée',
 				'percent'   => 50,
+                'limitHour' => 14
 			]
 		];
 
@@ -27,6 +29,7 @@ class LoadTicketTypeData implements FixtureInterface{
 			$ticketType
 				->setLabel($ticketTypeData->label)
 				->setPercent($ticketTypeData->percent)
+				->setLimitHour($ticketTypeData->limitHour)
 			;
 
 			$manager->persist($ticketType);

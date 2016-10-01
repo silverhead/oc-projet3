@@ -60,7 +60,7 @@ class BookingManager implements BookingManagerInterface
     {
         $booking = $this->findBooking->getCurrentBooking();
 
-	    if(!$booking instanceof BookingEntityInterface){
+	    if(!($booking instanceof BookingEntityInterface)){
 	    	throw new \Exception("You must use a entity who implement the AppBundle\Entity\BookingEntityInterface !");
 	    }
 

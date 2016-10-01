@@ -45,6 +45,15 @@ class TicketType
     protected $percent;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", length=2, nullable=false)
+     * @Assert\Range(min="0", max="24")
+     *
+     */
+    protected $limitHour;
+
+    /**
      * Get id
      *
      * @return integer
@@ -100,5 +109,29 @@ class TicketType
     public function getPercent()
     {
         return $this->percent;
+    }
+
+    /**
+     * Set limitHour
+     *
+     * @param integer $limitHour
+     *
+     * @return TicketType
+     */
+    public function setLimitHour($limitHour)
+    {
+        $this->limitHour = $limitHour;
+
+        return $this;
+    }
+
+    /**
+     * Get limitHour
+     *
+     * @return integer
+     */
+    public function getLimitHour()
+    {
+        return $this->limitHour;
     }
 }

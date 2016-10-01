@@ -38,7 +38,11 @@ class FindBooking implements FindBookingsInterface
 
     public function find($id)
     {
-        return $this->bookingRepo->find($id);
+        if(null!== $booking = $this->bookingRepo->find($id)){
+            return $booking;
+        }
+
+        return new Booking();
     }
 
     public function getCurrentBooking()
