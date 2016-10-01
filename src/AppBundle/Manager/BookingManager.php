@@ -136,7 +136,8 @@ class BookingManager implements BookingManagerInterface
     public function getFullBookingDates()
     {
         $start = new \DateTime();
-        $end = (clone $start)->add(new \DateInterval("P1Y"));//By default the end period is current date + 1 year;
+        $end = clone $start;
+        $end->add(new \DateInterval("P1Y"));//By default the end period is current date + 1 year.
 
         return $this->findBooking->findAllFullBookingInPeriod($start, $end, self::MAX_NUMBER_OF_BOOKED_TICKETS);
     }
