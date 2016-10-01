@@ -20,8 +20,8 @@ class ForbiddenDatesValidatorTest extends \PHPUnit_Framework_TestCase
 {
 
 	/**
-	 * @expectedException     \Exception
-	 * @expectedExceptionMessage The value must be a instance of \DateTime
+	 * @expectedException   \Exception
+	 * @expectedExceptionMessage  The value must be a instance of \DateTime
 	 */
 	public function testBadValueParam()
 	{

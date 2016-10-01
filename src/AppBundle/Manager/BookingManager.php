@@ -11,6 +11,8 @@ use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Service\BookingSaveInterface;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Service\HolidayProviderInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 
@@ -57,6 +59,11 @@ class BookingManager implements BookingManagerInterface
     public function getCurrentBooking()
     {
         $booking = $this->findBooking->getCurrentBooking();
+
+	    if(!$booking instanceof BookingEntityInterface){
+	    	throw new \Exception("You must use a entity who implement the AppBundle\Entity\BookingEntityInterface !");
+	    }
+
         $bookingDate =  $this->getNextGoodDate($booking->getBookingDate());
         $booking->setBookingDate($bookingDate);
 
@@ -95,8 +102,8 @@ class BookingManager implements BookingManagerInterface
      */
     public function getForbiddenDates()
     {
-        $fullBookingDates =  $this->getFullBookingDates();
-        $holidayDates =  $this->getHolidayDates();
+        $fullBookingDates   =  $this->getFullBookingDates();
+        $holidayDates       =  $this->getHolidayDates();
 
         return array_merge($fullBookingDates, $holidayDates);
     }
@@ -129,7 +136,7 @@ class BookingManager implements BookingManagerInterface
     public function getFullBookingDates()
     {
         $start = new \DateTime();
-        $end = $start->add(new \DateInterval("P1Y"));//By default the end period is current date + 1 year;
+        $end = (clone $start)->add(new \DateInterval("P1Y"));//By default the end period is current date + 1 year;
 
         return $this->findBooking->findAllFullBookingInPeriod($start, $end, self::MAX_NUMBER_OF_BOOKED_TICKETS);
     }
@@ -140,7 +147,7 @@ class BookingManager implements BookingManagerInterface
     public function isForbiddenDate(\DateTime $date){
         $forbiddenWeekDay = $this->getForbiddenWeekDays();
         $holidayDates = $this->getHolidayDates($date);
-        $forbiddenDates = $this->getForbiddenDates();
+        $fullBookingDates = $this->getFullBookingDates();
 
 	    $today = new \DateTime();
 
@@ -161,7 +168,7 @@ class BookingManager implements BookingManagerInterface
             return true;
         }
 
-        if(in_array($date->format('Y-m-d'), $forbiddenDates)){
+        if(in_array($date->format('Y-m-d'), $fullBookingDates)){
 	        $this->errorMessages[] = "Désolé les réservations sont complètes pour le ".$date->format('d/m/Y')." !";
             return true;
         }

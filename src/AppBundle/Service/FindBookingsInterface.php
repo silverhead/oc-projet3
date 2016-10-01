@@ -8,8 +8,18 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Entity\BookingEntityInterface;
+
 interface FindBookingsInterface
 {
+	/**
+	 * Return the current Booking Entity
+	 *
+	 * @return BookingEntityInterface
+	 *
+	 */
+	public function getCurrentBooking();
+
 
     /**
      * Get the Booking model infos
