@@ -21,47 +21,6 @@ use AppBundle\Service\HolidayProviderInterface;
  */
 class BookingManagerTest extends \PHPUnit_Framework_TestCase
 {
-
-	private $dummyBookingEntity;
-
-	/**
-	 * @var BookingManager
-	 */
-	private $bookingManager;
-
-
-	private $dummyBookingSave;
-
-
-	private $dummyFindBookings;
-
-
-	private $dummyHolidayProvider;
-
-	/**
-	 * BookingManagerTest constructor.
-	 */
-    public function __construct()
-    {
-    	$this->setDummyBookingEntity();
-//	    $this->setDummyBookingSave();
-//	    $this->setDummyFindBookings();
-//	    $this->getDummyHolidayProvider();
-
-
-//        $this->bookingManager = new BookingManager(
-//        	$this->getDummyBookingSave(),
-//	        $this->getDummyFindBookings(new \DateTime()),
-//	        $this->getDummyHolidayProvider(new \DateTime())
-//        );
-    }
-
-    public function setDummyBookingEntity()
-    {
-	    $this->dummyBookingEntity = null;
-	    $this->dummyBookingEntity = $this->createMock(BookingEntityInterface::class);
-    }
-
     public function getDummyBookingSave()
     {
     	return $this->createMock(BookingSaveAndGetErrorsInterface::class);
