@@ -87,24 +87,47 @@ class TicketTypeTest  extends KernelTestCase
 	public function testEmptyValues(){
 		$this->ticketType->setLabel('');
 		$this->ticketType->setPercent('');
+		$this->ticketType->setLimitHour('');
 
 		$errors = $this->validator->validate($this->ticketType);
 
-		$this->assertEquals(2, count($errors));
+		$this->assertEquals(3, count($errors));
 	}
 
 	public function testBadValueForPercent(){
 		$this->ticketType->setLabel('test');
 		$this->ticketType->setPercent('test');
+		$this->ticketType->setLimitHour(14);
 
 		$errors = $this->validator->validate($this->ticketType);
 
 		$this->assertEquals(1, count($errors));
 	}
 
+    public function testBadTypeValueForLimitHour(){
+        $this->ticketType->setLabel('test');
+        $this->ticketType->setPercent(100);
+        $this->ticketType->setLimitHour('test');
+
+        $errors = $this->validator->validate($this->ticketType);
+
+        $this->assertEquals(1, count($errors));
+    }
+
+    public function testNotInRangeValueForLimitHour(){
+        $this->ticketType->setLabel('test');
+        $this->ticketType->setPercent(100);
+        $this->ticketType->setLimitHour(25);
+
+        $errors = $this->validator->validate($this->ticketType);
+
+        $this->assertEquals(1, count($errors));
+    }
+
 	public function testGoodValues(){
 		$this->ticketType->setLabel('test');
 		$this->ticketType->setPercent(100);
+		$this->ticketType->setLimitHour(14);
 
 		$errors = $this->validator->validate($this->ticketType);
 
@@ -114,18 +137,22 @@ class TicketTypeTest  extends KernelTestCase
 	public function testGetter(){
 		$this->ticketType->setLabel('test');
 		$this->ticketType->setPercent(100);
+		$this->ticketType->setLimitHour(14);
 
 		$label   = $this->ticketType->getLabel();
 		$percent = $this->ticketType->getPercent();
+		$limitHour = $this->ticketType->getLimitHour();
 
 		$this->assertEquals('test', $label);
 		$this->assertEquals(100, $percent);
+		$this->assertEquals(14, $limitHour);
 	}
 
 	public function testInsert()
 	{
 		$this->ticketType->setLabel('test');
 		$this->ticketType->setPercent(100);
+        $this->ticketType->setLimitHour(14);
 
 		$this->em->persist($this->ticketType);
 		$this->em->flush();

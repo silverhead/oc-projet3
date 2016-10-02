@@ -7,7 +7,6 @@
 
 namespace tests\AppBundle\units\Manager;
 
-use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Manager\BookingManager;
 use AppBundle\Service\BookingSaveAndGetErrorsInterface;
 use AppBundle\Service\BookingSaveInterface;
@@ -223,5 +222,22 @@ class BookingManagerTest extends \PHPUnit_Framework_TestCase
 	    $bookingManager = new BookingManager($bookingSave, $findBooking, $holidayProvider);
 
 	    $bookingManager->getCurrentBooking();
+    }
+
+    public function testGetTicketTypeAvailableFor()
+    {
+        $date = new \DateTime();
+
+        $bookingSave = $this->createMock(BookingSaveInterface::class);
+        $holidayProvider = $this->createMock(HolidayProviderInterface::class);
+
+        $findBooking = $this->createMock(FindBookingsInterface::class);
+        $findBooking->expects($this->once())
+            ->method('findTicketTypeAvailableFor')
+            ->with( $this->equalTo($date))
+        ;
+
+        $bookingManager = new BookingManager($bookingSave, $findBooking, $holidayProvider);
+        $bookingManager->getTicketTypeAvailableFor($date);
     }
 }

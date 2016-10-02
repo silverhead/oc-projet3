@@ -10,4 +10,13 @@ namespace AppBundle\Repository;
  */
 class TicketTypeRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param integer $hour limit between 0 and 24
+     */
+    public function findTicketTypeAvailableFor($hour)
+    {
+        return $this->createQueryBuilder("t")
+            ->where("t.limitHour > :hour")->setParameter('hour', $hour)
+            ->getQuery()->getResult();
+    }
 }

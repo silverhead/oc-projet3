@@ -17,6 +17,7 @@ class BookingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $bookingManager = $options['booking_manager'];
+        $entity = $builder->getData();
 
         $builder
             ->add("bookingDate", DateType::class, [
@@ -29,15 +30,10 @@ class BookingType extends AbstractType
                     'data-forbidden-weekdays'   =>  implode(", ",$bookingManager->getForbiddenWeekDays()),
                 ]
             ])
-            ->add("ticketType", EntityType::class, [
-                'class' => 'AppBundle\Entity\TicketType',
-                'choice_label' => "Label",
-	            'placeholder' => 'Choisissez le type de ticket',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('t')
-                        ->where("t.limitHour > :limitHour")->setParameter('limitHour', (new \DateTime())->format("H"))
-                        ->orderBy('t.label', 'ASC');
-                },
+            ->add("ticketType", ChoiceType::class, [
+                'choices' => $bookingManager->getTicketTypeAvailableFor($entity->getBookingDate()),
+                'choice_label' => 'label',
+	            'placeholder' => 'Choisissez le type de ticket'
             ])
             ->add("ticketQuantity", ChoiceType::class, [
                 'choices' => array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9)

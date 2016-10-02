@@ -11,9 +11,6 @@ use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Service\BookingSaveInterface;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Service\HolidayProviderInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 
 /**
@@ -140,6 +137,17 @@ class BookingManager implements BookingManagerInterface
         $end->add(new \DateInterval("P1Y"));//By default the end period is current date + 1 year.
 
         return $this->findBooking->findAllFullBookingInPeriod($start, $end, self::MAX_NUMBER_OF_BOOKED_TICKETS);
+    }
+
+    /**
+     * Get all ticketTypes available for the date (for our business logic, selected that in function of hour )
+     *
+     * @param \DateTime $date
+     * @return array
+     */
+    public function getTicketTypeAvailableFor(\DateTime $date)
+    {
+        return $this->findBooking->findTicketTypeAvailableFor($date);
     }
 
     /**

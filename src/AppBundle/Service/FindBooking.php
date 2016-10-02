@@ -29,11 +29,17 @@ class FindBooking implements FindBookingsInterface
      */
     private $bookingRepo;
 
+    /**
+     * @var \AppBundle\Repository\TicketTypeRepository|\Doctrine\Common\Persistence\ObjectRepository
+     */
+    private $ticketTypeRepo;
+
     public function __construct(EntityManagerInterface $em, SessionInterface $session)
     {
         $this->em = $em;
         $this->session = $session;
         $this->bookingRepo = $this->em->getRepository("AppBundle:Booking");
+        $this->ticketTypeRepo = $this->em->getRepository("AppBundle:TicketType");
     }
 
     public function find($id)
@@ -61,4 +67,14 @@ class FindBooking implements FindBookingsInterface
         return  $this->bookingRepo->findAllFullBookingInPeriod($start, $end, $maxNumberOfBookedTickets);
     }
 
+    /**
+     * @todo It must to be a unit/functional test for this
+     *
+     * @param \DateTime $date
+     * @return array
+     */
+    public function findTicketTypeAvailableFor(\DateTime $date)
+    {
+        return $this->ticketTypeRepo->findTicketTypeAvailableFor($date->format('H'));
+    }
 }

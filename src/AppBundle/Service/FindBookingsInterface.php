@@ -35,4 +35,10 @@ interface FindBookingsInterface
      * @return mixed
      */
     public function findAllFullBookingInPeriod(\DateTime $start, \DateTime $end, $maxNumberOfBookedTickets);
+
+    /**
+     * @param \DateTime $date
+     * @return array of TicketType
+     */
+    public function findTicketTypeAvailableFor(\DateTime $date);
 }

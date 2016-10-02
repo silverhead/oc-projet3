@@ -14,12 +14,12 @@ class LoadTicketTypeData implements FixtureInterface{
 			(object) [
 				'label'     => 'Tarif journée',
 				'percent'   => 100,
-                'limitHour' => 0
+                'limitHour' => 14
 			],
 			(object) [
 				'label'     => 'Tarif demi-journée',
 				'percent'   => 50,
-                'limitHour' => 14
+                'limitHour' => 24
 			]
 		];
 
