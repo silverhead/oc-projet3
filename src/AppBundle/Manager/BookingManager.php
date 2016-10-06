@@ -166,7 +166,6 @@ class BookingManager implements BookingManagerInterface
 		    return true;
 	    }
 
-
         if(in_array($date->format('w'), $forbiddenWeekDay)){
 	        $this->errorMessages[] = "Le musée est fermé le mardi et le dimanche !";
             return true;

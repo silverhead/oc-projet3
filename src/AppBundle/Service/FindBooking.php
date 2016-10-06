@@ -10,6 +10,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Booking;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class FindBooking implements FindBookingsInterface
@@ -42,13 +43,17 @@ class FindBooking implements FindBookingsInterface
         $this->ticketTypeRepo = $this->em->getRepository("AppBundle:TicketType");
     }
 
-    public function find($id)
+    public function find($id = null)
     {
-        if(null!== $booking = $this->bookingRepo->find($id)){
-            return $booking;
+        if(null === $id){
+            return new Booking();
         }
 
-        return new Booking();
+        if(null === $booking = $this->bookingRepo->find($id)){
+           throw new EntityNotFoundException("Not Booking Entity found with the id n° ".$id."!");
+        }
+
+        return $booking;
     }
 
     public function getCurrentBooking()

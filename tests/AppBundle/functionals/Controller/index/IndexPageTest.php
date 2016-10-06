@@ -52,7 +52,8 @@ class IndexPageTest extends WebTestCase
 	 */
 	public function setFakeTicketType()
 	{
-		$this->tiketTypes = $this->em->getRepository('AppBundle:TicketType')->findAll();
+        $hour = (new \DateTime())->format('H');
+		$this->tiketTypes = $this->em->getRepository('AppBundle:TicketType')->findTicketTypeAvailableFor($hour);
 	}
 
 	public function testAllFieldsError()
@@ -75,7 +76,7 @@ class IndexPageTest extends WebTestCase
 		$this->assertContains("Le musée est fermé le mardi et le dimanche !", $bookingDate);
 
 		$ticketType = $crawler->filter("#booking_ticketType")->parents('div')->parents('div > .help-block ul li')->text();
-		$this->assertContains("Choisissez le type de ticketTarif journéeTarif demi-journée", $ticketType);
+		$this->assertContains("Choisissez le type de ticket", $ticketType);
 
 		$ticketQuantity = $crawler->filter("#booking_ticketQuantity")->parents('div')->parents('div > .help-block ul li')->text();
 		$this->assertContains("123456789", $ticketQuantity);
@@ -106,7 +107,6 @@ class IndexPageTest extends WebTestCase
 		$crawler = $client->followRedirect();
 
 		$this->assertContains('Bénéficiaires des billets', $crawler->filter('h1')->text());
-
 
 		$crawlerNext  = $client->request('GET', self::HOME);
 

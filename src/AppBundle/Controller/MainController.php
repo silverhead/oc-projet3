@@ -4,7 +4,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class MainController extends Controller
 {
@@ -23,6 +26,28 @@ class MainController extends Controller
         return $this->render('main/index.html.twig', array(
             'form' => $form->createView()
         ));
+    }
+
+    /**
+     *@Route("/ajax/get/ticket_type_list_by_date.json", name="ajax-get-ticket-type-list", methods={"GET"})
+     */
+    public function ticketTypeListAction(Request $request)
+    {
+        $getDate = $request->get('date', null);
+
+        if(null === $getDate){
+            throw new ResourceNotFoundException("Ressource non trouvé");
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d', $getDate);
+
+        $bookingManager = $this->get('app.manager.booking');
+
+        $ticketTypes = $bookingManager->getTicketTypeAvailableFor($date);
+
+        $serializer = $this->get('serializer');
+
+        return new Response($serializer->serialize($ticketTypes, 'json'));
     }
 
     /**

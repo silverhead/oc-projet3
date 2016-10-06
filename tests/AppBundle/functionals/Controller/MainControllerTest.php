@@ -9,11 +9,13 @@ namespace AppBundle\functionals\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class MainControllerTest  extends WebTestCase
 {
 	const ROOTES = [
 		'HOME' => '/',
+		'AJAX_GET_TICKET_TYPE_LIST' => '/ajax/get/ticket_type_list_by_date.json',
 		'USER_INFORMATIONS' => '/vos-coordonnees',
 		'CHECK_ORDER' => '/verification-commande',
 		'PAYMENT_CHOICE' => '/choix-paiement',
@@ -30,11 +32,31 @@ class MainControllerTest  extends WebTestCase
 	{
 		$client = static::createClient();
 
-		$crawler = $client->request('GET', self::ROOTES['HOME']);
+        $crawler = $client->request('GET', self::ROOTES['HOME']);
 
 		$this->assertEquals(200, $client->getResponse()->getStatusCode());
 		$this->assertContains('Choix des billets', $crawler->filter('h1')->text());
 	}
+
+	public function testTicketTypeListAction(){
+        $client = static::createClient();
+
+        $client->request('GET', self::ROOTES['AJAX_GET_TICKET_TYPE_LIST'], ['date' => (new \DateTime())->format('Y-m-d')] );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
+        $this->assertNotEmpty($client->getResponse()->getContent());
+    }
+
+    public function testTicketTypeListActionWithoutDateParameter(){
+        $client = static::createClient();
+
+        $client->request('GET', self::ROOTES['AJAX_GET_TICKET_TYPE_LIST']);
+
+
+        $this->assertEquals(500, $client->getResponse()->getStatusCode());
+        $this->assertContains('Ressource non trouvé', $client->getResponse()->getContent());
+    }
 
 	/**
 	 * Page User informations / Ticket

@@ -46,13 +46,24 @@
             });
 
             $calendar.on("dp.change", function (e) {
-                $bookingDate.val(e.date.format('YYYY-MM-DD'));
+                var date = e.date.format('YYYY-MM-DD');
+
+                $bookingDate.val(date);
+
+                $.getJSON( "{{ path('ajax-get-ticket-type-list') }}?date=" + date, function( data ) {
+                    var items = [];
+                    $.each( data, function( index, ticketType) {
+                        items.push('<option value="'+ticketType.id+'">'+ticketType.label+'</option>' );
+                    });
+                    $( "#booking_ticketType").html( items.join( "" ) );
+                });
             });
             $bookingDate.css('display', 'none');
 
             if($bookingDate.parent('div.form-group').hasClass('has-error')){
                 $calendar.find('.day.active').addClass('bg-error');
             }
+
         });
         // ]]>
     </script>

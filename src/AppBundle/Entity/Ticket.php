@@ -57,6 +57,13 @@ class Ticket
 	protected $type;
 
     /**
+     * @var Booking
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Booking", inversedBy="tickets")
+     * @ORM\JoinColumn(name="booking_id", referencedColumnName="id")
+     */
+    protected $booking;
+
+    /**
      * Get id
      *
      * @return integer
@@ -160,5 +167,29 @@ class Ticket
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set booking
+     *
+     * @param \AppBundle\Entity\Booking $booking
+     *
+     * @return Ticket
+     */
+    public function setBooking(\AppBundle\Entity\Booking $booking = null)
+    {
+        $this->booking = $booking;
+
+        return $this;
+    }
+
+    /**
+     * Get booking
+     *
+     * @return \AppBundle\Entity\Booking
+     */
+    public function getBooking()
+    {
+        return $this->booking;
     }
 }
