@@ -30,7 +30,7 @@ class Booking implements BookingEntityInterface
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="date", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $bookingDate;
 

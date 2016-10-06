@@ -190,22 +190,6 @@ class FindBookingTest extends KernelTestCase
 	}
 
 	/**
-	 * Test the booking amount for person aged from 12 to 60 years old
-	 */
-	public function testGetBookingAmountAgeBetween12And60()
-	{
-		$today30YearAgo = new \DateTime();
-		$today30YearAgo->sub(new \DateInterval("P30Y"));
-
-		//adult ticket amount * ticket quantity
-		$sumToTest = 16 * 3;
-		$findBooking = new FindBooking($this->em, $this->session);
-		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $today30YearAgo);
-
-		$this->assertEquals($sumToTest, $amount);
-	}
-
-	/**
 	 *  Test the booking amount for person aged from 0 to 4 years old
 	 */
 	public function testGetBookingAmountAgeBetween0And4()
@@ -233,6 +217,22 @@ class FindBookingTest extends KernelTestCase
 		$sumToTest = 8 * 3;
 		$findBooking = new FindBooking($this->em, $this->session);
 		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $todaySubFiveYears);
+
+		$this->assertEquals($sumToTest, $amount);
+	}
+
+	/**
+	 * Test the booking amount for person aged from 12 to 60 years old
+	 */
+	public function testGetBookingAmountAgeBetween12And60()
+	{
+		$today30YearAgo = new \DateTime();
+		$today30YearAgo->sub(new \DateInterval("P30Y"));
+
+		//adult ticket amount * ticket quantity
+		$sumToTest = 16 * 3;
+		$findBooking = new FindBooking($this->em, $this->session);
+		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $today30YearAgo);
 
 		$this->assertEquals($sumToTest, $amount);
 	}

@@ -75,8 +75,8 @@ class IndexPageTest extends WebTestCase
 		$bookingDate = $crawler->filter("#booking_bookingDate")->parents('div')->parents('div > .help-block ul li')->text();
 		$this->assertContains("Le musée est fermé le mardi et le dimanche !", $bookingDate);
 
-		$ticketType = $crawler->filter("#booking_ticketType")->parents('div')->parents('div > .help-block ul li')->text();
-		$this->assertContains("Choisissez le type de ticket", $ticketType);
+//		$ticketType = $crawler->filter("#booking_ticketType")->parents('div')->parents('div > .help-block ul li')->text();
+//		$this->assertContains("Choisissez le type de ticket", $ticketType);
 
 		$ticketQuantity = $crawler->filter("#booking_ticketQuantity")->parents('div')->parents('div > .help-block ul li')->text();
 		$this->assertContains("123456789", $ticketQuantity);

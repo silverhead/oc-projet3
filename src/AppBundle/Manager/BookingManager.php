@@ -11,6 +11,7 @@ use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Service\BookingSaveInterface;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Service\HolidayProviderInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 
 /**
@@ -22,6 +23,8 @@ use AppBundle\Service\HolidayProviderInterface;
 class BookingManager implements BookingManagerInterface
 {
     const MAX_NUMBER_OF_BOOKED_TICKETS = 1000;
+
+	const REGEX_DATE_US = '/^[0-9]{2,4}-(0?[1-9]|1[0-2])-(0?[1-9]|[1-2][0-9]|3[01])$/';
 
     /**
      * @var BookingSaveInterface
@@ -147,6 +150,12 @@ class BookingManager implements BookingManagerInterface
      */
     public function getTicketTypeAvailableFor(\DateTime $date)
     {
+		$now = new \DateTime();
+
+	    if($now > $date){
+		    $date = $now;
+	    }
+
         return $this->findBooking->findTicketTypeAvailableFor($date);
     }
 

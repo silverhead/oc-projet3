@@ -55,7 +55,7 @@ class MainControllerTest  extends WebTestCase
 
 
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
-        $this->assertContains('Ressource non trouvé', $client->getResponse()->getContent());
+        $this->assertContains('Resource not found', $client->getResponse()->getContent());
     }
 
 	/**

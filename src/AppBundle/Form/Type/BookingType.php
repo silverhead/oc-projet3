@@ -30,10 +30,13 @@ class BookingType extends AbstractType
                     'data-forbidden-weekdays'   =>  implode(", ",$bookingManager->getForbiddenWeekDays()),
                 ]
             ])
-            ->add("ticketType", ChoiceType::class, [
-                'choices' => $bookingManager->getTicketTypeAvailableFor($entity->getBookingDate()),
+            ->add("ticketType", EntityType::class, [
                 'choice_label' => 'label',
-	            'placeholder' => 'Choisissez le type de ticket'
+//	            'placeholder' => 'Choisir le type de billet',
+	            'class' => "AppBundle\Entity\TicketType",
+	            'query_builder' => function(EntityRepository $er){
+            	    return $er->createQueryBuilder("t")->orderBy('t.limitHour', 'ASC');
+	            }
             ])
             ->add("ticketQuantity", ChoiceType::class, [
                 'choices' => array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9)

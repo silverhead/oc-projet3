@@ -36,6 +36,7 @@
         var $ticketQuantity = $('#booking_ticketQuantity');
 
         $(function(){
+            init();
 
             $calendar.datetimepicker({
                 format: 'YYYY-MM-DD',
@@ -53,24 +54,7 @@
 
                 $bookingDate.val(date);
 
-                $.getJSON(
-                    "{{ path('ajax-get-ticket-type-list') }}",
-                    {'date': date},
-                    function( dataJson ) {
-                        var items = [];
-                        var data = $.parseJSON(dataJson);
-
-                        var selectedValue = $ticketType.val();
-
-                        $.each( data, function( index, ticketType) {
-                            items.push('<option value="'+ticketType.id+'" '
-                                    +(selectedValue==ticketType.id?'selected="selected"':'')+
-                                    ' >'+ticketType.label+'</option>' );
-                        });
-                        $( "#booking_ticketType").html( items.join( "" ) );
-                        getTotalBookingAmount();
-                    }
-                );
+                getAvailableTicketType(date);
             });
             $bookingDate.css('display', 'none');
 
@@ -87,6 +71,28 @@
             });
         });
 
+
+        function getAvailableTicketType(date){
+            $.getJSON(
+                    "{{ path('ajax-get-ticket-type-list') }}",
+                    {'date': date},
+                    function( dataJson ) {
+                        var data = $.parseJSON(dataJson);
+
+                        $ticketType.find('option').attr('disabled', 'disabled');
+                        $ticketType.find('option').removeAttr('selected', 'selected');
+
+                        $.each( data, function( index, ticketType) {
+                            $ticketType.find('option[value="'+ticketType.id+'"]').removeAttr('disabled');
+                        });
+
+                        $ticketType.find('option:enabled:first').prop('selected', true);
+
+                        getTotalBookingAmount();
+                    }
+            );
+        }
+
         //get the total booking amount and set it in amount cell
         function getTotalBookingAmount()
         {
@@ -96,13 +102,15 @@
             $.getJSON(
                 "{{ path('ajax-get-total-booking-amount') }}",
                 {'ticketTypeId': ticketTypeId, ticketQuantity: ticketQuantity},
-                function( dataJson ) {
-                    var data = dataJson;
-                    var amount = data.bookingTotalAmount;
-
+                function( amount ) {
                     $('#booking_amount').text(amount);
                 }
             );
+        }
+
+        function init(){
+            var date = $bookingDate.val();
+            getAvailableTicketType(date);
         }
 
         // ]]>

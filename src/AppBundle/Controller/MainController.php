@@ -2,12 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use Doctrine\DBAL\Types\JsonArrayType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class MainController extends Controller
@@ -37,14 +35,15 @@ class MainController extends Controller
         $getDate = $request->get('date', null);
 
         if(null === $getDate){
-            throw new ResourceNotFoundException("Ressource non trouvé");
+            throw new ResourceNotFoundException("Resource not found!");
         }
 
-        $date = \DateTime::createFromFormat('Y-m-d', $getDate);
+        $date = \DateTime::createFromFormat('Y-m-d H:i', $getDate.' 00:00');
+
         $bookingManager = $this->get('app.manager.booking');
         $ticketTypes = $bookingManager->getTicketTypeAvailableFor($date);
-        $serializer = $this->get('serializer');
 
+	    $serializer = $this->get('serializer');
 	    return new JsonResponse($serializer->serialize($ticketTypes, 'json'));
     }
 
@@ -60,22 +59,10 @@ class MainController extends Controller
     	$ticketQuantity = $request->get('ticketQuantity', 1);
     	$ticketTypeId = $request->get('ticketTypeId', 1);
 
-	    $ticketAmounts = [];
+	    $bookingManager = $this->get('app.manager.booking');
+		$amount = $bookingManager->getBookingAmount($ticketTypeId, $ticketQuantity);
 
-	    for($i=0; $i < $ticketQuantity;$i++){
-	    	$ticketAmount =  10 / $ticketTypeId;//for the test of the id ticketTicket equal 1 or 2 and matches to division
-		    $ticketAmounts[] = number_format($ticketAmount, 2, ", ", " ");
-	    }
-
-	    $sumTicketAmount    = array_sum($ticketAmounts);
-		$bookingTotalAmount = number_format($sumTicketAmount, 2, ", ", " ");
-
-		$amounts = array(
-			'ticketAmounts' => $ticketAmounts,
-			'bookingTotalAmount' =>  $bookingTotalAmount
-		);
-
-	    return new JsonResponse($amounts);
+	    return new JsonResponse($amount);
     }
 
     /**

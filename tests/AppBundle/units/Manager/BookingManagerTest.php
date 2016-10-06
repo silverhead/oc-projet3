@@ -240,4 +240,27 @@ class BookingManagerTest extends \PHPUnit_Framework_TestCase
         $bookingManager = new BookingManager($bookingSave, $findBooking, $holidayProvider);
         $bookingManager->getTicketTypeAvailableFor($date);
     }
+
+    public function testGetBookingAmount()
+    {
+	    $fakeTicketId = 1;
+	    $fakeQuantity = 3;
+	    $findBookingReturn   = 30;
+	    $resultToTest = number_format($findBookingReturn, 2, ",", " ");
+
+	    $bookingSave = $this->createMock(BookingSaveInterface::class);
+	    $holidayProvider = $this->createMock(HolidayProviderInterface::class);
+
+	    $findBooking = $this->createMock(FindBookingsInterface::class);
+	    $findBooking->expects($this->once())
+		    ->method('getBookingAmount')
+		    ->with( $this->equalTo($fakeTicketId),  $this->equalTo($fakeQuantity))
+		    ->will($this->returnValue($findBookingReturn))
+	    ;
+
+	    $bookingManager = new BookingManager($bookingSave, $findBooking, $holidayProvider);
+	    $result = $bookingManager->getBookingAmount($fakeTicketId, $fakeQuantity);
+
+	    $this->assertEquals($resultToTest, $result);
+    }
 }
