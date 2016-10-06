@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Doctrine\DBAL\Types\JsonArrayType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,7 +48,8 @@ class MainController extends Controller
 
         $serializer = $this->get('serializer');
 
-        return new Response($serializer->serialize($ticketTypes, 'json'));
+	    return new JsonResponse($serializer->serialize($ticketTypes, 'json'));
+        //return new Response($serializer->serialize($ticketTypes, 'json'));
     }
 
     /**

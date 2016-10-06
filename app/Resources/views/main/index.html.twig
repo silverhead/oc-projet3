@@ -50,8 +50,10 @@
 
                 $bookingDate.val(date);
 
-                $.getJSON( "{{ path('ajax-get-ticket-type-list') }}?date=" + date, function( data ) {
+                $.getJSON( "{{ path('ajax-get-ticket-type-list') }}?date=" + date, function( dataJson ) {
                     var items = [];
+                    var data = $.parseJSON(dataJson);
+
                     $.each( data, function( index, ticketType) {
                         items.push('<option value="'+ticketType.id+'">'+ticketType.label+'</option>' );
                     });
