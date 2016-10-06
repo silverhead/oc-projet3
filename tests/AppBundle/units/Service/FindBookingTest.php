@@ -31,9 +31,19 @@ class FindBookingTest extends KernelTestCase
     private $session;
 
     /**
-     * @var TicketType
+     * @var array of TicketType
      */
-    private $ticketType;
+    private $ticketTypes;
+
+	/**
+	 * @var TicketType
+	 */
+	private $ticketTypeFullDay;
+
+	/**
+	 * @var TicketType
+	 */
+	private $ticketTypeHalfDay;
 
     /**
      * @var Booking
@@ -73,7 +83,9 @@ class FindBookingTest extends KernelTestCase
 
 
     public function setFakeTicketType(){
-        $this->ticketType = $this->em->getRepository("AppBundle:TicketType")->findAll()[0];
+	    $this->ticketTypes = $this->em->getRepository("AppBundle:TicketType")->findAll();
+        $this->ticketTypeFullDay = $this->ticketTypes[0];
+        $this->ticketTypeHalfDay = $this->ticketTypes[1];
     }
 
     public function addFakeBooking(){
@@ -81,7 +93,7 @@ class FindBookingTest extends KernelTestCase
 
         $booking
             ->setBookingDate(new \DateTime())
-            ->setTicketType($this->ticketType)
+            ->setTicketType($this->ticketTypeFullDay)
             ->setTicketQuantity(1)
         ;
 
@@ -151,4 +163,94 @@ class FindBookingTest extends KernelTestCase
 
         $this->assertEquals(1, count($results));
     }
+
+	/**
+	 * Test the default booking amount for 3 tickets and full day ticket type
+	 */
+    public function testGetBookingAmountDefaultFullDayType()
+    {
+    	$sumToTest = 16 * 3; // 16 -> default amount and 3 for the ticket quantity
+	    $findBooking = new FindBooking($this->em, $this->session);
+	    $amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3);
+
+	    $this->assertEquals($sumToTest, $amount);
+    }
+
+	/**
+	 * Test the default booking amount for 3 tickets and half day ticket type
+	 */
+	public function testGetBookingAmountDefaultHalfDayType()
+	{
+		//default ticket amount * ticket quantity * 50% for half day
+		$sumToTest = 16 * 3 * (50 / 100);
+		$findBooking = new FindBooking($this->em, $this->session);
+		$amount = $findBooking->getBookingAmount($this->ticketTypeHalfDay->getId(), 3);
+
+		$this->assertEquals($sumToTest, $amount);
+	}
+
+	/**
+	 * Test the booking amount for person aged from 12 to 60 years old
+	 */
+	public function testGetBookingAmountAgeBetween12And60()
+	{
+		$today30YearAgo = new \DateTime();
+		$today30YearAgo->sub(new \DateInterval("P30Y"));
+
+		//adult ticket amount * ticket quantity
+		$sumToTest = 16 * 3;
+		$findBooking = new FindBooking($this->em, $this->session);
+		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $today30YearAgo);
+
+		$this->assertEquals($sumToTest, $amount);
+	}
+
+	/**
+	 *  Test the booking amount for person aged from 0 to 4 years old
+	 */
+	public function testGetBookingAmountAgeBetween0And4()
+	{
+		$todaySubOneYear = new \DateTime();
+		$todaySubOneYear->sub(new \DateInterval("P1Y"));// baby with 1 year old
+
+		//baby ticket amount * ticket quantity
+		$sumToTest = 0 * 3;
+		$findBooking = new FindBooking($this->em, $this->session);
+		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $todaySubOneYear);
+
+		$this->assertEquals($sumToTest, $amount);
+	}
+
+	/**
+	 *  Test the booking amount for person aged from 4 to 12 years old
+	 */
+	public function testGetBookingAmountAgeBetween4And12()
+	{
+		$todaySubFiveYears = new \DateTime();
+		$todaySubFiveYears->sub(new \DateInterval("P6Y"));// children with 1 year old
+
+		//baby ticket amount * ticket quantity
+		$sumToTest = 8 * 3;
+		$findBooking = new FindBooking($this->em, $this->session);
+		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $todaySubFiveYears);
+
+		$this->assertEquals($sumToTest, $amount);
+	}
+
+	/**
+	 *  Test the booking amount for person aged from 60 to 99 years old
+	 */
+	public function testGetBookingAmountAgeBetween60And99()
+	{
+		$todaySubsixtyFiveYears = new \DateTime();
+		$todaySubsixtyFiveYears->sub(new \DateInterval("P65Y"));// children with 1 year old
+
+		//baby ticket amount * ticket quantity
+		$sumToTest = 12 * 3;
+		$findBooking = new FindBooking($this->em, $this->session);
+		$amount = $findBooking->getBookingAmount($this->ticketTypeFullDay->getId(), 3, $todaySubsixtyFiveYears);
+
+		$this->assertEquals($sumToTest, $amount);
+	}
+
 }

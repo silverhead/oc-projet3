@@ -35,12 +35,29 @@ class FindBooking implements FindBookingsInterface
      */
     private $ticketTypeRepo;
 
-    public function __construct(EntityManagerInterface $em, SessionInterface $session)
+
+	/**
+	 * @var \AppBundle\Repository\TicketAmountRepository|\Doctrine\Common\Persistence\ObjectRepository
+	 */
+	private $ticketAmount;
+
+	/**
+	 * FindBooking constructor.
+	 *
+	 * @param EntityManagerInterface $em
+	 * @param SessionInterface $session
+	 */
+    public function __construct
+    (
+    	EntityManagerInterface $em,
+	    SessionInterface $session
+    )
     {
-        $this->em = $em;
-        $this->session = $session;
-        $this->bookingRepo = $this->em->getRepository("AppBundle:Booking");
-        $this->ticketTypeRepo = $this->em->getRepository("AppBundle:TicketType");
+        $this->em               = $em;
+        $this->session          = $session;
+        $this->bookingRepo      = $this->em->getRepository("AppBundle:Booking");
+        $this->ticketTypeRepo   = $this->em->getRepository("AppBundle:TicketType");
+        $this->ticketAmount     = $this->em->getRepository("AppBundle:TicketAmount");
     }
 
     public function find($id = null)
@@ -73,7 +90,7 @@ class FindBooking implements FindBookingsInterface
     }
 
     /**
-     * @todo It must to be a unit/functional test for this
+     * find ticket type available for the date and hour
      *
      * @param \DateTime $date
      * @return array
@@ -82,4 +99,20 @@ class FindBooking implements FindBookingsInterface
     {
         return $this->ticketTypeRepo->findTicketTypeAvailableFor($date->format('H'));
     }
+
+	public function getBookingAmount($ticketTypeId, $ticketQuantity, \DateTime $birthday = null)
+	{
+		$ticketType     = $this->ticketTypeRepo->find($ticketTypeId);
+
+		if(null === $birthday){
+			$ticketAmount   = $this->ticketAmount->findOneByDefault(true);
+		}
+		else{
+			$ticketAmount   = $this->ticketAmount->findOneByAge($birthday);
+		}
+
+		$ticketAmount = $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
+
+		return $ticketAmount * $ticketQuantity;
+	}
 }

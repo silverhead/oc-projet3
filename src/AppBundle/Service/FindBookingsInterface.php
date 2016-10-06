@@ -41,4 +41,14 @@ interface FindBookingsInterface
      * @return array of TicketType
      */
     public function findTicketTypeAvailableFor(\DateTime $date);
+
+	/**
+	 * Get the amount of the booking
+	 *
+	 * @param integer $ticketTypeId
+	 * @param integer $ticketQuantity
+	 *
+	 * @return integer
+	 */
+	public function getBookingAmount($ticketTypeId, $ticketQuantity);
 }

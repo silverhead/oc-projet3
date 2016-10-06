@@ -186,8 +186,25 @@ class BookingManager implements BookingManagerInterface
         return false;
     }
 
+	/**
+	 * Return list of errors (for especially "isForbiddenDate" method)
+	 *
+	 * @return array
+	 */
 	public function getErrorMessages()
 	{
 		return $this->errorMessages;
+	}
+
+	/**
+	 * Get the total booking amount and format it
+	 *
+	 * @param int $ticketTypeId
+	 * @param int $ticketQuantity
+	 */
+	public function getBookingAmount($ticketTypeId, $ticketQuantity)
+	{
+		$amount = $this->findBooking->getBookingAmount($ticketTypeId, $ticketQuantity);
+		return number_format($amount, 2, ",", " ");
 	}
 }

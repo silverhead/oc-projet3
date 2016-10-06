@@ -41,15 +41,41 @@ class MainController extends Controller
         }
 
         $date = \DateTime::createFromFormat('Y-m-d', $getDate);
-
         $bookingManager = $this->get('app.manager.booking');
-
         $ticketTypes = $bookingManager->getTicketTypeAvailableFor($date);
-
         $serializer = $this->get('serializer');
 
 	    return new JsonResponse($serializer->serialize($ticketTypes, 'json'));
-        //return new Response($serializer->serialize($ticketTypes, 'json'));
+    }
+
+	/**
+	 * Return the total booking amount in AJAX call
+	 *
+	 * @param Request $request birthday
+	 *
+	 * @Route("/ajax/get/total_booking_amount", name="ajax-get-total-booking-amount", methods={"GET"})
+	 */
+    public function getBookingAmountsAction(Request $request)
+    {
+    	$ticketQuantity = $request->get('ticketQuantity', 1);
+    	$ticketTypeId = $request->get('ticketTypeId', 1);
+
+	    $ticketAmounts = [];
+
+	    for($i=0; $i < $ticketQuantity;$i++){
+	    	$ticketAmount =  10 / $ticketTypeId;//for the test of the id ticketTicket equal 1 or 2 and matches to division
+		    $ticketAmounts[] = number_format($ticketAmount, 2, ", ", " ");
+	    }
+
+	    $sumTicketAmount    = array_sum($ticketAmounts);
+		$bookingTotalAmount = number_format($sumTicketAmount, 2, ", ", " ");
+
+		$amounts = array(
+			'ticketAmounts' => $ticketAmounts,
+			'bookingTotalAmount' =>  $bookingTotalAmount
+		);
+
+	    return new JsonResponse($amounts);
     }
 
     /**

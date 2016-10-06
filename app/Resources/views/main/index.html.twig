@@ -30,9 +30,12 @@
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         // <![CDATA[
+        var $calendar = $("#booking_calendar");
+        var $bookingDate = $('#booking_bookingDate');
+        var $ticketType = $('#booking_ticketType');
+        var $ticketQuantity = $('#booking_ticketQuantity');
+
         $(function(){
-            var $calendar = $("#booking_calendar");
-            var $bookingDate = $('#booking_bookingDate');
 
             $calendar.datetimepicker({
                 format: 'YYYY-MM-DD',
@@ -50,15 +53,24 @@
 
                 $bookingDate.val(date);
 
-                $.getJSON( "{{ path('ajax-get-ticket-type-list') }}?date=" + date, function( dataJson ) {
-                    var items = [];
-                    var data = $.parseJSON(dataJson);
+                $.getJSON(
+                    "{{ path('ajax-get-ticket-type-list') }}",
+                    {'date': date},
+                    function( dataJson ) {
+                        var items = [];
+                        var data = $.parseJSON(dataJson);
 
-                    $.each( data, function( index, ticketType) {
-                        items.push('<option value="'+ticketType.id+'">'+ticketType.label+'</option>' );
-                    });
-                    $( "#booking_ticketType").html( items.join( "" ) );
-                });
+                        var selectedValue = $ticketType.val();
+
+                        $.each( data, function( index, ticketType) {
+                            items.push('<option value="'+ticketType.id+'" '
+                                    +(selectedValue==ticketType.id?'selected="selected"':'')+
+                                    ' >'+ticketType.label+'</option>' );
+                        });
+                        $( "#booking_ticketType").html( items.join( "" ) );
+                        getTotalBookingAmount();
+                    }
+                );
             });
             $bookingDate.css('display', 'none');
 
@@ -66,7 +78,33 @@
                 $calendar.find('.day.active').addClass('bg-error');
             }
 
+            $ticketType.on('change', function(){
+                getTotalBookingAmount();
+            });
+
+            $ticketQuantity.on('change', function(){
+                getTotalBookingAmount();
+            });
         });
+
+        //get the total booking amount and set it in amount cell
+        function getTotalBookingAmount()
+        {
+            var ticketTypeId    = $ticketType.val();
+            var ticketQuantity  = $ticketQuantity.val();
+
+            $.getJSON(
+                "{{ path('ajax-get-total-booking-amount') }}",
+                {'ticketTypeId': ticketTypeId, ticketQuantity: ticketQuantity},
+                function( dataJson ) {
+                    var data = dataJson;
+                    var amount = data.bookingTotalAmount;
+
+                    $('#booking_amount').text(amount);
+                }
+            );
+        }
+
         // ]]>
     </script>
 {% endblock %}
@@ -113,7 +151,7 @@
                                 {{ form_row(form.ticketQuantity, {'attr': {'class': 'form-control'}}) }}
                             </td>
                             <td class="amount">
-                                10,00 €
+                                <span id="booking_amount">10,00</span> €
                             </td>
                         </tr>
                         </tbody>

@@ -54,4 +54,13 @@ interface BookingManagerInterface
 	 * @return array of string
 	 */
 	public function getErrorMessages();
+
+
+	/**
+	 * Get the total booking amount
+	 *
+	 * @param int $ticketTypeId
+	 * @param int $ticketQuantity
+	 */
+	public function getBookingAmount($ticketTypeId, $ticketQuantity);
 }
