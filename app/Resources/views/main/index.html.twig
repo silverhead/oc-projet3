@@ -1,9 +1,27 @@
 {% extends 'base.html.twig' %}
+{% form_theme form _self %}
+{% block form_row %}
+    <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{% endblock form_row %}
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+        {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
+        <ul class="list-unstyled">
+        {%- for error in errors -%}
+            <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+        {% if form.parent %}</span>{% else %}</div>{% endif %}
+    {%- endif %}
+{%- endblock form_errors %}
+
 {% block title %}{{ parent() }} - Choix billet {% endblock  %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {#<link href="{{ asset('css/jquery.datetimepicker.min.css') }}" rel="stylesheet">#}
     <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
 {% endblock %}
 {% block javascripts %}
@@ -12,18 +30,90 @@
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         // <![CDATA[
+        var $calendar = $("#booking_calendar");
+        var $bookingDate = $('#booking_bookingDate');
+        var $ticketType = $('#booking_ticketType');
+        var $ticketQuantity = $('#booking_ticketQuantity');
+
         $(function(){
-            $('#reservation_calendar').datetimepicker({
+            init();
+
+            $calendar.datetimepicker({
                 format: 'YYYY-MM-DD',
                 locale: 'fr',
                 inline: true,
-                sideBySide: true
+                sideBySide: true,
+                daysOfWeekDisabled: $bookingDate.data('forbidden-weekdays').split(', '),
+                disabledDates: $bookingDate.data('forbidden-dates').split(', '),
+                minDate: new moment().format('YYYY-MM-DD 00:00'), //I have to put a hour them I can't set the current date
+                defaultDate: moment( $bookingDate.val() , 'YYYY-MM-DD HH:SS')// I use a hour-
             });
-            $("#reservation_calendar").on("dp.change", function (e) {
-                $('#reservation_date').val(e.date.format('YYYY-MM-DD'));
+
+            $calendar.on("dp.change", function (e) {
+                var date = e.date.format('YYYY-MM-DD');
+
+                $bookingDate.val(date);
+
+                getAvailableTicketType(date);
             });
-            $('#reservation_date').css('display', 'none');
+            $bookingDate.css('display', 'none');
+
+            if($bookingDate.parent('div.form-group').hasClass('has-error')){
+                $calendar.find('.day.active').addClass('bg-error');
+            }
+
+            $ticketType.on('change', function(){
+                getTotalBookingAmount();
+            });
+
+            $ticketQuantity.on('change', function(){
+                getTotalBookingAmount();
+            });
         });
+
+
+        function getAvailableTicketType(date){
+            $.getJSON(
+                    "{{ path('ajax-get-ticket-type-list') }}",
+                    {'date': date},
+                    function( dataJson ) {
+                        var data = $.parseJSON(dataJson);
+
+                        $ticketType.find('option').attr('disabled', 'disabled');
+                        $ticketType.find('option').removeAttr('selected', 'selected');
+
+                        $.each( data, function( index, ticketType) {
+                            $ticketType.find('option[value="'+ticketType.id+'"]').removeAttr('disabled');
+                        });
+
+                        $ticketType.find('option:enabled:first').prop('selected', true);
+
+                        getTotalBookingAmount();
+                    }
+            );
+        }
+
+        //get the total booking amount and set it in amount cell
+        function getTotalBookingAmount()
+        {
+            var ticketTypeId    = $ticketType.val();
+            var ticketQuantity  = $ticketQuantity.val();
+
+            $.getJSON(
+                "{{ path('ajax-get-total-booking-amount') }}",
+                {'ticketTypeId': ticketTypeId, ticketQuantity: ticketQuantity},
+                function( amount ) {
+                    $('#booking_amount').text(amount);
+                }
+            );
+        }
+
+        function init(){
+            var date = $bookingDate.val();
+            getAvailableTicketType(date);
+            getTotalBookingAmount();
+        }
+
         // ]]>
     </script>
 {% endblock %}
@@ -36,22 +126,20 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cumque laborum nulla odio quo ratione sunt? Consectetur consequatur ipsum mollitia repellat ut veniam! Deserunt, eaque et impedit pariatur provident tempore?</p>
             </div>
         </div>
-        <form action="{{ path('user-informations') }}" method="post">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
         <div class="row">
             <div class="col-md-6">
                 <h2><i class="glyphicon glyphicon-calendar"></i> Choisissez une date</h2>
                 <div class="text-center">
-                    <input type="date" id="reservation_date" pattern="d/m/Y" value="">
-                    <div id="reservation_calendar"></div>
+                    {{ form_row(form.bookingDate) }}
+                    <div id="booking_calendar"></div>
                 </div>
             </div>
             <div class="col-md-6 border-left">
                 <h2><i class="glyphicon glyphicon-time"></i> Choisissez le type de billet</h2>
                 <div class="text-center">
-                    <select class="form-control">
-                        <option value="1">Journée</option>
-                        <option value="2">Demi-journée</option>
-                    </select>
+                    {{ form_row(form.ticketType, {'attr': {'class': 'form-control'}}) }}
                 </div>
                 <h2><i class="glyphicon glyphicon-bookmark"></i> Choisissez le nombre de billet</h2>
                 <div class="text-center">
@@ -69,20 +157,10 @@
                                 <p>Tarif unique</p>
                             </td>
                             <td>
-                                <select class="form-control">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                </select>
+                                {{ form_row(form.ticketQuantity, {'attr': {'class': 'form-control'}}) }}
                             </td>
                             <td class="amount">
-                                10,00 €
+                                <span id="booking_amount">0,00</span> €
                             </td>
                         </tr>
                         </tbody>
@@ -92,6 +170,6 @@
                 </div>
             </div>
         </div>
-        </form>
+        {{ form_end(form) }}
     </div>
 {% endblock %}

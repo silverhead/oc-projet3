@@ -10,4 +10,17 @@ namespace AppBundle\Repository;
  */
 class TicketAmountRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function findOneByAge(\DateTime $birthday)
+	{
+		$today = new \DateTime();
+		$interval = $today->diff($birthday);
+
+		$age = $interval->format('%y');
+
+		return $this->createQueryBuilder('a')
+			->where("a.ageConditionStart <= :start")->setParameter('start', $age)
+			->andWhere("a.ageConditionEnd > :end")->setParameter('end', $age)
+			->getQuery()->getSingleResult()
+			;
+	}
 }

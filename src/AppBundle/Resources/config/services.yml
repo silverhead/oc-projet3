@@ -1,11 +1,29 @@
 services:
-    app.form.type.reservation:
-        class:     AppBundle\Form\Type\ReservationType
-        arguments: ["AppBundle\Form\Model\Reservation"]
+    app.service.save.booking:
+        class: AppBundle\Service\BookingSave
+        arguments: ['@doctrine.orm.entity_manager', '@session']
+    app.service.find.booking:
+        class: AppBundle\Service\FindBooking
+        arguments: ['@doctrine.orm.entity_manager', '@session']
+    app.service.provider.holider:
+        class: AppBundle\Service\HolidayProvider
+        arguments: ['@doctrine.orm.entity_manager']
+    app.form.type.booking:
+        class: AppBundle\Form\Type\BookingType
+    app.manager.booking:
+        class: AppBundle\Manager\BookingManager
+        arguments: ["@app.service.save.booking", "@app.service.find.booking", "@app.service.provider.holider"]
+    app.validator.forbidden_dates:
+        class: AppBundle\Validator\Constraints\ForbiddenDatesValidator
+        arguments: ['@app.manager.booking']
         tags:
-            - { name: form.type}
-#        calls:
-#            - [setService, ["@service_id"]]
-#        tags:
-#            - { name: twig.extension }
-#            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - {name: validator.constraint_validator}
+    app.validator.available_ticket_type:
+        class: AppBundle\Validator\Constraints\AvailableTicketTypeValidator
+        arguments: ['@app.manager.booking']
+        tags:
+            - {name: validator.constraint_validator}
+    app.form.handler.booking:
+        class: AppBundle\Form\Handler\BookingFormHandler
+        arguments: ["@app.manager.booking", "@form.factory", "@app.form.type.booking" ]
+

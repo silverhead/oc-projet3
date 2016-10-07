@@ -24,31 +24,37 @@ class TicketAmount
     /**
      * @var string
      *
-     * @ORM\Column(name="label", type="string", length=255)
+     * @ORM\Column(name="label", type="string", length=255, nullable=false)
      */
     private $label;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="amount", type="float")
+     * @ORM\Column(name="amount", type="float", nullable=false)
      */
     private $amount;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="ageConditionStart", type="integer")
+     * @ORM\Column(name="ageConditionStart", type="integer", nullable=false)
      */
     private $ageConditionStart;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="ageConditionEnd", type="integer")
+     * @ORM\Column(name="ageConditionEnd", type="integer", nullable=false)
      */
     private $ageConditionEnd;
 
+	/**
+	 * @var bool
+	 *
+	 * @ORM\Column(name="default_tarif", type="boolean", nullable=false)
+	 */
+	private $default;
 
     /**
      * Get id
@@ -155,5 +161,28 @@ class TicketAmount
     {
         return $this->ageConditionEnd;
     }
-}
 
+    /**
+     * Set default
+     *
+     * @param boolean $default
+     *
+     * @return TicketAmount
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+
+        return $this;
+    }
+
+    /**
+     * Get default
+     *
+     * @return boolean
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+}
