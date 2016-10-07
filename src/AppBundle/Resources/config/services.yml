@@ -18,6 +18,11 @@ services:
         arguments: ['@app.manager.booking']
         tags:
             - {name: validator.constraint_validator}
+    app.validator.available_ticket_type:
+        class: AppBundle\Validator\Constraints\AvailableTicketTypeValidator
+        arguments: ['@app.manager.booking']
+        tags:
+            - {name: validator.constraint_validator}
     app.form.handler.booking:
         class: AppBundle\Form\Handler\BookingFormHandler
         arguments: ["@app.manager.booking", "@form.factory", "@app.form.type.booking" ]

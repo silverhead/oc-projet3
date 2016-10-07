@@ -63,4 +63,12 @@ interface BookingManagerInterface
 	 * @param int $ticketQuantity
 	 */
 	public function getBookingAmount($ticketTypeId, $ticketQuantity);
+
+	/**
+	 * Get the ticket types list in function of the date
+	 *
+	 * @param \DateTime $date
+	 * @return mixed
+	 */
+	public function getTicketTypeAvailableFor(\DateTime $date);
 }

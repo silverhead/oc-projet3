@@ -16,12 +16,55 @@ class MainControllerTest  extends WebTestCase
 	const ROOTES = [
 		'HOME' => '/',
 		'AJAX_GET_TICKET_TYPE_LIST' => '/ajax/get/ticket_type_list_by_date.json',
+		'AJAX_GET_TOTAL_BOOKING_AMOUNT' => '/ajax/get/total_booking_amount.json',
 		'USER_INFORMATIONS' => '/vos-coordonnees',
 		'CHECK_ORDER' => '/verification-commande',
 		'PAYMENT_CHOICE' => '/choix-paiement',
 		'ORDER_CONFIRME' => '/confirmation-commande',
 		'ORDER_CANCELED' => '/annulation-commande',
 	];
+
+	private $tiketTypes;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function setUp()
+	{
+		self::bootKernel();
+
+		$this->em = static::$kernel->getContainer()
+			->get('doctrine')
+			->getManager();
+
+		$this->em->beginTransaction();
+
+		$this->setFakeTicketType();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function tearDown()
+	{
+		parent::tearDown();
+
+//		$this->em->rollBack();
+
+		$this->em->close();
+		$this->em = null; // avoid memory leaks
+	}
+
+	/**
+	 * set tickets type
+	 *
+	 * @return TicketType
+	 */
+	public function setFakeTicketType()
+	{
+		$hour = (new \DateTime())->format('H');
+		$this->tiketTypes = $this->em->getRepository('AppBundle:TicketType')->findTicketTypeAvailableFor($hour);
+	}
 
 	/**
 	 * Page home
@@ -57,6 +100,38 @@ class MainControllerTest  extends WebTestCase
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
         $this->assertContains('Resource not found', $client->getResponse()->getContent());
     }
+
+	public function testGetBookingAmountsWithParameters()
+	{
+
+
+		$client = static::createClient();
+
+		$client->request(
+			'GET',
+			self::ROOTES['AJAX_GET_TOTAL_BOOKING_AMOUNT'],
+			[
+				'ticketQuantity'=> 1,
+				'ticketTypeId'=> $this->tiketTypes[0]->getId()
+			]
+		);
+
+		$this->assertEquals(200, $client->getResponse()->getStatusCode());
+		$this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
+		$this->assertNotEmpty($client->getResponse()->getContent());
+	}
+
+    public function testGetBookingAmountsWithoutParameters()
+    {
+	    $client = static::createClient();
+
+	    $client->request('GET', self::ROOTES['AJAX_GET_TOTAL_BOOKING_AMOUNT']);
+
+
+	    $this->assertEquals(500, $client->getResponse()->getStatusCode());
+	    $this->assertContains('ticketQuantity and/or ticketTypeId not found!', $client->getResponse()->getContent());
+    }
+
 
 	/**
 	 * Page User informations / Ticket

@@ -111,6 +111,7 @@
         function init(){
             var date = $bookingDate.val();
             getAvailableTicketType(date);
+            getTotalBookingAmount();
         }
 
         // ]]>
@@ -159,7 +160,7 @@
                                 {{ form_row(form.ticketQuantity, {'attr': {'class': 'form-control'}}) }}
                             </td>
                             <td class="amount">
-                                <span id="booking_amount">10,00</span> €
+                                <span id="booking_amount">0,00</span> €
                             </td>
                         </tr>
                         </tbody>

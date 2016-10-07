@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Validator\Constraints\AvailableTicketType;
 use AppBundle\Validator\Constraints\ForbiddenDates;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -17,7 +18,6 @@ class BookingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $bookingManager = $options['booking_manager'];
-        $entity = $builder->getData();
 
         $builder
             ->add("bookingDate", DateType::class, [
@@ -36,7 +36,10 @@ class BookingType extends AbstractType
 	            'class' => "AppBundle\Entity\TicketType",
 	            'query_builder' => function(EntityRepository $er){
             	    return $er->createQueryBuilder("t")->orderBy('t.limitHour', 'ASC');
-	            }
+	            },
+	            'constraints' => [
+	            	new AvailableTicketType(['fieldDate' => 'bookingDate'])
+	            ]
             ])
             ->add("ticketQuantity", ChoiceType::class, [
                 'choices' => array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9)

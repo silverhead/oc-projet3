@@ -67,7 +67,7 @@ class IndexPageTest extends WebTestCase
 		$form->disableValidation();
 
 		$form['booking[bookingDate]'] =  (new \DateTime('next Tuesday'))->format('Y-m-d');//make a Tuesday date for test if error
-		$form['booking[ticketType]'] = '';
+		$form['booking[ticketType]'] = 3;
 		$form['booking[ticketQuantity]'] = '';
 
 		$crawler = $client->submit($form);
@@ -75,8 +75,8 @@ class IndexPageTest extends WebTestCase
 		$bookingDate = $crawler->filter("#booking_bookingDate")->parents('div')->parents('div > .help-block ul li')->text();
 		$this->assertContains("Le musée est fermé le mardi et le dimanche !", $bookingDate);
 
-//		$ticketType = $crawler->filter("#booking_ticketType")->parents('div')->parents('div > .help-block ul li')->text();
-//		$this->assertContains("Choisissez le type de ticket", $ticketType);
+		$ticketType = $crawler->filter("#booking_ticketType")->parents('div')->parents('div > .help-block ul li')->text();
+		$this->assertContains("Cette valeur n'est pas valide.", $ticketType);
 
 		$ticketQuantity = $crawler->filter("#booking_ticketQuantity")->parents('div')->parents('div > .help-block ul li')->text();
 		$this->assertContains("123456789", $ticketQuantity);

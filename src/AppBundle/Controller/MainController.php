@@ -52,12 +52,16 @@ class MainController extends Controller
 	 *
 	 * @param Request $request birthday
 	 *
-	 * @Route("/ajax/get/total_booking_amount", name="ajax-get-total-booking-amount", methods={"GET"})
+	 * @Route("/ajax/get/total_booking_amount.json", name="ajax-get-total-booking-amount", methods={"GET"})
 	 */
     public function getBookingAmountsAction(Request $request)
     {
-    	$ticketQuantity = $request->get('ticketQuantity', 1);
-    	$ticketTypeId = $request->get('ticketTypeId', 1);
+    	$ticketQuantity = $request->get('ticketQuantity', null);
+    	$ticketTypeId = $request->get('ticketTypeId', null);
+
+	    if(null === $ticketQuantity || null === $ticketTypeId){
+		    throw new ResourceNotFoundException("ticketQuantity and/or ticketTypeId not found!");
+	    }
 
 	    $bookingManager = $this->get('app.manager.booking');
 		$amount = $bookingManager->getBookingAmount($ticketTypeId, $ticketQuantity);
