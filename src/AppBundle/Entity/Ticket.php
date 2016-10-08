@@ -64,6 +64,12 @@ class Ticket
     protected $booking;
 
     /**
+     * @var float
+     * @ORM\Column(name="amount", type="float", nullable=false)
+     */
+    protected $amount;
+
+    /**
      * Get id
      *
      * @return integer
@@ -191,5 +197,29 @@ class Ticket
     public function getBooking()
     {
         return $this->booking;
+    }
+
+    /**
+     * Set amount
+     *
+     * @param float $amount
+     *
+     * @return Ticket
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * Get amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->amount;
     }
 }
