@@ -55,6 +55,13 @@ class Customer
     protected $country;
 
     /**
+     * @var Ticket
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ticket", inversedBy="customer", cascade={"persist"})
+     * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id")
+     */
+    protected $ticket;
+
+    /**
      * Get id
      *
      * @return integer
@@ -158,5 +165,29 @@ class Customer
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * Set ticket
+     *
+     * @param \AppBundle\Entity\Ticket $ticket
+     *
+     * @return Customer
+     */
+    public function setTicket(\AppBundle\Entity\Ticket $ticket = null)
+    {
+        $this->ticket = $ticket;
+
+        return $this;
+    }
+
+    /**
+     * Get ticket
+     *
+     * @return \AppBundle\Entity\Ticket
+     */
+    public function getTicket()
+    {
+        return $this->ticket;
     }
 }

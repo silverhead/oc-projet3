@@ -1,4 +1,8 @@
 {% extends 'base.html.twig' %}
+{% form_theme form _self %}
+{% block form_group_class -%}
+    col-md-9
+{%- endblock form_group_class %}
 {% block title %}{{ parent() }} - Bénéficiaires des billets {% endblock  %}
 {% block body %}
 <div class="body-content" id="user-informations">
@@ -12,6 +16,9 @@
         <div class="col-md-12">
             <h2><i class="glyphicon glyphicon-check"></i> Bénéficiaires des billets</h2>
             {{ form_start(form) }}
+                {% for ticket in form.tickets %}
+                    {% include 'main/form_block.html.twig' with { 'tikect': ticket} %}
+                {% endfor %}
             {{ form_end(form) }}
             {#<form action="{{ path('check-order') }}" method="post" class="form-horizontal">#}
                 {#{% include 'main/form_block.html.twig' %}#}
