@@ -45,7 +45,7 @@ class Ticket
 	/**
 	 * @var Customer
 	 *
-	 * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer",cascade={"persist", "remove"})
+	 * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer", cascade={"persist", "remove"})
 	 */
 	protected $customer;
 

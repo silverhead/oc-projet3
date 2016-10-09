@@ -55,13 +55,6 @@ class Customer
     protected $country;
 
     /**
-     * @var Ticket
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ticket", inversedBy="customer", cascade={"persist"})
-     * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id")
-     */
-    protected $ticket;
-
-    /**
      * Get id
      *
      * @return integer
