@@ -78,6 +78,8 @@
                     {'date': date},
                     function( dataJson ) {
                         var data = $.parseJSON(dataJson);
+                        var selectedTicketType = $ticketType.find('option:selected').val();
+                        var $selectedOption = $ticketType.find('option[value="'+selectedTicketType+'"]');
 
                         $ticketType.find('option').attr('disabled', 'disabled');
                         $ticketType.find('option').removeAttr('selected', 'selected');
@@ -86,7 +88,13 @@
                             $ticketType.find('option[value="'+ticketType.id+'"]').removeAttr('disabled');
                         });
 
-                        $ticketType.find('option:enabled:first').prop('selected', true);
+                        //if the previous selected ticket type is available them we set the selected attribute
+                        if('undefined'  === typeof($selectedOption.attr('disabled'))){
+                            $selectedOption.prop('selected', true);
+                        }
+                        else{// else we set the first ticket type by default
+                            $ticketType.find('option:enabled:first').prop('selected', true);
+                        }
 
                         getTotalBookingAmount();
                     }

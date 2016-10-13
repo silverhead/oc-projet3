@@ -67,7 +67,7 @@ class FindBooking implements FindBookingsInterface
         }
 
         if(null === $booking = $this->bookingRepo->find($id)){
-           throw new EntityNotFoundException("Not Booking Entity found with the id n° ".$id."!");
+           throw new EntityNotFoundException("Not Booking Entity found with the id ".$id."!");
         }
 
         return $booking;
@@ -75,13 +75,9 @@ class FindBooking implements FindBookingsInterface
 
     public function getCurrentBooking()
     {
-        $bookingId = $this->session->get('booking');
+        $bookingId = $this->session->get('booking', null);
 
-        if(null !== $bookingId){
-            return $this->find($bookingId);
-        }
-
-        return new Booking();
+        return $this->find($bookingId);
     }
 
     public function findAllFullBookingInPeriod(\DateTime $start, \DateTime $end, $maxNumberOfBookedTickets)
