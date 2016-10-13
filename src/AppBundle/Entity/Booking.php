@@ -50,7 +50,7 @@ class Booking implements BookingEntityInterface
 
     /**
      * @var ArrayCollection Ticket
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ticket", mappedBy="booking")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ticket", mappedBy="booking", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $tickets;
 

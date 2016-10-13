@@ -8,6 +8,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\BookingEntityInterface;
+use AppBundle\Entity\Ticket;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -45,6 +46,11 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
     public function save(BookingEntityInterface $booking)
     {
         try{
+            //remove all old tickets from booking
+            $tickets = $booking->getTickets();
+            $tickets->clear();
+            //$this->em->getRepository("AppBundle:Ticket")->removeAllOf($booking);
+
             $this->em->persist($booking);
             $this->em->flush();
 

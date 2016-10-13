@@ -22,14 +22,13 @@ class BookingController extends Controller
     public function indexAction(Request $request)
     {
         $bookingHandler = $this->get('app.form.handler.booking');
-        $form = $bookingHandler->getForm();
 
         if($bookingHandler->process($request)){
             return $this->redirectToRoute('user-informations');
         }
 
         return $this->render('main/index.html.twig', array(
-            'form' => $form->createView()
+            'form' => $bookingHandler->getForm()->createView()
         ));
     }
 

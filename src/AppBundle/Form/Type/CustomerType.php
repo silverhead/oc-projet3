@@ -16,7 +16,9 @@ class CustomerType extends AbstractType
         $builder
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
-            ->add('birthday', BirthdayType::class)
+            ->add('birthday', BirthdayType::class,[
+                'widget' => 'single_text',
+            ])
             ->add('country', CountryType::class)
         ;
     }

@@ -2,33 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Ticket;
-use AppBundle\Form\Type\TicketInformationsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+
 class MainController extends Controller
 {
-    /**
-     * @Route("/vos-coordonnees", name="user-informations", methods={"GET"})
-     */
-    public function ticketInformationsAction(){
-        $session = $this->get('session');
-
-        $bookingId = $session->get('booking');
-
-        $booking = $this->getDoctrine()->getRepository('AppBundle:Booking')->find($bookingId);
-
-        for($i = 0; $i < $booking->getTicketQuantity(); $i++){
-            $booking->addTicket( new Ticket());
-        }
-
-        $form = $this->createForm(TicketInformationsType::class, $booking);
-
-        return $this->render('main/user-informations.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
 
     /**
      * @Route("/verification-commande", name="check-order", methods={"POST"})

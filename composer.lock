@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "46b63f72c9eca2c98e3fa077b2b48419",
-    "content-hash": "27992c8922a84c157564f6f08a64016b",
+    "hash": "37185d1d5b96feb35e49deee05737c59",
+    "content-hash": "a1c50d145f8e26a4023c0e556748884a",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -1363,6 +1363,81 @@
             "time": "2016-07-08 11:51:25"
         },
         {
+            "name": "symfony/intl",
+            "version": "3.1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/intl.git",
+                "reference": "1dc47c14187c0e7b7dfe8ae3b8dbde9b60b6d96b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/intl/zipball/1dc47c14187c0e7b7dfe8ae3b8dbde9b60b6d96b",
+                "reference": "1dc47c14187c0e7b7dfe8ae3b8dbde9b60b6d96b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-intl-icu": "~1.0"
+            },
+            "require-dev": {
+                "symfony/filesystem": "~2.8|~3.0"
+            },
+            "suggest": {
+                "ext-intl": "to use the component with locales other than \"en\""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Intl\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ],
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                },
+                {
+                    "name": "Eriksen Costa",
+                    "email": "eriksen.costa@infranology.com.br"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A PHP replacement layer for the C intl extension that includes additional data from the ICU library.",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "i18n",
+                "icu",
+                "internationalization",
+                "intl",
+                "l10n",
+                "localization"
+            ],
+            "time": "2016-09-06 11:02:40"
+        },
+        {
             "name": "symfony/monolog-bundle",
             "version": "2.11.1",
             "source": {
@@ -1765,12 +1840,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "8de2ed908fafd717a2025ce054b65dd9d5e15f5e"
+                "reference": "2d2b0866397b870e307ca5f9923c89b1c8c25a42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/8de2ed908fafd717a2025ce054b65dd9d5e15f5e",
-                "reference": "8de2ed908fafd717a2025ce054b65dd9d5e15f5e",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/2d2b0866397b870e307ca5f9923c89b1c8c25a42",
+                "reference": "2d2b0866397b870e307ca5f9923c89b1c8c25a42",
                 "shasum": ""
             },
             "require": {
@@ -1830,7 +1905,7 @@
             ],
             "description": "Symfony Serializer Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-25 08:27:07"
+            "time": "2016-10-07 16:40:45"
         },
         {
             "name": "symfony/swiftmailer-bundle",
@@ -2029,6 +2104,58 @@
                 "framework"
             ],
             "time": "2016-10-03 19:01:14"
+        },
+        {
+            "name": "twig/extensions",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig-extensions.git",
+                "reference": "449e3c8a9ffad7c2479c7864557275a32b037499"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/449e3c8a9ffad7c2479c7864557275a32b037499",
+                "reference": "449e3c8a9ffad7c2479c7864557275a32b037499",
+                "shasum": ""
+            },
+            "require": {
+                "twig/twig": "~1.20|~2.0"
+            },
+            "require-dev": {
+                "symfony/translation": "~2.3"
+            },
+            "suggest": {
+                "symfony/translation": "Allow the time_diff output to be translated"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_Extensions_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Common additional features for Twig that do not directly belong in core",
+            "homepage": "http://twig.sensiolabs.org/doc/extensions/index.html",
+            "keywords": [
+                "i18n",
+                "text"
+            ],
+            "time": "2015-08-22 16:38:35"
         },
         {
             "name": "twig/twig",
@@ -2320,7 +2447,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "symfony/serializer": 20
+        "symfony/serializer": 20,
+        "symfony/intl": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

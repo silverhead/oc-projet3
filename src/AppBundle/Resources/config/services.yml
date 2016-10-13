@@ -26,4 +26,12 @@ services:
     app.form.handler.booking:
         class: AppBundle\Form\Handler\BookingFormHandler
         arguments: ["@app.manager.booking", "@form.factory", "@app.form.type.booking" ]
-
+#---------- ticket informations page  ----------#
+    app.manager.ticket_information:
+        class: AppBundle\Manager\TicketInformationsManager
+        arguments: ["@app.service.save.booking", "@app.service.find.booking"]
+    app.form.type.ticket_information:
+      class: AppBundle\Form\Type\TicketInformationsType
+    app.form.handler.ticket_information:
+        class: AppBundle\Form\Handler\TicketInformationsFormHandler
+        arguments: ["@app.manager.ticket_information", "@form.factory", "@app.form.type.ticket_information" ]

@@ -4,6 +4,26 @@
     col-md-9
 {%- endblock form_group_class %}
 {% block title %}{{ parent() }} - Bénéficiaires des billets {% endblock  %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript">
+        $('input[type="date"]').datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'fr',
+            inline: true,
+            sideBySide: true,
+            maxDate: new moment().format('YYYY-MM-DD 00:00'),
+            defaultDate: new moment().format('YYYY-MM-DD 00:00')
+        });
+    </script>
+{% endblock %}
 {% block body %}
 <div class="body-content" id="user-informations">
     <div class="row">
@@ -17,7 +37,7 @@
             <h2><i class="glyphicon glyphicon-check"></i> Bénéficiaires des billets</h2>
             {{ form_start(form) }}
                 {% for ticket in form.tickets %}
-                    {% include 'main/form_block.html.twig' with { 'tikect': ticket} %}
+                    {% include 'main/form_block.html.twig' with { 'tikect': ticket, 'index': loop.index0, 'booking': booking } %}
                 {% endfor %}
             <div class="row">
                 <div class="col-md-6">
