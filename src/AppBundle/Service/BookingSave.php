@@ -48,8 +48,10 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
         try{
             //remove all old tickets from booking
             $tickets = $booking->getTickets();
-            $tickets->clear();
-            //$this->em->getRepository("AppBundle:Ticket")->removeAllOf($booking);
+
+            foreach($tickets as $ticketToDel){
+                $booking->removeTicket($ticketToDel);
+            }
 
             $this->em->persist($booking);
             $this->em->flush();

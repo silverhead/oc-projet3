@@ -33,7 +33,7 @@ class BookingController extends Controller
     }
 
     /**
-     *@Route("/ajax/get/ticket_type_list_by_date.json", name="ajax-get-ticket-type-list", methods={"GET"})
+     *@Route("/ajax/get/ticket_type_list_by_date.{_format}", defaults={"_format": "json"}, requirements={"_format": "json" }, name="ajax-get-ticket-type-list", methods={"GET"})
      */
     public function ticketTypeListAction(Request $request)
     {
@@ -57,7 +57,7 @@ class BookingController extends Controller
      *
      * @param Request $request birthday
      *
-     * @Route("/ajax/get/total_booking_amount.json", name="ajax-get-total-booking-amount", methods={"GET"})
+     * @Route("/ajax/get/total_booking_amount.{_format}", defaults={"_format": "json"}, requirements={"_format" = "json" }, name="ajax-get-total-booking-amount", methods={"GET"})
      */
     public function getBookingAmountsAction(Request $request)
     {
