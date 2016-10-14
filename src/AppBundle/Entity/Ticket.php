@@ -65,6 +65,13 @@ class Ticket
     protected $booking;
 
     /**
+     * @var TicketAmount
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TicketAmount")
+     * @ORM\JoinColumn(name="ticket_amount_id", referencedColumnName="id")
+     */
+    protected $ticketAmount;
+
+    /**
      * @var float
      * @ORM\Column(name="amount", type="float", nullable=false)
      */
@@ -236,5 +243,29 @@ class Ticket
         $this->serialNumber = $serialNumber;
 
         return $this;
+    }
+
+    /**
+     * Set ticketAmount
+     *
+     * @param \AppBundle\Entity\TicketAmount $ticketAmount
+     *
+     * @return Ticket
+     */
+    public function setTicketAmount(\AppBundle\Entity\TicketAmount $ticketAmount = null)
+    {
+        $this->ticketAmount = $ticketAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get ticketAmount
+     *
+     * @return \AppBundle\Entity\TicketAmount
+     */
+    public function getTicketAmount()
+    {
+        return $this->ticketAmount;
     }
 }

@@ -13,7 +13,10 @@ class MainController extends Controller
      * @Route("/verification-commande", name="check-order", methods={"GET"})
      */
     public function checkOrderAction(){
-        return $this->render('main/check-order.html.twig');
+        $ticketManager = $this->get('app.manager.ticket_information');
+        return $this->render('main/check-order.html.twig', [
+            'booking' => $ticketManager->getCurrentBooking()
+        ]);
     }
 
     /**

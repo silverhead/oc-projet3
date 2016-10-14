@@ -45,9 +45,14 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
      */
     public function save(BookingEntityInterface $booking)
     {
-        dump( $booking) ;
-
         try{
+
+            foreach ($booking->getTickets() as $ticket){
+                $ticketAmount = $this->em->getRepository("AppBundle:TicketAmount")->findOneByAge($ticket->getCustomer()->getBirthday());
+                $ticket->setTicketAmount($ticketAmount);
+            }
+
+
             $this->em->persist($booking);
             $this->em->flush();
 

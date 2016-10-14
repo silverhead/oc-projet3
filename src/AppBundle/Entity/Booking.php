@@ -152,4 +152,14 @@ class Booking implements BookingEntityInterface
     {
         return $this->tickets;
     }
+
+    public function getAmount()
+    {
+        $sum =0;
+        $this->tickets->map(function($ticket) use (&$sum)
+        {
+            $sum += $ticket->getAmount();
+        });
+        return $sum;
+    }
 }

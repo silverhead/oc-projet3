@@ -1,5 +1,5 @@
 <div class="form-block" id="ticket-{{ index }}">
-    <h3>Musée du Louvre - le {{ booking.bookingDate|localizeddate('full', 'none', locale) }}<br />{{ booking.ticketType.label }} : <span class="ticket-amount">{{ ticket.amount.vars.value|number_format(2, ',', ' ') }} €</span></h3>
+    <h3>Musée du Louvre - le {{ booking.bookingDate|localizeddate('full', 'none', locale) }}<br />{{ booking.ticketType.label }} : <span class="ticket-amount">{{ ticket.amount.vars.value|localizedcurrency('EUR') }}</span></h3>
     <div class="row">
         <div class="col-md-6">
             {{ form_widget(ticket.amount) }}

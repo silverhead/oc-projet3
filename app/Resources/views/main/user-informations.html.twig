@@ -28,9 +28,6 @@
                 defaultDate: new moment().format('YYYY-MM-DD 00:00')
             });
 
-//            $birthday.on('change', function(){
-//                console.log('suis la');
-//            });
             $birthday.on("dp.change", function (e) {
                 var $element = $('#' + e.currentTarget.id);
                 var ticketBlockId =  $element.parents('.form-block').attr('id');
@@ -104,18 +101,6 @@
                 </div>
             </div>
             {{ form_end(form) }}
-            {#<form action="{{ path('check-order') }}" method="post" class="form-horizontal">#}
-                {#{% include 'main/form_block.html.twig' %}#}
-                {#{% include 'main/form_block.html.twig' %}#}
-                {#<div class="row">#}
-                    {#<div class="col-md-6">#}
-                        {#<a href="{{ path('homepage') }}" class="btn btn-default">Retour</a>#}
-                    {#</div>#}
-                    {#<div class="col-md-6 text-right">#}
-                        {#<button type="submit" class="btn btn-default">Payez</button>#}
-                    {#</div>#}
-                {#</div>#}
-            {#</form>#}
         </div>
     </div>
 </div>
