@@ -58,7 +58,8 @@ class BookingFormHandler
         $this->setForm();
     }
 
-    private function setForm(){
+    private function setForm()
+    {
         $bookingEntity = $this->bookingManager->getCurrentBooking();
 
         $this->form = $this->formFactory->create(
@@ -73,11 +74,13 @@ class BookingFormHandler
     /**
      * @return Form|\Symfony\Component\Form\FormInterface
      */
-    public function getForm(){
+    public function getForm()
+    {
         return  $this->form;
     }
 
-    public function process(Request $request){
+    public function process(Request $request)
+    {
         if('POST' !== $request->getMethod()){
             return false;
         }

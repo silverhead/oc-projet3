@@ -8,11 +8,13 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('js/sweetalert/sweetalert.css') }}" rel="stylesheet">
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('js/sweetalert/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
         $(function(){
             var $birthday = $('input[type="date"]');
@@ -34,6 +36,27 @@
                 var ticketBlockId =  $element.parents('.form-block').attr('id');
                 getTicketAmountByBirthday(ticketBlockId);
             });
+
+            $('#returnBtn').on('click', function(e){
+                e.preventDefault();
+
+                var link = $(this).attr('href');
+
+                swal({
+                    title: "Êtes-vous sûr ?",
+                    text: "Si vous continuez, toutes les informations saisies vont être perdues !",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "Annuler",
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Oui, j'ai compris !",
+                    closeOnConfirm: false
+                },
+                function(){
+                    window.location.href = link;
+                });
+            });
+
         });
 
         function getTicketAmountByBirthday(ticketBlockId)
@@ -74,7 +97,7 @@
                 {% endfor %}
             <div class="row">
                 <div class="col-md-6">
-                    <a href="{{ path('homepage') }}" class="btn btn-default">Retour</a>
+                    <a href="{{ path('homepage') }}" id="returnBtn" class="btn btn-default">Retour</a>
                 </div>
                 <div class="col-md-6 text-right">
                     <button type="submit" class="btn btn-default">Payez</button>
