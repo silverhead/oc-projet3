@@ -14,14 +14,47 @@
     <script src="{{ asset('js/moment-with-locales.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
-        $('input[type="date"]').datetimepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'fr',
-            inline: true,
-            sideBySide: true,
-            maxDate: new moment().format('YYYY-MM-DD 00:00'),
-            defaultDate: new moment().format('YYYY-MM-DD 00:00')
+        $(function(){
+            var $birthday = $('input[type="date"]');
+
+            $birthday.datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'fr',
+                inline: false,
+                sideBySide: false,
+                maxDate: new moment().format('YYYY-MM-DD 00:00'),
+                defaultDate: new moment().format('YYYY-MM-DD 00:00')
+            });
+
+//            $birthday.on('change', function(){
+//                console.log('suis la');
+//            });
+            $birthday.on("dp.change", function (e) {
+                var $element = $('#' + e.currentTarget.id);
+                var ticketBlockId =  $element.parents('.form-block').attr('id');
+                getTicketAmountByBirthday(ticketBlockId);
+            });
         });
+
+        function getTicketAmountByBirthday(ticketBlockId)
+        {
+            var $ticketFormBlock = $('#' +ticketBlockId);
+            var formTicketIndex = ticketBlockId.replace('ticket-', '');
+            var $birthday   = $('#ticket_informations_tickets_'+ formTicketIndex +'_customer_birthday');
+            var $amount   = $('#ticket_informations_tickets_'+ formTicketIndex +'_amount');
+
+            console.log($birthday.val());
+
+            $.getJSON(
+                "{{ path('ajax-get-ticket-amount-by-birthday') }}",
+                {'birthday': $birthday.val()},
+                function( amount ) {
+                    var formatedAmount = new Intl.NumberFormat("{{ locale }}", {style: "currency", currency: "EUR"}).format(amount)
+                    $ticketFormBlock.find('.ticket-amount').html(formatedAmount);
+                    $amount.val(amount);
+                }
+            );
+        }
     </script>
 {% endblock %}
 {% block body %}

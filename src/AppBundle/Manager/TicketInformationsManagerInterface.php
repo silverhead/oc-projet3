@@ -41,5 +41,5 @@ interface TicketInformationsManagerInterface
      *
      * @return mixed
      */
-    public function saveTickets();
+    public function saveTickets(BookingEntityInterface $booking);
 }

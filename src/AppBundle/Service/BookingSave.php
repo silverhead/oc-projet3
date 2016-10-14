@@ -46,11 +46,11 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
     public function save(BookingEntityInterface $booking)
     {
         try{
-            //remove all old tickets from booking
-            $tickets = $booking->getTickets();
-
-            foreach($tickets as $ticketToDel){
-                $booking->removeTicket($ticketToDel);
+            //delete all old ticket
+            $originalBooking = $this->em->getRepository("AppBundle:Booking")->find($booking->getId());
+            foreach ($originalBooking->getTickets() as $ticket){
+                $ticket->setBooking(null);
+                $this->em->persist($ticket);
             }
 
             $this->em->persist($booking);
@@ -65,6 +65,9 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
 	                                "l'enregistrement dans la base ! Si le ".
 									"problème persiste veuillez contacter ".
                                     "l'administrateur du site";
+
+            dump($e);
+
             return false;
         }
     }

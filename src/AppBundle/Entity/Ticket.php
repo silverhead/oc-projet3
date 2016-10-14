@@ -32,7 +32,7 @@ class Ticket
      *
      * @ORM\Column(type="date", nullable=false)
      */
-    protected $reservationDate;
+    protected $bookingDate;
 
     /**
      * @var string
@@ -52,7 +52,8 @@ class Ticket
 	/**
 	 * @var TicketType
 	 *
-	 * @ORM\OneToOne(targetEntity="AppBundle\Entity\TicketType")
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TicketType")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
 	 */
 	protected $type;
 
@@ -69,6 +70,12 @@ class Ticket
      */
     protected $amount;
 
+
+    public function __construct()
+    {
+        $this->generateSerialNumber();
+    }
+
     /**
      * Get id
      *
@@ -77,44 +84,6 @@ class Ticket
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set reservationDate
-     *
-     * @param \DateTime $reservationDate
-     *
-     * @return Ticket
-     */
-    public function setReservationDate($reservationDate)
-    {
-        $this->reservationDate = $reservationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get reservationDate
-     *
-     * @return \DateTime
-     */
-    public function getReservationDate()
-    {
-        return $this->reservationDate;
-    }
-
-    /**
-     * Set serialNumber
-     *
-     * @param string $serialNumber
-     *
-     * @return Ticket
-     */
-    public function setSerialNumber($serialNumber)
-    {
-        $this->serialNumber = $serialNumber;
-
-        return $this;
     }
 
     /**
@@ -221,5 +190,51 @@ class Ticket
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Generate random serial number
+     */
+    private function generateSerialNumber()
+    {
+        $this->serialNumber = uniqid();
+    }
+
+    /**
+     * Set bookingDate
+     *
+     * @param \DateTime $bookingDate
+     *
+     * @return Ticket
+     */
+    public function setBookingDate($bookingDate)
+    {
+        $this->bookingDate = $bookingDate;
+
+        return $this;
+    }
+
+    /**
+     * Get bookingDate
+     *
+     * @return \DateTime
+     */
+    public function getBookingDate()
+    {
+        return $this->bookingDate;
+    }
+
+    /**
+     * Set serialNumber
+     *
+     * @param string $serialNumber
+     *
+     * @return Ticket
+     */
+    public function setSerialNumber($serialNumber)
+    {
+        $this->serialNumber = $serialNumber;
+
+        return $this;
     }
 }

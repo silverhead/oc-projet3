@@ -54,6 +54,10 @@ class TicketInformationsFormHandler
     private function setForm(){
         $bookingEntity = $this->ticketInfosManager->getCurrentBooking();
 
+        if(0 === count($bookingEntity->getTickets())){
+            $this->ticketInfosManager->setNewTicketsForBooking($bookingEntity);
+        }
+
         $this->form = $this->formFactory->create(
             get_class($this->ticketInfosType),
             $bookingEntity
@@ -78,7 +82,7 @@ class TicketInformationsFormHandler
             return false;
         }
 
-        $this->ticketInfosManager->save($this->form->getData());
+        $this->ticketInfosManager->saveTickets($this->form->getData());
 
         return true;
     }

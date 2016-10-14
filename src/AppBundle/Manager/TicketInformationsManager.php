@@ -25,13 +25,18 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
      */
     private $findBooking;
 
+    /**
+     * @var BookingEntityInterface
+     */
+    private $booking;
+
     public function __construct(
         BookingSaveAndGetErrorsInterface $saveService,
         FindBookingsInterface $findBooking
     )
     {
-        $this->saveService = $saveService;
-        $this->findBooking = $findBooking;
+        $this->saveService  = $saveService;
+        $this->findBooking  = $findBooking;
     }
 
     /**
@@ -40,10 +45,7 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
      */
     public function getCurrentBooking()
     {
-        $booking =  $this->findBooking->getCurrentBooking();
-        $this->setNewTicketsForBooking($booking);
-
-        return $booking;
+       return $this->findBooking->getCurrentBooking();
     }
 
     public function setNewTicketsForBooking(BookingEntityInterface $booking)
@@ -66,7 +68,12 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
      */
     public function getTicketPriceByBirthday(\DateTime $birthday)
     {
-        // TODO: Implement getTicketPriceByBirthday() method.
+        $booking = $this->getCurrentBooking();
+
+        return $this->findBooking->getTicketAmountByTicketType(
+            $booking->getTicketType(),
+            $birthday
+        );
     }
 
     /**
@@ -85,8 +92,8 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
      *
      * @return mixed
      */
-    public function saveTickets()
+    public function saveTickets(BookingEntityInterface $booking)
     {
-        // TODO: Implement saveTickets() method.
+            $this->saveService->save($booking);
     }
 }

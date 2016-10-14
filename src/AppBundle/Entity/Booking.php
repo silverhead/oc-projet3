@@ -123,6 +123,10 @@ class Booking implements BookingEntityInterface
      */
     public function addTicket(\AppBundle\Entity\Ticket $ticket)
     {
+        $ticket->setBooking($this);
+        $ticket->setBookingDate($this->getBookingDate());
+        $ticket->setType($this->getTicketType());
+
         $this->tickets[] = $ticket;
 
         return $this;
@@ -136,6 +140,7 @@ class Booking implements BookingEntityInterface
     public function removeTicket(\AppBundle\Entity\Ticket $ticket)
     {
         $this->tickets->removeElement($ticket);
+        $ticket->setBooking(null);
     }
 
     /**

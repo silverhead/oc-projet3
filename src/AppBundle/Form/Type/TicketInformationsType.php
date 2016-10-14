@@ -14,6 +14,7 @@ class TicketInformationsType extends AbstractType
         $builder
             ->add('tickets', CollectionType::class, [
                 'entry_type'   => TicketType::class,
+                'allow_delete' => true,
             ])
         ;
     }

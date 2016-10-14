@@ -10,7 +10,7 @@ class MainController extends Controller
 {
 
     /**
-     * @Route("/verification-commande", name="check-order", methods={"POST"})
+     * @Route("/verification-commande", name="check-order", methods={"GET"})
      */
     public function checkOrderAction(){
         return $this->render('main/check-order.html.twig');
