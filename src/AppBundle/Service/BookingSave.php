@@ -47,11 +47,7 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
     {
         try{
 
-            foreach ($booking->getTickets() as $ticket){
-                $ticketAmount = $this->em->getRepository("AppBundle:TicketAmount")->findOneByAge($ticket->getCustomer()->getBirthday());
-                $ticket->setTicketAmount($ticketAmount);
-            }
-
+            $this->setTickets($booking);//if the booking has tickets save that
 
             $this->em->persist($booking);
             $this->em->flush();
@@ -66,6 +62,15 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
 									"problème persiste veuillez contacter ".
                                     "l'administrateur du site";
             return false;
+        }
+    }
+
+    public function setTickets($booking){
+        if(null !== $booking->getTickets()){
+            foreach ($booking->getTickets() as $ticket){
+                $ticketAmount = $this->em->getRepository("AppBundle:TicketAmount")->findOneByAge($ticket->getCustomer()->getBirthday());
+                $ticket->setTicketAmount($ticketAmount);
+            }
         }
     }
 

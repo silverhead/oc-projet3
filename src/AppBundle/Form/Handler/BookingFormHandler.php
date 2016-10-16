@@ -91,8 +91,11 @@ class BookingFormHandler
             return false;
         }
 
-        $this->bookingManager->save($this->form->getData());
+        return $this->bookingManager->save($this->form->getData());
+    }
 
-        return true;
+    public function getErrorMessages()
+    {
+        return $this->bookingManager->getErrorMessages();
     }
 }

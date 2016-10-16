@@ -119,7 +119,11 @@ class BookingManager implements BookingManagerInterface
      * @param BookingEntityInterface $bookingEntityFromForm
      */
     public function save(BookingEntityInterface $bookingEntityFromForm){
-        $this->bookingSave->save($bookingEntityFromForm);
+        if(true !== $this->bookingSave->save($bookingEntityFromForm)){
+            array_merge($this->errorMessages, $this->bookingSave->getErrors());
+            return false;
+        }
+        return true;
     }
 
     /**

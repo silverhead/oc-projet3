@@ -27,6 +27,12 @@ class BookingController extends Controller
             return $this->redirectToRoute('user-informations');
         }
 
+        $errors = $bookingHandler->getErrorMessages();
+
+        if(count($errors) > 0 ){
+            $this->addFlash("error", implode("<br />", $errors));
+        }
+
         return $this->render('main/index.html.twig', array(
             'form' => $bookingHandler->getForm()->createView()
         ));
