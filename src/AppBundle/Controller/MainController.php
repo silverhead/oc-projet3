@@ -8,17 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class MainController extends Controller
 {
-
-    /**
-     * @Route("/verification-commande", name="check-order", methods={"GET"})
-     */
-    public function checkOrderAction(){
-        $ticketManager = $this->get('app.manager.ticket_information');
-        return $this->render('main/check-order.html.twig', [
-            'booking' => $ticketManager->getCurrentBooking()
-        ]);
-    }
-
     /**
      * @Route("/choix-paiement", name="payment-choice", methods={"POST"})
      */

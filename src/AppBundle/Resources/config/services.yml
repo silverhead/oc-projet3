@@ -41,3 +41,15 @@ services:
     app.form.handler.ticket_information:
         class: AppBundle\Form\Handler\TicketInformationsFormHandler
         arguments: ["@app.manager.ticket_information", "@form.factory", "@app.form.type.ticket_information" ]
+#---------- check order page  ----------#
+    app.bridge.order:
+      class: AppBundle\Bridge\BridgeOrderORM
+      arguments: ["@session", "@doctrine.orm.entity_manager"]
+    app.manager.check_order:
+        class: AppBundle\Manager\CheckOrderManager
+        arguments: ["@app.service.find.booking", "@app.bridge.order"]
+    app.form.type.order:
+      class: AppBundle\Form\Type\OrderType
+    app.form.handler.check_order:
+        class: AppBundle\Form\Handler\CheckOrderFormHandler
+        arguments: ["@form.factory", "@app.manager.check_order", "@app.form.type.order" ]
