@@ -80,10 +80,12 @@ class CheckOrderFormHandler
             return false;
         }
 
-        $this->manager->saveOrder($this->form->getData());
-    }
+        if(!$this->manager->saveOrder($this->form->getData())){
+            foreach($this->manager->getErrors() as $errorMessage){
+                $this->form->addError(new FormError($errorMessage));
+            }
+        }
 
-    public function getErrorMessages()
-    {
+        return true;
     }
 }

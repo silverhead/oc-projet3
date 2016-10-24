@@ -25,6 +25,8 @@ class BridgeOrderORM implements BridgeOrderORMInterface
      */
     private $em;
 
+    private $errors = array();
+
     public function __construct(SessionInterface $session, EntityManagerInterface $em)
     {
         $this->session = $session;
@@ -39,10 +41,19 @@ class BridgeOrderORM implements BridgeOrderORMInterface
 
     public function save(Order $order)
     {
-        $order->setDate(new \DateTime());
+        try{
+            $order->setDate(new \DateTime());
+            $this->em->persist($order);
+            $this->em->flush();
 
-        $this->em->persist($order);
-        $this->em->flush();
+            return true;
+        }
+        catch (\Exception $e){
+            $this->errors[] = $e->getMessage();
+
+            return false;
+        }
+
     }
 
     public function getCurrent()
@@ -58,6 +69,6 @@ class BridgeOrderORM implements BridgeOrderORMInterface
 
     public function getErrors()
     {
-        // TODO: Implement getErrors() method.
+        return $this->errors;
     }
 }

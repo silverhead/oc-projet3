@@ -8,12 +8,12 @@
 
 namespace AppBundle\Manager;
 
-
 use AppBundle\Entity\Order;
+use AppBundle\Helper\CanHaveErrors;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Bridge\BridgeOrderORMInterface;
 
-class CheckOrderManager
+class CheckOrderManager implements CanHaveErrors
 {
 
     /**
@@ -25,6 +25,11 @@ class CheckOrderManager
      * @var BridgeOrderORMInterface
      */
     private $bridgeOrder;
+
+    /**
+     * @var array
+     */
+    private $errors;
 
     public function __construct
     (
@@ -49,6 +54,19 @@ class CheckOrderManager
 
     public function saveOrder(Order $order)
     {
-        return $this->bridgeOrder->save($order);
+        if(!$this->bridgeOrder->save($order)){
+            $this->errors = $this->bridgeOrder->getErrors();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array of error messages if exists
+     */
+    public function getErrors()
+    {
+      return $this->errors;
     }
 }
