@@ -8,9 +8,10 @@
 
 namespace AppBundle\Bridge;
 
+use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Entity\Order;
 
 interface BridgeOrderORMInterface extends BridgeORMInterface
 {
-    public function save(Order $order);
+    public function save(Order $order, BookingEntityInterface $booking);
 }

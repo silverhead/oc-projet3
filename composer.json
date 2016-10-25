@@ -32,7 +32,8 @@
         "azuyalabs/yasumi": "1.4.0",
         "symfony/serializer": "3.1.x-dev",
         "twig/extensions": "v1.3.0",
-        "symfony/intl": "3.1.x-dev"
+        "symfony/intl": "3.1.x-dev",
+        "jms/payment-paypal-bundle": "^1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

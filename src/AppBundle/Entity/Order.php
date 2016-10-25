@@ -7,8 +7,10 @@
  */
 
 namespace AppBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Payment\CoreBundle\Model\PaymentInstructionInterface;
 
 /**
  * Class Order
@@ -38,6 +40,17 @@ class Order
      * @ORM\Column(name="email", type="string", length=255)
      */
     protected $email;
+
+
+	/**
+	 * @var ArrayCollection
+	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\OrderDetail", mappedBy="order", cascade={"persist", "remove"}, orphanRemoval=true)
+	 */
+	protected $orderDetails;
+
+	/** @ORM\OneToOne(targetEntity="JMS\Payment\CoreBundle\Entity\PaymentInstruction") */
+	private $paymentInstruction;
+
 
     /**
      * Set date
@@ -96,4 +109,64 @@ class Order
     {
         return $this->id;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->orderDetails = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add orderDetail
+     *
+     * @param \AppBundle\Entity\OrderDetail $orderDetail
+     *
+     * @return Order
+     */
+    public function addOrderDetail(\AppBundle\Entity\OrderDetail $orderDetail)
+    {
+	    $orderDetail->setOrder($this);
+        $this->orderDetails[] = $orderDetail;
+
+        return $this;
+    }
+
+    /**
+     * Remove orderDetail
+     *
+     * @param \AppBundle\Entity\OrderDetail $orderDetail
+     */
+    public function removeOrderDetail(\AppBundle\Entity\OrderDetail $orderDetail)
+    {
+        $this->orderDetails->removeElement($orderDetail);
+	    $orderDetail->setOrder(null);
+    }
+
+    /**
+     * Get orderDetails
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrderDetails()
+    {
+        return $this->orderDetails;
+    }
+
+	public function getAmount()
+	{
+		$this->getOrderDetails()->map(function($orderDetail){
+			return $orderDetail->getAmount();
+		});
+	}
+
+	public function getPaymentInstruction()
+	{
+		return $this->paymentInstruction;
+	}
+
+	public function setPaymentInstruction(PaymentInstructionInterface $instruction)
+	{
+		$this->paymentInstruction = $instruction;
+	}
 }

@@ -10,6 +10,7 @@ namespace AppBundle\Form\Handler;
 
 use AppBundle\Manager\CheckOrderManager;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
@@ -84,6 +85,8 @@ class CheckOrderFormHandler
             foreach($this->manager->getErrors() as $errorMessage){
                 $this->form->addError(new FormError($errorMessage));
             }
+
+	        return false;
         }
 
         return true;

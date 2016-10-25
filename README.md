@@ -15,3 +15,11 @@ The project use localizeddate twig function, this function need a php extension,
 on linux ubuntu 16.04 :
 
 `sudo apt-get install php-intl`
+
+The jms/payment-paypal-bundle require `mrcrypt extension` and `curl`
+
+on linux ubuntu 16.04 :
+
+`sudo apt-get install php-mycrypt`
+
+`sudo apt-get install php-curl`

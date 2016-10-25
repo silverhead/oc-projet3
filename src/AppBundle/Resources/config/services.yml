@@ -53,3 +53,10 @@ services:
     app.form.handler.check_order:
         class: AppBundle\Form\Handler\CheckOrderFormHandler
         arguments: ["@form.factory", "@app.manager.check_order", "@app.form.type.order" ]
+#---------- payment choice page  ----------#
+#    app.bridge.payment:
+#        class: AppBundle\Bridge\PaymentJMSCoreBridge
+#        arguments: ["@payment.plugin_controller"]
+#    app.manager.payment_choice:
+#        class: AppBundle\Manager\PaymentChoiceManager
+#        arguments: ["@app.bridge.payment", "@app.bridge.order"]

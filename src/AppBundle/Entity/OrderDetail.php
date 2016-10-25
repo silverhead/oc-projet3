@@ -33,6 +33,14 @@ class OrderDetail
      */
     protected $ticket;
 
+	/**
+	 * @var Order
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order", inversedBy="orderDetails")
+	 * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+	 */
+	protected $order;
+
+
     /**
      * Set ticket
      *
@@ -65,5 +73,34 @@ class OrderDetail
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set booking
+     *
+     * @param \AppBundle\Entity\Order $order
+     *
+     * @return OrderDetail
+     */
+    public function setOrder(\AppBundle\Entity\Order $order = null)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get booking
+     *
+     * @return \AppBundle\Entity\Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function getAmount()
+    {
+	    return $this->ticket->getAmount();
     }
 }

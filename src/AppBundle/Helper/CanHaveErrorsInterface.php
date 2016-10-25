@@ -8,7 +8,7 @@ namespace AppBundle\Helper;
  * Date: 24/10/16
  * Time: 22:39
  */
-interface CanHaveErrors
+interface CanHaveErrorsInterface
 {
     /**
      * @return array of error messages if exists

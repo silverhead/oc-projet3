@@ -28,10 +28,13 @@
                     <div class="row">
                         <div class="col-md12">
                             {% if form.vars.errors is not empty %}
-                                hello
-                                {% for message in form.vars.errors %}
-                                    {% include 'flashMessage/flashMessageContent.html.twig' with {'type': 'danger', 'content': message } %}
-                                {% endfor %}
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        {% for error in form.vars.errors %}
+                                            {% include 'flashMessage/flashMessageContent.html.twig' with {'type': 'danger', 'message': error.message } %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             {% endif %}
                             <label for="{{ form.email.vars.id }}" class="col-md-4">Saisir votre e-mail où vous allez recevoir votre/vos billet(s) * :</label>
                             <div class="col-md-8 {% if form.email.vars.errors is not empty %}has-error{% endif %}">

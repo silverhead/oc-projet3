@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use JMS\Payment\CoreBundle\PluginController\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use JMS\Payment\CoreBundle\Form\ChoosePaymentMethodType;
 
 class OrderController extends Controller
 {
@@ -28,11 +30,88 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/choix-paiement", name="payment-choice", methods={"GET"})
+     * @Route("/choix-paiement", name="payment-choice", methods={"GET", "POST"})
      */
-    public function paymentChoiceAction(){
-        return $this->render('main/payment-choice.html.twig');
+    public function paymentChoiceAction(Request $request){
+	    $config = [
+		    'paypal_express_checkout' => [
+			    'return_url' => 'https://example.com/return-url',
+			    'cancel_url' => 'https://example.com/cancel-url',
+			    'useraction' => 'commit',
+		    ],
+	    ];
+
+	    $formPayPal = $this->createForm(ChoosePaymentMethodType::class, null, [
+		    'amount'          => 10.00,
+		    'currency'        => 'EUR',
+		    'predefined_data' => $config,
+	    ]);
+
+	    $formPayPal->handleRequest($request);
+
+	    if ($formPayPal->isSubmitted() && $formPayPal->isValid()) {
+		    $ppc = $this->get('payment.plugin_controller');
+		    $ppc->createPaymentInstruction($instruction = $formPayPal->getData());
+
+		    $checkOrderManager = $this->get("app.manager.check_order");
+		    $order = $checkOrderManager->getCurrentOrder();
+
+		    $order->setPaymentInstruction($instruction);
+
+		    $em = $this->getDoctrine()->getManager();
+//		    $em->persist($order);
+		    $em->flush($order);
+
+		    return $this->redirect($this->generateUrl('payment-create', [
+//			    'id' => $order->getId(),
+		    ]));
+	    }
+
+
+        return $this->render('main/payment-choice.html.twig', [
+        	'formPayPal' => $formPayPal->createView()
+        ]);
     }
+
+	/**
+	 * @Route("/creation-paiement", name="payment-create", methods={"GET", "POST"})
+	 */
+    public function paymentCreateAction()
+    {
+	    $checkOrderManager = $this->get("app.manager.check_order");
+	    $order = $checkOrderManager->getCurrentOrder();
+
+	    $payment = $this->createPayment($order);
+
+	    $ppc = $this->get('payment.plugin_controller');
+	    $result = $ppc->approveAndDeposit($payment->getId(), $payment->getTargetAmount());
+
+	    dump($result);
+
+	    if ($result->getStatus() === Result::STATUS_SUCCESS) {
+		    return $this->redirect($this->generateUrl('order-confirmed', [
+			    'id' => $order->getId(),
+		    ]));
+	    }
+
+	    throw new \Exception('Transaction was not successful: '.$result->getReasonCode());
+    }
+
+	private function createPayment($order)
+	{
+		$instruction = $order->getPaymentInstruction();
+		$pendingTransaction = $instruction->getPendingTransaction();
+
+		if ($pendingTransaction !== null) {
+			return $pendingTransaction->getPayment();
+		}
+
+		$ppc = $this->get('payment.plugin_controller');
+		$amount = $instruction->getAmount() - $instruction->getDepositedAmount();
+
+		return $ppc->createPayment($instruction->getId(), $amount);
+	}
+
 
     /**
      * @Route("/confirmation-commande", name="order-confirmed", methods={"GET"})

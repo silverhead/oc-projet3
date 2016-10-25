@@ -9,11 +9,11 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\Order;
-use AppBundle\Helper\CanHaveErrors;
+use AppBundle\Helper\CanHaveErrorsInterface;
 use AppBundle\Service\FindBookingsInterface;
 use AppBundle\Bridge\BridgeOrderORMInterface;
 
-class CheckOrderManager implements CanHaveErrors
+class CheckOrderManager implements CanHaveErrorsInterface
 {
 
     /**
@@ -48,13 +48,19 @@ class CheckOrderManager implements CanHaveErrors
 
     public function getCurrentOrder()
     {
-        return $this->bridgeOrder->getCurrent();
+        $order = $this->bridgeOrder->getCurrent();
+
+	    $this->bridgeOrder->deleteLines($order);
+
+	    return $order;
     }
 
 
     public function saveOrder(Order $order)
     {
-        if(!$this->bridgeOrder->save($order)){
+	    $booking = $this->findBookings->getCurrentBooking();
+
+        if(!$this->bridgeOrder->save($order, $booking)){
             $this->errors = $this->bridgeOrder->getErrors();
             return false;
         }
