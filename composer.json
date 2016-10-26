@@ -33,7 +33,8 @@
         "symfony/serializer": "3.1.x-dev",
         "twig/extensions": "v1.3.0",
         "symfony/intl": "3.1.x-dev",
-        "jms/payment-paypal-bundle": "^1.1"
+        "jms/payment-paypal-bundle": "^1.1",
+        "whiteoctober/tcpdf-bundle": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

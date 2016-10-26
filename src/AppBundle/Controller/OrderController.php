@@ -21,6 +21,7 @@ class OrderController extends Controller
 
         if($formHandler->process($request)){
             return $this->redirectToRoute("payment-choice");
+//            return $this->redirectToRoute("order-confirmed");
         }
 
         return $this->render('checkOrder/check-order.html.twig', [
@@ -33,17 +34,21 @@ class OrderController extends Controller
      * @Route("/choix-paiement", name="payment-choice", methods={"GET", "POST"})
      */
     public function paymentChoiceAction(Request $request){
+        $orderBridge = $this->get("app.bridge.order");
+        $order = $orderBridge->getCurrent();
+
 	    $config = [
 		    'paypal_express_checkout' => [
 			    'return_url' => 'https://example.com/return-url',
 			    'cancel_url' => 'https://example.com/cancel-url',
-			    'useraction' => 'commit',
+//			    'useraction' => 'commit',
 		    ],
 	    ];
 
 	    $formPayPal = $this->createForm(ChoosePaymentMethodType::class, null, [
-		    'amount'          => 10.00,
+		    'amount'          => number_format($order->getAmount(), 2),
 		    'currency'        => 'EUR',
+            'default_method' => 'payment_paypal',
 		    'predefined_data' => $config,
 	    ]);
 
@@ -69,6 +74,7 @@ class OrderController extends Controller
 
 
         return $this->render('main/payment-choice.html.twig', [
+            'order' => $order,
         	'formPayPal' => $formPayPal->createView()
         ]);
     }

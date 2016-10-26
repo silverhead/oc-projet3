@@ -155,9 +155,11 @@ class Order
 
 	public function getAmount()
 	{
-		$this->getOrderDetails()->map(function($orderDetail){
+        $sums = $this->getOrderDetails()->map(function($orderDetail){
 			return $orderDetail->getAmount();
 		});
+
+        return array_sum($sums->toArray());
 	}
 
 	public function getPaymentInstruction()

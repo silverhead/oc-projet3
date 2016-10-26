@@ -79,3 +79,4 @@ jms_payment_paypal:
     username: '%paypal_username%'
     password: '%paypal_password%'
     signature: '%paypal_signature%'
+    debug: true
