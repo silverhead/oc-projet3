@@ -24,7 +24,7 @@ class OrderController extends Controller
 //            return $this->redirectToRoute("order-confirmed");
         }
 
-        return $this->render('checkOrder/check-order.html.twig', [
+        return $this->render('order/check-order.html.twig', [
             'booking' => $checkOrderManager->getCurrentBooking(),
             'form' => $formHandler->getForm()->createView()
         ]);
@@ -73,7 +73,7 @@ class OrderController extends Controller
 	    }
 
 
-        return $this->render('main/payment-choice.html.twig', [
+        return $this->render('order/payment-choice.html.twig', [
             'order' => $order,
         	'formPayPal' => $formPayPal->createView()
         ]);
@@ -123,13 +123,13 @@ class OrderController extends Controller
      * @Route("/confirmation-commande", name="order-confirmed", methods={"GET"})
      */
     public function orderConfirmedAction(){
-        return $this->render('main/order-confirmed.html.twig');
+        return $this->render('order/order-confirmed.html.twig');
     }
 
     /**
      * @Route("/annulation-commande", name="order-canceled", methods={"GET"})
      */
     public function orderCanceledAction(){
-        return $this->render('main/order-canceled.html.twig');
+        return $this->render('order/order-canceled.html.twig');
     }
 }

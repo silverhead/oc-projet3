@@ -13,7 +13,7 @@
                 <h2><i class="glyphicon glyphicon-check"></i> Vérifier votre commande</h2>
                 <ul>
                     {% for ticket in booking.tickets %}
-                        {% include 'checkOrder/check-order-line.html.twig' with {'ticket': ticket, 'booking': booking} %}
+                        {% include 'order/check-order-line.html.twig' with {'ticket': ticket, 'booking': booking} %}
                     {% endfor %}
                 </ul>
                 <div class="row total-amount-line">

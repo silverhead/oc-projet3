@@ -60,3 +60,7 @@ services:
 #    app.manager.payment_choice:
 #        class: AppBundle\Manager\PaymentChoiceManager
 #        arguments: ["@app.bridge.payment", "@app.bridge.order"]
+#---------- Ticket PDF generator  ----------#
+    app.factory.ticket_pdf:
+        class: AppBundle\Factory\PDFTicketFactory
+        arguments: ["@white_october.tcpdf", "%kernel.root_dir%%logo_path_file%", "%ticket_pdf_title%"]

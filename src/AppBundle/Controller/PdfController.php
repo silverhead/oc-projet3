@@ -8,62 +8,44 @@ use Symfony\Component\BrowserKit\Response;
 
 class PdfController extends Controller
 {
+
     /**
-     * @Route("/test.pdf", name="test-pdf", methods={"GET"})
+     * @Route("/download/booking", name="download-booking", methods={"GET"})
      * @return Response
      */
-    public function indexAction()
+    public function downloadAction()
     {
+	    $pdfFact = $this->get("app.factory.ticket_pdf");
         $orderBridge = $this->get("app.bridge.order");
+
         $order = $orderBridge->getCurrent();
 
-        $orderLines = $order->getOrderDetails();
+	    foreach($order->getOrderDetails() as $line){
+		    $amountLabel = $line->getTicket()->getBooking()->getTicketType()->getLabel()
+					        . ' - ' .
+					        $line->getTicket()->getTicketAmount()->getLabel()
+					        . ' : ' .
+					        number_format($line->getTicket()->getAmount(), 2, ', ', ' ') . ' €'
+		    ;
 
+		    $customerName = strtoupper($line->getTicket()->getCustomer()->getLastName())
+					        . ' ' .
+					        ucfirst($line->getTicket()->getCustomer()->getFirstName())
+		    ;
 
-        // set style for barcode
-        $style = array(
-            'border' => true,
-            'vpadding' => 'auto',
-            'hpadding' => 'auto',
-            'fgcolor' => array(0,0,0),
-            'bgcolor' => false, //array(255,255,255)
-            'module_width' => 1, // width of a single module in points
-            'module_height' => 1 // height of a single module in points
-        );
+		    $pdfFact->createTicket(
+			    $line->getTicket()->getBookingDate(),
+			    $amountLabel,
+			    $customerName,
+			    $line->getTicket()->getCustomer()->getBirthday(),
+			    $line->getTicket()->getSerialNumber()
+		    );
+	    }
 
-        $pdf = $this->get("white_october.tcpdf")->create();
+	    $fileName = 'billets_musee_du_louvre_'.str_pad($order->getId(), 5, '0', STR_PAD_LEFT).'.pdf';
 
-        $pdf->SetFont('helvetica', '', 11);
-
-
-
-//        $txt = "You can also export 2D barcodes in other formats (PNG, SVG, HTML). Check the examples inside the barcode directory.\n";
-//        $pdf->MultiCell(70, 50, $txt, 0, 'J', false, 1, 125, 30, true, 0, false, true, 0, 'T', false);
-
-        $top = 0;
-
-        $rootDir = $this->get('kernel')->getRootDir();
-        $image = $rootDir . '/../web/images/logo-louvre.jpg';
-
-        foreach ($orderLines as $line){
-
-            $serialNumber = $line->getTicket()->getSerialNumber();
-            $top +=60;
-            $pdf->AddPage();
-
-            $pdf->SetXY(10, 10);
-            $pdf->Image($image);
-            $pdf->SetXY(100, 40);
-            $pdf->writeHTML("<h1>MUSEE DU LOUVRE</h1>");
-//            $pdf->Cell(0, 0, 'MUSEE DU LOUVRE', 1, 1, 'C');
-
-
-            $pdf->write2DBarcode($serialNumber, 'QRCODE,H', 140, $top, 50, 50, $style, 'N');
-        }
-
-//        $pdf->Output('example_050.pdf', 'I');
         return new Response(
-            $pdf->Output('example_050.pdf', 'I')
+	        $pdfFact->output($fileName)
         );
     }
 }

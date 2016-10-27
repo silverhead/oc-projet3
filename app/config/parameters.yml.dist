@@ -28,4 +28,6 @@ parameters:
     paypal_username: your_api_username # not your account username
     paypal_password: your_api_password # not your account password
     paypal_signature: your_api_signature
-
+    #-- ticket pdf generator --#
+    logo_path_file: your path logo
+    ticket_pdf_title: your ticket title
