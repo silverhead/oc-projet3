@@ -21,6 +21,12 @@ use JMS\Payment\CoreBundle\Model\PaymentInstructionInterface;
  */
 class Order
 {
+	const STATE_STANDBY     = 0;
+	const STATE_PAYED       = 1;
+	const STATE_REFUSED     = 2;
+	const STATE_CANCELED    = 3;
+
+
     /**
      * @var integer
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -47,6 +53,13 @@ class Order
 	 * @ORM\OneToMany(targetEntity="AppBundle\Entity\OrderDetail", mappedBy="order", cascade={"persist", "remove"}, orphanRemoval=true)
 	 */
 	protected $orderDetails;
+
+
+	/**
+	 * @var integer
+	 * @ORM\Column(type="integer", nullable=false)
+	 */
+	protected $state;
 
 	/** @ORM\OneToOne(targetEntity="JMS\Payment\CoreBundle\Entity\PaymentInstruction") */
 	private $paymentInstruction;
@@ -171,4 +184,28 @@ class Order
 	{
 		$this->paymentInstruction = $instruction;
 	}
+
+    /**
+     * Set state
+     *
+     * @param integer $state
+     *
+     * @return Order
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return integer
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
 }

@@ -96,4 +96,26 @@ class BridgeOrderORM implements BridgeOrderORMInterface
     {
         return $this->errors;
     }
+
+
+
+	public function isStandby($order)
+	{
+		return (Order::STATE_STANDBY === $order->getState());
+	}
+
+	public function isPayed($order)
+	{
+		return (Order::STATE_PAYED === $order->getState());
+	}
+
+	public function isCanceled($order)
+	{
+		return (Order::STATE_CANCELED === $order->getState());
+	}
+
+	public function isRefused($order)
+	{
+		return (Order::STATE_REFUSED === $order->getState());
+	}
 }

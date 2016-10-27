@@ -64,3 +64,12 @@ services:
     app.factory.ticket_pdf:
         class: AppBundle\Factory\PDFTicketFactory
         arguments: ["@white_october.tcpdf", "%kernel.root_dir%%logo_path_file%", "%ticket_pdf_title%"]
+#---------- control access to order  ----------#
+    app.listener.order_control:
+      class: AppBundle\EventListener\OrderControlListener
+      arguments: ['@router', '@app.bridge.order']
+      tags:
+        - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
+    app.manager.check_author_order:
+        class: AppBundle\Manager\CheckAuthorOrderManager
+        arguments: ["@app.bridge.order"]

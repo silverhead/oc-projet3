@@ -21,6 +21,14 @@ class BookingController extends Controller
      */
     public function indexAction(Request $request)
     {
+
+//	    $orderMgr = $this->get("app.manager.order");
+//
+//	    if($orderMgr->hasCurrentOrder() && $orderMgr->isStandby()){
+//		    return $this->redirectToRoute('check-order');
+//	    }
+
+
         $bookingHandler = $this->get('app.form.handler.booking');
 
         if($bookingHandler->process($request)){

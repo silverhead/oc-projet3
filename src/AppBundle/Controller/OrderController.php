@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\CheckAuthorOrderType;
 use JMS\Payment\CoreBundle\PluginController\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -131,5 +132,18 @@ class OrderController extends Controller
      */
     public function orderCanceledAction(){
         return $this->render('order/order-canceled.html.twig');
+    }
+
+	/**
+	 * @Route("/verification-auteur-commande", name="check-author-order", methods={"GET", "POST"})
+	 *
+	 */
+    public function checkAuthorOrderAction()
+    {
+	    $form = $this->createForm(CheckAuthorOrderType::class, null);
+
+	    return $this->render('order/check-author-order.html.twig', [
+	    	'form' => $form->createView()
+	    ]);
     }
 }
