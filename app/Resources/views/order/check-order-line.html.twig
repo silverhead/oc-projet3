@@ -2,7 +2,7 @@
     <div class="col-md-6">
         <h3>Musée du Louvre</h3>
         <h5>{{ booking.ticketType.label }} {{ ticket.ticketAmount.label }}</h5>
-        <p>Tarif unique - {{ ticket.customer.firstName }} {{ ticket.customer.lastName }} - née le {{ ticket.customer.birthday|date('d/mY') }}</p>
+        <p>Tarif unique - {{ ticket.customer.firstName }} {{ ticket.customer.lastName }} - née le {{ ticket.customer.birthday|date('d/m/Y') }}</p>
     </div>
     <div class="col-md-6 text-right">
         <h3>{{ ticket.amount|localizedcurrency('EUR') }}</h3>

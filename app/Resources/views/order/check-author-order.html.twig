@@ -6,28 +6,35 @@
 {% block body %}
     <div class="body-content" id="check-order">
         <div class="row">
-            <div class="col-lg-12">
-                <h1>Vérification de l'auteur de la commande</h1>
-                <p>Une commande a été effectué précédemment, nous avons besoin de connaitre si vous en êtes l'auteur !</p>
+            <div class="col-md-8">
+                <h1>Commencer une nouvelle réservation ?</h1>
+                <p>Une commande est en cours, Voulez-vous l'annuler et commencer une nouvelle ?</p>
+            </div>
+            <div class="col-md-4">
+                <br />
+                <p><a href="{{ path('new-booking') }}" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-erase"></i> Nouvelle réservation</a></p>
+                <br />
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <h2>
-                    <i class="glyphicon glyphicon glyphicon-alert"></i> Vérification de votre e-mail
+                    <i class="glyphicon glyphicon-repeat"></i> Revenir sur votre commande
                 </h2>
                 {{ form_start(form) }}
                 <div class="row">
-                    <div class="col-md-6">
-                        {{ form_row(form.email, {'label' : 'Votre e-mail', 'attr': {'placeholder': "Saisir l'e-mail qui a été utilisé pour la commande" }}) }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form_row(form.callbackpage, {'label' : 'Après la vérification vous voulez :'}) }}
+                    <div class="col-md-6 col-md-offset-3">
+                        <p class="text-center"></p>
+                        <br />
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <a href="#" class="btn btn-primary">Commencer une nouvelle réservation</a>
+                    <div class="col-md-6 col-md-offset-3">
+                        {{ form_row(form.email, {'label' : 'Votre e-mail', 'attr': {'placeholder': "Saisir l'e-mail qui a été utilisé pour la commande" }}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
                         <input type="submit" value="Valider" class="btn btn-default pull-right">
                     </div>
                 </div>

@@ -55,7 +55,7 @@ header p{
 }
 
 .body-content p{
-    text-align: left;
+    /*text-align: left;*/
 }
 
 .body-content table caption{

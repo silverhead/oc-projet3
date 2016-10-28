@@ -55,10 +55,7 @@ class CheckAuthorOrderFormHandler
 
 	private function setForm()
 	{
-		$this->form = $this->formFactory->create(get_class($this->checkAuthorOrderFormType), [
-			'email' => null,
-			'callbackpage' => null
-		]);
+		$this->form = $this->formFactory->create(get_class($this->checkAuthorOrderFormType), null);
 	}
 
 	/**
@@ -83,7 +80,7 @@ class CheckAuthorOrderFormHandler
 
 		if(!$this->manager->checkEmail($this->form->getData())){
 			foreach($this->manager->getErrors() as $errorMessage){
-				$this->form->addError(new FormError($errorMessage));
+				$this->form->get('email')->addError(new FormError($errorMessage));
 			}
 
 			return false;

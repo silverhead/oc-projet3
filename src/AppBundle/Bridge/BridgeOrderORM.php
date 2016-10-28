@@ -97,7 +97,22 @@ class BridgeOrderORM implements BridgeOrderORMInterface
         return $this->errors;
     }
 
+    public function removeCurrent(){
+	    $this->session->remove('order');
+    }
 
+
+    public function checkBelonging($email)
+    {
+		$orderId = $this->getCurrent();
+
+	    $order = $this->em->getRepository("AppBundle:Order")->findOneBy([
+	    	'id'    => $orderId,
+		    'email' => $email
+	    ]);
+
+	    return (null !== $order);//if not object is returned then the checking has failed
+    }
 
 	public function isStandby($order)
 	{

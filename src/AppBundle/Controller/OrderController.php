@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\CheckAuthorOrderType;
+use AppBundle\Form\Type\CheckAuthorOrderType;
 use JMS\Payment\CoreBundle\PluginController\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -135,15 +135,39 @@ class OrderController extends Controller
     }
 
 	/**
-	 * @Route("/verification-auteur-commande", name="check-author-order", methods={"GET", "POST"})
+	 * @Route("/recommencer-ou-terminer-votre-commande", name="check-author-order", methods={"GET", "POST"})
 	 *
 	 */
-    public function checkAuthorOrderAction()
+    public function checkAuthorOrderAction(Request $request)
     {
-	    $form = $this->createForm(CheckAuthorOrderType::class, null);
+//	    $form = $this->createForm(CheckAuthorOrderType::class, null);
+	    $formHandler = $this->get('app.form.handler.check_author_order');
+
+	    $form = $formHandler->getForm();
+
+
+	    if($formHandler->process($request)){
+		    return $this->redirect($this->generateUrl('check-order'));
+	    }
+
 
 	    return $this->render('order/check-author-order.html.twig', [
 	    	'form' => $form->createView()
 	    ]);
+    }
+
+
+	/**
+	 * @Route("/nouvelle-reservation", name="new-booking", methods={"GET"})
+	 */
+    public function newOrderAction()
+    {
+		$orderBridge = $this->get('app.bridge.order');
+	    $bookingBridge = $this->get('app.bridge.booking');
+
+	    $orderBridge->removeCurrent();
+	    $bookingBridge->removeCurrent();
+
+	    return $this->redirect($this->generateUrl('homepage'));
     }
 }

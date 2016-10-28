@@ -50,6 +50,14 @@ class OrderControlListener
 		    return;
 	    }
 
+		//If the ordrer is canceled or payed, remove the  current session
+	    if($this->bridgeOrder->isCanceled($order) || $this->bridgeOrder->isPayed($order)){
+		    $this->bridgeOrder->removeCurrent();
+
+		    return;
+        }
+
+
         $event->setResponse(
             new RedirectResponse(
                 $this->router->generate(

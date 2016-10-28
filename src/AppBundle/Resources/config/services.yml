@@ -5,6 +5,9 @@ services:
     app.service.find.booking:
         class: AppBundle\Service\FindBooking
         arguments: ['@doctrine.orm.entity_manager', '@session']
+    app.bridge.booking:
+        class: AppBundle\Bridge\BridgeBookingORM
+        arguments: ['@doctrine.orm.entity_manager', '@session']
     app.service.provider.holider:
         class: AppBundle\Service\HolidayProvider
         arguments: ['@doctrine.orm.entity_manager']
@@ -73,3 +76,8 @@ services:
     app.manager.check_author_order:
         class: AppBundle\Manager\CheckAuthorOrderManager
         arguments: ["@app.bridge.order"]
+    app.form.type.check_author_order:
+        class: AppBundle\Form\Type\CheckAuthorOrderType
+    app.form.handler.check_author_order:
+        class: AppBundle\Form\Handler\CheckAuthorOrderFormHandler
+        arguments: ["@form.factory", "@app.manager.check_author_order", "@app.form.type.check_author_order" ]

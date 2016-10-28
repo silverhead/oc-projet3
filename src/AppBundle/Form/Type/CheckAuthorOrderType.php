@@ -1,9 +1,8 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,14 +15,9 @@ class CheckAuthorOrderType extends AbstractType
 		$builder
 			->add('email', EmailType::class, [
 				'constraints' => [new Email([
-					'strict' => true
+					'checkHost' => true,
+					'checkMX' => true
 				])]
-			])
-			->add('callbackpage', ChoiceType::class, [
-				'choices' => [
-					'Finaliser la commande' => 1,
-					'Annuler la commande et recommencer une nouvelle réservation' => 2
-				]
 			])
 		;
     }
