@@ -64,7 +64,6 @@ class Order
 	/** @ORM\OneToOne(targetEntity="JMS\Payment\CoreBundle\Entity\PaymentInstruction") */
 	private $paymentInstruction;
 
-
     /**
      * Set date
      *
@@ -128,6 +127,7 @@ class Order
     public function __construct()
     {
         $this->orderDetails = new \Doctrine\Common\Collections\ArrayCollection();
+	    $this->state = self::STATE_STANDBY;
     }
 
     /**
