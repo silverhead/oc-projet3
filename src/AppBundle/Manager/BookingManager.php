@@ -64,6 +64,12 @@ class BookingManager implements BookingManagerInterface
 	    	throw new \Exception("You must use a entity who implement the AppBundle\Entity\BookingEntityInterface !");
 	    }
 
+	    //When the user return on the homepage, we must delete the tickets information
+	    if(null !== $booking->getId()){
+	        //@todo change the place method
+	        $this->bookingSave->deleteTickets($booking);
+        }
+
         $bookingDate =  $this->getNextGoodDate($booking->getBookingDate());
         $booking->setBookingDate($bookingDate);
 
@@ -113,7 +119,11 @@ class BookingManager implements BookingManagerInterface
      * @param BookingEntityInterface $bookingEntityFromForm
      */
     public function save(BookingEntityInterface $bookingEntityFromForm){
-        $this->bookingSave->save($bookingEntityFromForm);
+        if(true !== $this->bookingSave->save($bookingEntityFromForm)){
+            array_merge($this->errorMessages, $this->bookingSave->getErrors());
+            return false;
+        }
+        return true;
     }
 
     /**

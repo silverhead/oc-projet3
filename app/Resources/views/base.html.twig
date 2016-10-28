@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Billetterie du musée du Louvre {% endblock %}</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
     {% block stylesheets %}{% endblock %}
@@ -12,12 +13,13 @@
 <div class="container">
     <header class="row">
         <div class="col-xs-2">
-            <a href="#"><img src="{{ asset('images/logo-louvre.jpg') }}"></a>
+            <a href="{{ path('homepage') }}"><img src="{{ asset('images/logo-louvre.jpg') }}"></a>
         </div>
         <div class="col-sm-10">
             <p class="site-title">OC-Projet3 : Billeterie du musée du Louvre</p>
         </div>
     </header>
+    {% include 'flashMessage/flashMessageBloc.html.twig' %}
     {% block body %}{% endblock %}
     <footer class="row">
         <div class="col-xs-2"><a href="#">Tarifs</a></div>

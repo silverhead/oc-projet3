@@ -8,6 +8,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\BookingEntityInterface;
+use AppBundle\Entity\Ticket;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -45,6 +46,9 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
     public function save(BookingEntityInterface $booking)
     {
         try{
+
+            $this->setTickets($booking);//if the booking has tickets save that
+
             $this->em->persist($booking);
             $this->em->flush();
 
@@ -59,6 +63,25 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
                                     "l'administrateur du site";
             return false;
         }
+    }
+
+    public function setTickets($booking){
+        if(null !== $booking->getTickets()){
+            foreach ($booking->getTickets() as $ticket){
+                $ticketAmount = $this->em->getRepository("AppBundle:TicketAmount")->findOneByAge($ticket->getCustomer()->getBirthday());
+                $ticket->setTicketAmount($ticketAmount);
+            }
+        }
+    }
+
+    public function deleteTickets(BookingEntityInterface $booking)
+    {
+        //delete all old tickets
+        foreach ($booking->getTickets() as $ticket){
+            $booking->removeTicket($ticket);
+        }
+        $this->em->persist($booking);
+        $this->em->flush();
     }
 
     /**

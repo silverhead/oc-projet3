@@ -40,6 +40,8 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         locale: "%locale%"
+    form_themes:
+        - bootstrap_3_horizontal_layout.html.twig
 
 # Doctrine Configuration
 doctrine:
@@ -70,3 +72,11 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+jms_payment_core:
+    secret:  "%secret%"
+jms_payment_paypal:
+    username: '%paypal_username%'
+    password: '%paypal_password%'
+    signature: '%paypal_signature%'
+    debug: true

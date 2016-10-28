@@ -9,6 +9,7 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Entity\BookingEntityInterface;
+use AppBundle\Entity\Ticket;
 
 interface FindBookingsInterface
 {
@@ -20,6 +21,10 @@ interface FindBookingsInterface
 	 */
 	public function getCurrentBooking();
 
+    /**
+     * @return Ticket
+     */
+    public function getTicket();
 
     /**
      * Get the Booking model infos

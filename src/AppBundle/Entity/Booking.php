@@ -50,7 +50,7 @@ class Booking implements BookingEntityInterface
 
     /**
      * @var ArrayCollection Ticket
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ticket", mappedBy="booking")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ticket", mappedBy="booking", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $tickets;
 
@@ -123,6 +123,10 @@ class Booking implements BookingEntityInterface
      */
     public function addTicket(\AppBundle\Entity\Ticket $ticket)
     {
+        $ticket->setBooking($this);
+        $ticket->setBookingDate($this->getBookingDate());
+        $ticket->setType($this->getTicketType());
+
         $this->tickets[] = $ticket;
 
         return $this;
@@ -136,6 +140,7 @@ class Booking implements BookingEntityInterface
     public function removeTicket(\AppBundle\Entity\Ticket $ticket)
     {
         $this->tickets->removeElement($ticket);
+        $ticket->setBooking(null);
     }
 
     /**
@@ -146,5 +151,15 @@ class Booking implements BookingEntityInterface
     public function getTickets()
     {
         return $this->tickets;
+    }
+
+    public function getAmount()
+    {
+        $sum =0;
+        $this->tickets->map(function($ticket) use (&$sum)
+        {
+            $sum += $ticket->getAmount();
+        });
+        return $sum;
     }
 }

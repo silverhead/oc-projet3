@@ -12,23 +12,34 @@
             <div class="col-md-12">
                 <h2><i class="glyphicon glyphicon-check"></i> Vérifier votre commande</h2>
                 <ul>
-                    {% include 'main/check-order-line.html.twig' %}
-                    {% include 'main/check-order-line.html.twig' %}
+                    {% for ticket in booking.tickets %}
+                        {% include 'order/check-order-line.html.twig' with {'ticket': ticket, 'booking': booking} %}
+                    {% endfor %}
                 </ul>
                 <div class="row total-amount-line">
                     <div class="col-md-4 col-md-offset-4">
                         <h3>Montant de votre commande </h3>
                     </div>
                     <div class="col-md-4 text-right">
-                        <h3>32,00 €</h3>
+                        <h3>{{ booking.amount|localizedcurrency('EUR') }}</h3>
                     </div>
                 </div>
-                <form action="{{ path('payment-choice') }}" method="post">
+                {{ form_start(form) }}
                     <div class="row">
                         <div class="col-md12">
-                            <label class="col-md-4">Saisir votre e-mail où vous allez recevoir votre/vos billet(s) * :</label>
-                            <div class="col-md-8">
-                                <input type="email" placeholder="Votre e-mail" class="form-control">
+                            {% if form.vars.errors is not empty %}
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        {% for error in form.vars.errors %}
+                                            {% include 'flashMessage/flashMessageContent.html.twig' with {'type': 'danger', 'message': error.message } %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <label for="{{ form.email.vars.id }}" class="col-md-4">Saisir votre e-mail où vous allez recevoir votre/vos billet(s) * :</label>
+                            <div class="col-md-8 {% if form.email.vars.errors is not empty %}has-error{% endif %}">
+                                {{ form_widget(form.email, {'attr': {'placeholder': 'Votre e-mail'}}) }}
+                                {{ form_errors(form.email) }}
                             </div>
                         </div>
                     </div>
@@ -40,7 +51,7 @@
                             <button type="submit" class="btn btn-default">Payez</button>
                         </div>
                     </div>
-                </form>
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

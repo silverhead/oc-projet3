@@ -1,38 +1,14 @@
-<div class="form-block">
-    <h3>Musée du Louvre - le xx Septembre 2016<br />Tarif journée : 16,00 €</h3>
+<div class="form-block" id="ticket-{{ index }}">
+    <h3>Musée du Louvre - le {{ booking.bookingDate|localizeddate('full', 'none', locale) }}<br />{{ booking.ticketType.label }} : <span class="ticket-amount">{{ ticket.amount.vars.value|localizedcurrency('EUR') }}</span></h3>
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-                <label for="" class="col-md-3 label-control">Nom *</label>
-                <div class="col-md-9">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="" class="col-md-3 label-control">Prénom *</label>
-                <div class="col-md-9">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
+            {{ form_widget(ticket.amount) }}
+            {{ form_row(ticket.customer.lastName, {'label': 'Nom *', 'label_attr': { 'class': 'col-md-3'}}) }}
+            {{ form_row(ticket.customer.firstName, {'label': 'Prénom *', 'label_attr': { 'class': 'col-md-3'}}) }}
         </div>
         <div class="col-md-6">
-            <div class="form-group">
-                <label for="" class="col-md-3 label-control">Date de naissance *</label>
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <input type="date" class="form-control">
-                        <div class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="" class="col-md-3 label-control">Pays</label>
-                <div class="col-md-9">
-                    <select class="form-control">
-                        <option value="">Sélectionnez votre pays</option>
-                    </select>
-                </div>
-            </div>
+            {{ form_row(ticket.customer.birthday, {'label': 'Date de naissance *', 'label_attr': { 'class': 'col-md-3'}}) }}
+            {{ form_row(ticket.customer.country, {'label': 'Pays *', 'label_attr': { 'class': 'col-md-3'}}) }}
         </div>
     </div>
     <div class="row">

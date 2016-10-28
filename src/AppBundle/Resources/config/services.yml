@@ -26,4 +26,50 @@ services:
     app.form.handler.booking:
         class: AppBundle\Form\Handler\BookingFormHandler
         arguments: ["@app.manager.booking", "@form.factory", "@app.form.type.booking" ]
-
+#---------- workflow control  ----------#
+    app.listener.workflow:
+      class: AppBundle\EventListener\WorkFlowListener
+      arguments: ['@router', '@app.service.find.booking']
+      tags:
+        - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
+#---------- ticket informations page  ----------#
+    app.manager.ticket_information:
+        class: AppBundle\Manager\TicketInformationsManager
+        arguments: ["@app.service.save.booking", "@app.service.find.booking"]
+    app.form.type.ticket_information:
+      class: AppBundle\Form\Type\TicketInformationsType
+    app.form.handler.ticket_information:
+        class: AppBundle\Form\Handler\TicketInformationsFormHandler
+        arguments: ["@app.manager.ticket_information", "@form.factory", "@app.form.type.ticket_information" ]
+#---------- check order page  ----------#
+    app.bridge.order:
+      class: AppBundle\Bridge\BridgeOrderORM
+      arguments: ["@session", "@doctrine.orm.entity_manager"]
+    app.manager.check_order:
+        class: AppBundle\Manager\CheckOrderManager
+        arguments: ["@app.service.find.booking", "@app.bridge.order"]
+    app.form.type.order:
+      class: AppBundle\Form\Type\OrderType
+    app.form.handler.check_order:
+        class: AppBundle\Form\Handler\CheckOrderFormHandler
+        arguments: ["@form.factory", "@app.manager.check_order", "@app.form.type.order" ]
+#---------- payment choice page  ----------#
+#    app.bridge.payment:
+#        class: AppBundle\Bridge\PaymentJMSCoreBridge
+#        arguments: ["@payment.plugin_controller"]
+#    app.manager.payment_choice:
+#        class: AppBundle\Manager\PaymentChoiceManager
+#        arguments: ["@app.bridge.payment", "@app.bridge.order"]
+#---------- Ticket PDF generator  ----------#
+    app.factory.ticket_pdf:
+        class: AppBundle\Factory\PDFTicketFactory
+        arguments: ["@white_october.tcpdf", "%kernel.root_dir%%logo_path_file%", "%ticket_pdf_title%"]
+#---------- control access to order  ----------#
+    app.listener.order_control:
+      class: AppBundle\EventListener\OrderControlListener
+      arguments: ['@router', '@app.bridge.order']
+      tags:
+        - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
+    app.manager.check_author_order:
+        class: AppBundle\Manager\CheckAuthorOrderManager
+        arguments: ["@app.bridge.order"]

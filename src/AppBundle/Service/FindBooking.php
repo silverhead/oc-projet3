@@ -9,6 +9,9 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Entity\Booking;
+use AppBundle\Entity\BookingEntityInterface;
+use AppBundle\Entity\Ticket;
+use AppBundle\Entity\TicketType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -67,7 +70,7 @@ class FindBooking implements FindBookingsInterface
         }
 
         if(null === $booking = $this->bookingRepo->find($id)){
-           throw new EntityNotFoundException("Not Booking Entity found with the id n° ".$id."!");
+           throw new EntityNotFoundException("Not Booking Entity found with the id ".$id."!");
         }
 
         return $booking;
@@ -75,13 +78,14 @@ class FindBooking implements FindBookingsInterface
 
     public function getCurrentBooking()
     {
-        $bookingId = $this->session->get('booking');
+        $bookingId = $this->session->get('booking', null);
 
-        if(null !== $bookingId){
-            return $this->find($bookingId);
-        }
+        return $this->find($bookingId);
+    }
 
-        return new Booking();
+    public function getTicket()
+    {
+        return new Ticket();
     }
 
     public function findAllFullBookingInPeriod(\DateTime $start, \DateTime $end, $maxNumberOfBookedTickets)
@@ -104,15 +108,20 @@ class FindBooking implements FindBookingsInterface
 	{
 		$ticketType     = $this->ticketTypeRepo->find($ticketTypeId);
 
-		if(null === $birthday){
-			$ticketAmount   = $this->ticketAmount->findOneByDefault(true);
-		}
-		else{
-			$ticketAmount   = $this->ticketAmount->findOneByAge($birthday);
-		}
-
-		$ticketAmount = $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
+        $ticketAmount = $this->getTicketAmountByTicketType($ticketType, $birthday);
 
 		return $ticketAmount * $ticketQuantity;
 	}
+
+    public function getTicketAmountByTicketType(TicketType $ticketType, \DateTime $birthday = null)
+    {
+        if(null === $birthday){
+            $ticketAmount   = $this->ticketAmount->findOneByDefault(true);
+        }
+        else{
+            $ticketAmount   = $this->ticketAmount->findOneByAge($birthday);
+        }
+
+        return $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
+    }
 }
