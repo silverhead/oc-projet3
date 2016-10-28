@@ -42,9 +42,11 @@ class OrderControlListener
 
 		$order = $this->bridgeOrder->getCurrent();
 
+
+
 	    //If there is not order in the session
 	    //then we can to display the home page / first booking page
-	    if(null === $order){
+	    if(null === $order->getId()){
 		    return;
 	    }
 
