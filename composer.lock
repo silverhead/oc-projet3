@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f89bc11887f6d763a99556b0355db16f",
-    "content-hash": "9dc98b453b7e0c296c2b1974bcf97c24",
+    "hash": "f30c85b646a9167ee7d69d1f4c42f472",
+    "content-hash": "2628859a71a154a646f343e96f4a51c6",
     "packages": [
         {
             "name": "azuyalabs/yasumi",
@@ -931,140 +931,6 @@
                 "sql"
             ],
             "time": "2014-01-12 16:20:24"
-        },
-        {
-            "name": "jms/payment-core-bundle",
-            "version": "1.2.0",
-            "target-dir": "JMS/Payment/CoreBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSPaymentCoreBundle.git",
-                "reference": "a5e3c0753f957e9c3ad257c939b0770996a456b4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSPaymentCoreBundle/zipball/a5e3c0753f957e9c3ad257c939b0770996a456b4",
-                "reference": "a5e3c0753f957e9c3ad257c939b0770996a456b4",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/common": "~2.3",
-                "doctrine/dbal": "~2.3",
-                "doctrine/orm": "~2.3",
-                "ext-mcrypt": "*",
-                "php": ">=5.3.2",
-                "symfony/browser-kit": "~2.3|~3.0",
-                "symfony/config": "~2.3|~3.0",
-                "symfony/dependency-injection": "~2.3|~3.0",
-                "symfony/event-dispatcher": "~2.3|~3.0",
-                "symfony/form": "~2.3|~3.0",
-                "symfony/http-foundation": "~2.3|~3.0",
-                "symfony/http-kernel": "~2.3|~3.0",
-                "symfony/options-resolver": "~2.3|~3.0",
-                "symfony/validator": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "~1.6",
-                "jms/payment-paypal-bundle": "dev-symfony3",
-                "phpunit/phpunit": "~4.8|~5.4",
-                "sensio/framework-extra-bundle": "~3.0",
-                "symfony/doctrine-bridge": "~2.3|~3.0",
-                "symfony/dom-crawler": "~2.3|~3.0",
-                "symfony/framework-bundle": "~2.3|~3.0",
-                "symfony/phpunit-bridge": "~2.7",
-                "symfony/routing": "~2.3|~3.0",
-                "symfony/templating": "~2.3|~3.0",
-                "symfony/twig-bridge": "~2.3|~3.0",
-                "symfony/twig-bundle": "~2.3|~3.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "JMS\\Payment\\CoreBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Paulo Rodrigues Pinto",
-                    "email": "regularjack@gmail.com"
-                },
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                },
-                {
-                    "name": "Contributors",
-                    "homepage": "https://github.com/schmittjoh/JMSPaymentCoreBundle/contributors"
-                }
-            ],
-            "description": "This bundle is providing the foundation for various payment plugins.",
-            "homepage": "http://jmspaymentcorebundle.readthedocs.io",
-            "keywords": [
-                "payment"
-            ],
-            "time": "2016-10-03 01:47:19"
-        },
-        {
-            "name": "jms/payment-paypal-bundle",
-            "version": "1.1.1",
-            "target-dir": "JMS/Payment/PaypalBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSPaymentPaypalBundle.git",
-                "reference": "773a1bddfb27077719ea5b24845d2a9f9dd5f85c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSPaymentPaypalBundle/zipball/773a1bddfb27077719ea5b24845d2a9f9dd5f85c",
-                "reference": "773a1bddfb27077719ea5b24845d2a9f9dd5f85c",
-                "shasum": ""
-            },
-            "require": {
-                "jms/payment-core-bundle": "~1.0",
-                "php": ">=5.3.2",
-                "symfony/browser-kit": "~2.0|~3.0",
-                "symfony/config": "~2.0|~3.0",
-                "symfony/dependency-injection": "~2.0|~3.0",
-                "symfony/form": "~2.0|~3.0",
-                "symfony/http-foundation": "~2.0|~3.0",
-                "symfony/http-kernel": "~2.0|~3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8|~5.4",
-                "symfony/phpunit-bridge": "~2.7"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "JMS\\Payment\\PaypalBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Payment Bundle providing access to the PayPal API",
-            "homepage": "http://jmsyst.com/bundles/JMSPaymentPaypalBundle",
-            "keywords": [
-                "payment",
-                "paypal"
-            ],
-            "time": "2016-10-09 15:02:44"
         },
         {
             "name": "monolog/monolog",
@@ -2043,28 +1909,30 @@
         },
         {
             "name": "symfony/swiftmailer-bundle",
-            "version": "v2.3.11",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/swiftmailer-bundle.git",
-                "reference": "5e1a90f28213231ceee19c953bbebc5b5b95c690"
+                "reference": "d7b7bd6bb6e9b32ebc5f9778f94d4b4e4af5d069"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/5e1a90f28213231ceee19c953bbebc5b5b95c690",
-                "reference": "5e1a90f28213231ceee19c953bbebc5b5b95c690",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/d7b7bd6bb6e9b32ebc5f9778f94d4b4e4af5d069",
+                "reference": "d7b7bd6bb6e9b32ebc5f9778f94d4b4e4af5d069",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "swiftmailer/swiftmailer": ">=4.2.0,~5.0",
-                "symfony/config": "~2.3|~3.0",
-                "symfony/dependency-injection": "~2.3|~3.0",
-                "symfony/http-kernel": "~2.3|~3.0",
-                "symfony/yaml": "~2.3|~3.0"
+                "symfony/config": "~2.7|~3.0",
+                "symfony/dependency-injection": "~2.7|~3.0",
+                "symfony/http-kernel": "~2.7|~3.0"
             },
             "require-dev": {
-                "symfony/phpunit-bridge": "~2.7|~3.0"
+                "symfony/console": "~2.7|~3.0",
+                "symfony/framework-bundle": "~2.7|~3.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0",
+                "symfony/yaml": "~2.7|~3.0"
             },
             "suggest": {
                 "psr/log": "Allows logging"
@@ -2072,7 +1940,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2096,7 +1964,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2016-01-15 16:41:20"
+            "time": "2016-10-27 17:59:30"
         },
         {
             "name": "symfony/symfony",

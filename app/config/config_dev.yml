@@ -32,6 +32,3 @@ monolog:
 
 #swiftmailer:
 #    delivery_address: me@example.com
-
-jms_payment_paypal:
-    debug: true # Use the Sandbox

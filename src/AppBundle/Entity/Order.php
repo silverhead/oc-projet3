@@ -10,7 +10,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Payment\CoreBundle\Model\PaymentInstructionInterface;
 
 /**
  * Class Order
@@ -60,9 +59,6 @@ class Order
 	 * @ORM\Column(type="integer", nullable=false)
 	 */
 	protected $state;
-
-	/** @ORM\OneToOne(targetEntity="JMS\Payment\CoreBundle\Entity\PaymentInstruction") */
-	private $paymentInstruction;
 
     /**
      * Set date
@@ -168,22 +164,13 @@ class Order
 
 	public function getAmount()
 	{
-        $sums = $this->getOrderDetails()->map(function($orderDetail){
+        $sums = $this->getOrderDetails()->map(function(OrderDetail $orderDetail){
 			return $orderDetail->getAmount();
 		});
 
         return array_sum($sums->toArray());
 	}
 
-	public function getPaymentInstruction()
-	{
-		return $this->paymentInstruction;
-	}
-
-	public function setPaymentInstruction(PaymentInstructionInterface $instruction)
-	{
-		$this->paymentInstruction = $instruction;
-	}
 
     /**
      * Set state
