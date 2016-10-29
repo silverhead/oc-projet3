@@ -96,7 +96,6 @@ class OrderController extends Controller
 	 */
     public function checkAuthorOrderAction(Request $request)
     {
-//	    $form = $this->createForm(CheckAuthorOrderType::class, null);
 	    $formHandler = $this->get('app.form.handler.check_author_order');
 
 	    $form = $formHandler->getForm();

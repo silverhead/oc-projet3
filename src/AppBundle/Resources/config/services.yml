@@ -81,3 +81,9 @@ services:
     app.form.handler.check_author_order:
         class: AppBundle\Form\Handler\CheckAuthorOrderFormHandler
         arguments: ["@form.factory", "@app.manager.check_author_order", "@app.form.type.check_author_order" ]
+#---------- control booking exist ----------#
+    app.listener.booking_exist:
+        class: AppBundle\EventListener\BookingExistListener
+        arguments: ['@router', '@app.bridge.booking']
+        tags:
+            - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}

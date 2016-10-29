@@ -14,4 +14,6 @@ use AppBundle\Entity\Order;
 interface BridgeOrderORMInterface extends BridgeORMInterface
 {
     public function save(Order $order, BookingEntityInterface $booking);
+
+    public function removeCurrent();
 }

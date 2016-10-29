@@ -16,6 +16,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+
+/**
+ * Class FindBooking
+ * @package AppBundle\Service
+ *
+ * @deprecated see BridgeBookingORM
+ * @todo change all call of that by BridgeBookingORM
+ */
 class FindBooking implements FindBookingsInterface
 {
     /**
@@ -70,6 +78,7 @@ class FindBooking implements FindBookingsInterface
         }
 
         if(null === $booking = $this->bookingRepo->find($id)){
+	        $this->session->remove('booking');
            throw new EntityNotFoundException("Not Booking Entity found with the id ".$id."!");
         }
 

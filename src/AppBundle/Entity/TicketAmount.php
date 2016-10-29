@@ -56,7 +56,21 @@ class TicketAmount
 	 */
 	private $default;
 
-    /**
+
+	/**
+	 * @var bool
+	 * @ORM\Column(type="boolean", nullable=false)
+	 */
+	private $specialAmount;
+
+
+	public function __construct()
+	{
+		$this->default = 0;
+		$this->specialAmount = 0;
+	}
+
+	/**
      * Get id
      *
      * @return int
@@ -184,5 +198,29 @@ class TicketAmount
     public function getDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Set specialAmount
+     *
+     * @param boolean $specialAmount
+     *
+     * @return TicketAmount
+     */
+    public function setSpecialAmount($specialAmount)
+    {
+        $this->specialAmount = $specialAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get specialAmount
+     *
+     * @return boolean
+     */
+    public function getSpecialAmount()
+    {
+        return $this->specialAmount;
     }
 }

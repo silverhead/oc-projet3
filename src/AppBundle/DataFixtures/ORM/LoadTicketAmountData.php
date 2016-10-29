@@ -13,34 +13,45 @@ class LoadTicketAmountData implements FixtureInterface{
 	{
 		$data = [
 			(object) [
-				'label'     => 'Tarif normal',
+				'label'     => 'Adulte',
 				'amount'   => 16,
                 'ageConditionStart' => 12,
                 'ageConditionEnd' => 60,
-				'default' => 1
+				'default' => 1,
+				'specialAmount' => 0,
 			],
 			(object) [
-				'label'     => 'Tarif enfant',
+				'label'     => 'Enfant',
 				'amount'   => 8,
 				'ageConditionStart' => 4,
 				'ageConditionEnd' => 12,
-				'default' => 0
+				'default' => 0,
+				'specialAmount' => 0,
 			],
 			(object) [
-				'label'     => 'Tarif enfant de moins de 4 ans',
+				'label'     => 'Enfant de moins de 4 ans',
 				'amount'   => 0,
 				'ageConditionStart' => 0,
 				'ageConditionEnd' => 4,
-				'default' => 0
+				'default' => 0,
+				'specialAmount' => 0,
 			],
 			(object) [
-				'label'     => 'Tarif senior',
+				'label'     => 'Senior',
 				'amount'   => 12,
 				'ageConditionStart' => 60,
 				'ageConditionEnd' => 99,
-				'default' => 0
+				'default' => 0,
+				'specialAmount' => 0,
 			],
-
+			(object) [
+				'label'     => 'Spécial',
+				'amount'   => 10,
+				'ageConditionStart' => 18,
+				'ageConditionEnd' => 99,
+				'default' => 0,
+				'specialAmount' => 1,
+			],
 		];
 
 		foreach ($data as $ticketAmountFixture){

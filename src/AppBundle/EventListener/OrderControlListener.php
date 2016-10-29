@@ -4,7 +4,6 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Bridge\BridgeOrderORMInterface;
 use AppBundle\Manager\OrderManager;
-use AppBundle\Service\FindBookingsInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Router;
@@ -42,11 +41,10 @@ class OrderControlListener
 
 		$order = $this->bridgeOrder->getCurrent();
 
-
-
 	    //If there is not order in the session
 	    //then we can to display the home page / first booking page
-	    if(null === $order->getId()){
+	    if(null === $order || null === $order->getId()){
+		    $this->bridgeOrder->removeCurrent();//delete the id in session
 		    return;
 	    }
 

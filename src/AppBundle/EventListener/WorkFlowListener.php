@@ -41,11 +41,6 @@ class WorkFlowListener
 
 	    $lastRoute = $this->getLastRoute($event->getRequest());
 
-	    dump($route);
-
-	    dump($lastRoute);
-
-
 	    //test if the route provenance is authorized for the current route
 
 	    if( self::USER_INFOS_ROUTE === $route && $this->testUserInformationRoute($lastRoute)){
