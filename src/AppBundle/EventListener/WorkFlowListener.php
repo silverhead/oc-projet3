@@ -41,47 +41,80 @@ class WorkFlowListener
 
 	    $lastRoute = $this->getLastRoute($event->getRequest());
 
+	    dump($route);
 
-	    $routeDirection = self::HOME_PAGE_ROUTE;
+	    dump($lastRoute);
+
+
+	    //test if the route provenance is authorized for the current route
 
 	    if( self::USER_INFOS_ROUTE === $route && $this->testUserInformationRoute($lastRoute)){
-		    $routeDirection = $route;
+		   return;
 	    }
 
+	    if( self::CHECK_ORDER_ROUTE === $route && $this->testCheckOrderRoute($lastRoute)){
+		    return;
+	    }
 
+	    if( self::PAYMENT_CHOICE_ROUTE === $route && $this->testPaymentChoice($lastRoute)){
+		    return;
+	    }
 
+		//if the conditions are not ok, then we redirect the user to the homepage
 	    $event->setResponse(
             new RedirectResponse(
                 $this->router->generate(
-	                $routeDirection
+	                self::HOME_PAGE_ROUTE
                 )
             )
         );
-
-//        //get curent booking entity
-//        $booking = $this->findBooking->getCurrentBooking();
-//
-//        //test if the current booking has persisted, if not them the workflow has corrupted and force to redirect on
-//        //the homepage
-//        if (null === $booking->getId()){
-//            $event->setResponse(
-//                new RedirectResponse(
-//                    $this->router->generate(
-//                        self::HOME_PAGE_ROUTE
-//                    )
-//                )
-//            );
-//        }
     }
 
 
-
+	/**
+	 * authorized route provenance for the user information route
+	 *
+	 * @param $lastRoute
+	 * @return bool
+	 */
     private function testUserInformationRoute($lastRoute)
     {
-		return 	 (self::HOME_PAGE_ROUTE === $lastRoute) || (self::CHECK_ORDER_ROUTE === $lastRoute);
+		return 	(self::HOME_PAGE_ROUTE === $lastRoute)
+				||
+				(self::CHECK_ORDER_ROUTE === $lastRoute)
+				||
+				(self::USER_INFOS_ROUTE === $lastRoute)		 //for the form validation
+				;
     }
 
 
+	private function testCheckOrderRoute($lastRoute)
+	{
+		return 	 (self::USER_INFOS_ROUTE === $lastRoute)
+				||
+				(self::PAYMENT_CHOICE_ROUTE === $lastRoute)
+				||
+				(self::CHECK_AUTHOR_ORDER_ROUTE === $lastRoute)
+				||
+				(self::CHECK_ORDER_ROUTE === $lastRoute) //for the form validation
+			;
+	}
+
+
+	private function testPaymentChoice($lastRoute)
+	{
+		return 	(self::CHECK_ORDER_ROUTE === $lastRoute)
+				||
+				(self::PAYMENT_CHOICE_ROUTE === $lastRoute)
+		;
+	}
+
+	/**
+	 * authorized route provenance for the check order route
+	 *
+	 * @param $lastRoute
+	 * @return bool
+	 */
     public function getLastRoute(Request $request)
     {
 	    // get last requested path
@@ -97,6 +130,12 @@ class WorkFlowListener
     }
 
 
+	/**
+	 * test if the event is an event we want to listen or not
+	 *
+	 * @param GetResponseEvent $event
+	 * @return bool
+	 */
 	private function isNoControlledRoute(GetResponseEvent $event)
 	{
 		if (!$event->isMasterRequest()) {
@@ -123,7 +162,7 @@ class WorkFlowListener
 		}
 
 		//test if the current route is the homepage, if it's the case them return (workflow start : ok)
-		if (self::HOME_PAGE_ROUTE !== $route){
+		if (self::HOME_PAGE_ROUTE === $route){
 			return true;
 		}
 
