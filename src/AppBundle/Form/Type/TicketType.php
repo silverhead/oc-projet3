@@ -27,7 +27,7 @@ class TicketType extends AbstractType
                 'data_class' => 'AppBundle\Entity\Customer'
             ])
             ->add('amount', HiddenType::class)
-            ->add('TicketAmount', HiddenType::class,[
+            ->add('ticketAmount', HiddenType::class,[
                 'property_path' => 'ticketAmount'
             ])
             ->add('specialAmount', CheckboxType::class, [
@@ -36,7 +36,7 @@ class TicketType extends AbstractType
             ])
         ;
 
-        $builder->get("TicketAmount")
+        $builder->get("ticketAmount")
             ->addModelTransformer(new EntityToIdTransformer($this->manager,TicketAmount::class));
     }
 

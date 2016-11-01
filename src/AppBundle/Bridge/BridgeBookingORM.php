@@ -13,6 +13,7 @@ use AppBundle\Entity\Booking;
 use AppBundle\Entity\Ticket;
 use AppBundle\Entity\TicketType;
 use Doctrine\ORM\EntityNotFoundException;
+use AppBundle\Entity\BookingEntityInterface;
 
 class BridgeBookingORM implements BridgeBookingORMInterface
 {

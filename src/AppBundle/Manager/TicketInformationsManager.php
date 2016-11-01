@@ -115,6 +115,6 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
      */
     public function saveTickets(BookingEntityInterface $booking)
     {
-            $this->saveService->save($booking);
+            $this->bookingORMBridge->save($booking);
     }
 }

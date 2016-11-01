@@ -68,6 +68,7 @@
             var formTicketIndex = ticketBlockId.replace('ticket-', '');
             var $birthday   = $('#ticket_informations_tickets_'+ formTicketIndex +'_customer_birthday');
             var $amount   = $('#ticket_informations_tickets_'+ formTicketIndex +'_amount');
+            var $ticketAmount   = $('#ticket_informations_tickets_'+ formTicketIndex +'_ticketAmount');
             var $specialAmount   = $('#ticket_informations_tickets_'+ formTicketIndex +'_specialAmount');
             var birthdayDate = new Date($birthday.val());
 
@@ -95,6 +96,8 @@
                         $amount.val(ticketAmount.amount);
 
                         $ticketFormBlock.find('.ticket-amount-label').html(ticketAmount.label);
+
+                        $ticketAmount.val(ticketAmount.id);
                     }
                 {#function( amount ) {#}
                     {#var formatedAmount = new Intl.NumberFormat("{{ locale }}", {style: "currency", currency: "EUR"}).format(amount)#}

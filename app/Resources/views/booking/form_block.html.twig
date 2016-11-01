@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-6">
             {{ form_widget(ticket.amount) }}
-            {{ form_widget(ticket.TicketAmount) }}
+            {{ form_widget(ticket.ticketAmount) }}
             {{ form_row(ticket.customer.lastName, {'label': 'Nom *', 'label_attr': { 'class': 'col-md-3'}}) }}
             {{ form_row(ticket.customer.firstName, {'label': 'Prénom *', 'label_attr': { 'class': 'col-md-3'}}) }}
         </div>

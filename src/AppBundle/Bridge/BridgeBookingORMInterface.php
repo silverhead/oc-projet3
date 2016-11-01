@@ -7,6 +7,7 @@
 
 namespace AppBundle\Bridge;
 
+use AppBundle\Entity\BookingEntityInterface;
 
 interface BridgeBookingORMInterface
 {
