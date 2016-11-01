@@ -1,4 +1,5 @@
 services:
+#---------- booking page  ----------#
     app.service.save.booking:
         class: AppBundle\Service\BookingSave
         arguments: ['@doctrine.orm.entity_manager', '@session']
@@ -38,7 +39,12 @@ services:
 #---------- ticket informations page  ----------#
     app.manager.ticket_information:
         class: AppBundle\Manager\TicketInformationsManager
-        arguments: ["@app.service.save.booking", "@app.service.find.booking"]
+        arguments: ["@app.service.save.booking", "@app.service.find.booking", "@app.bridge.booking"]
+    app.form.type.ticket:
+        class: AppBundle\Form\Type\TicketType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type }
     app.form.type.ticket_information:
       class: AppBundle\Form\Type\TicketInformationsType
     app.form.handler.ticket_information:

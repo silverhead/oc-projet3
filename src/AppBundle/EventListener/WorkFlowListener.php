@@ -15,6 +15,7 @@ class WorkFlowListener
 	const CHECK_ORDER_ROUTE         = 'check-order';
 	const PAYMENT_CHOICE_ROUTE      = 'payment-choice';
 	const CHECK_AUTHOR_ORDER_ROUTE  = 'check-author-order';
+	const DOWNLOAD_BOOKING_ROUTE    = 'download-booking';
 
 
     const WDT_ROUTE = '_wdt';
@@ -54,6 +55,10 @@ class WorkFlowListener
 	    if( self::PAYMENT_CHOICE_ROUTE === $route && $this->testPaymentChoice($lastRoute)){
 		    return;
 	    }
+
+        if( self::DOWNLOAD_BOOKING_ROUTE === $route){
+            return;
+        }
 
 		//if the conditions are not ok, then we redirect the user to the homepage
 	    $event->setResponse(

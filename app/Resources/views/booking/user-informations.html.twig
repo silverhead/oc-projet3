@@ -18,6 +18,7 @@
     <script type="text/javascript">
         $(function(){
             var $birthday = $('input[type="date"]');
+            var $specialAmount   = $('input[type="checkbox"]');
 
             $birthday.datetimepicker({
                 format: 'YYYY-MM-DD',
@@ -31,6 +32,11 @@
             $birthday.on("dp.change", function (e) {
                 var $element = $('#' + e.currentTarget.id);
                 var ticketBlockId =  $element.parents('.form-block').attr('id');
+                getTicketAmountByBirthday(ticketBlockId);
+            });
+
+            $specialAmount.on('click', function(){
+                var ticketBlockId =  $(this).parents('.form-block').attr('id');
                 getTicketAmountByBirthday(ticketBlockId);
             });
 
@@ -62,17 +68,39 @@
             var formTicketIndex = ticketBlockId.replace('ticket-', '');
             var $birthday   = $('#ticket_informations_tickets_'+ formTicketIndex +'_customer_birthday');
             var $amount   = $('#ticket_informations_tickets_'+ formTicketIndex +'_amount');
+            var $specialAmount   = $('#ticket_informations_tickets_'+ formTicketIndex +'_specialAmount');
+            var birthdayDate = new Date($birthday.val());
 
-            console.log($birthday.val());
+            //if the date is not valid return false for not launch ajax request
+            if( 'Invalid Date' === birthdayDate.toDateString()){
+                return false;
+            }
+
+            //if the birthday date is inferior at 1900 it is that the user is very very old :-)
+            if(birthdayDate.getFullYear() < 1900 ){
+                return false;
+            }
+
+            var specialAmount = ($specialAmount.prop('checked') == true)?1:0;
 
             $.getJSON(
                 "{{ path('ajax-get-ticket-amount-by-birthday') }}",
-                {'birthday': $birthday.val()},
-                function( amount ) {
-                    var formatedAmount = new Intl.NumberFormat("{{ locale }}", {style: "currency", currency: "EUR"}).format(amount)
-                    $ticketFormBlock.find('.ticket-amount').html(formatedAmount);
-                    $amount.val(amount);
-                }
+                {'birthday': $birthday.val(), 'specialAmount': specialAmount},
+                    function(ticketAmountJson)
+                    {
+                        var ticketAmount = $.parseJSON(ticketAmountJson);
+
+                        var formatedAmount = new Intl.NumberFormat("{{ locale }}", {style: "currency", currency: "EUR"}).format(ticketAmount.amount)
+                        $ticketFormBlock.find('.ticket-amount').html(formatedAmount);
+                        $amount.val(ticketAmount.amount);
+
+                        $ticketFormBlock.find('.ticket-amount-label').html(ticketAmount.label);
+                    }
+                {#function( amount ) {#}
+                    {#var formatedAmount = new Intl.NumberFormat("{{ locale }}", {style: "currency", currency: "EUR"}).format(amount)#}
+                    {#$ticketFormBlock.find('.ticket-amount').html(formatedAmount);#}
+                    {#$amount.val(amount);#}
+                {#}#}
             );
         }
     </script>
@@ -90,7 +118,7 @@
             <h2><i class="glyphicon glyphicon-check"></i> Bénéficiaires des billets</h2>
             {{ form_start(form) }}
                 {% for ticket in form.tickets %}
-                    {% include 'main/form_block.html.twig' with { 'tikect': ticket, 'index': loop.index0, 'booking': booking } %}
+                    {% include 'booking/form_block.html.twig' with { 'ticket': ticket, 'index': loop.index0, 'booking': booking } %}
                 {% endfor %}
             <div class="row">
                 <div class="col-md-6">

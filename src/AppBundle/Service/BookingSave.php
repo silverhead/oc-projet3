@@ -45,6 +45,9 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
      */
     public function save(BookingEntityInterface $booking)
     {
+
+        dump($booking);
+
         try{
 
             $this->setTickets($booking);//if the booking has tickets save that

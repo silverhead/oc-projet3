@@ -41,7 +41,7 @@ class BookingController extends Controller
             $this->addFlash("error", implode("<br />", $errors));
         }
 
-        return $this->render('main/index.html.twig', array(
+        return $this->render('booking/index.html.twig', array(
             'form' => $bookingHandler->getForm()->createView()
         ));
     }

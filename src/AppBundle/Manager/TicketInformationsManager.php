@@ -9,6 +9,7 @@
 namespace AppBundle\Manager;
 
 
+use AppBundle\Bridge\BridgeBookingORM;
 use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Service\BookingSaveAndGetErrorsInterface;
 use AppBundle\Service\FindBookingsInterface;
@@ -26,17 +27,25 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
     private $findBooking;
 
     /**
+     * @var BridgeBookingORM
+     */
+    private $bookingORMBridge;
+
+    /**
      * @var BookingEntityInterface
      */
     private $booking;
 
     public function __construct(
         BookingSaveAndGetErrorsInterface $saveService,
-        FindBookingsInterface $findBooking
+        FindBookingsInterface $findBooking,
+        BridgeBookingORM $bookingORMBridge //@todo will replace $saveService and $findBooking
     )
     {
         $this->saveService  = $saveService;
         $this->findBooking  = $findBooking;
+
+        $this->bookingORMBridge  = $bookingORMBridge;
     }
 
     /**
@@ -66,13 +75,25 @@ class TicketInformationsManager implements TicketInformationsManagerInterface
      * @param \DateTime $birthday
      * @return mixed
      */
-    public function getTicketPriceByBirthday(\DateTime $birthday)
+    public function getTicketPriceByBirthday(\DateTime $birthday, $specialAmount = false)
     {
         $booking = $this->getCurrentBooking();
 
-        return $this->findBooking->getTicketAmountByTicketType(
+        return $this->bookingORMBridge->getTicketAmountByTicketType(
             $booking->getTicketType(),
-            $birthday
+            $birthday,
+            $specialAmount
+        );
+    }
+
+    public function getTicketByBirthday(\DateTime $birthday, $specialAmount = false)
+    {
+        $booking = $this->getCurrentBooking();
+
+        return $this->bookingORMBridge->getTicketAmountEntityByTicketType(
+            $booking->getTicketType(),
+            $birthday,
+            $specialAmount
         );
     }
 

@@ -21,18 +21,39 @@ class TicketInfoController extends Controller
             return $this->redirectToRoute('check-order');
         }
 
-        return $this->render('main/user-informations.html.twig', [
+        return $this->render('booking/user-informations.html.twig', [
             'form' => $formHandler->getForm()->createView(),
             'booking' => $ticketInfoManager->getCurrentBooking()
         ]);
     }
 
+//    /**
+//     *@Route("/ajax/get/ticket_amount_by_birthday.{_format}", defaults={"_format": "json"}, requirements={"_format": "json" }, name="ajax-get-ticket-amount-by-birthday", methods={"GET"})
+//     */
+//    public function ticketTypeListAction(Request $request)
+//    {
+//        $getDate    = $request->get('birthday', null);
+//        $getSpecialAmount  = (bool) $request->get('specialAmount', 0);
+//
+//        if(null === $getDate){
+//            throw new ResourceNotFoundException("Resource not found!");
+//        }
+//
+//        $birthday = \DateTime::createFromFormat('Y-m-d H:i', $getDate.' 00:00');
+//
+//        $ticketInfoManager = $this->get('app.manager.ticket_information');
+//        $amount = $ticketInfoManager->getTicketPriceByBirthday($birthday, $getSpecialAmount);
+//
+//        return new JsonResponse($amount);
+//    }
+
     /**
-     *@Route("/ajax/get/ticket_amoun_by_birthday.{_format}", defaults={"_format": "json"}, requirements={"_format": "json" }, name="ajax-get-ticket-amount-by-birthday", methods={"GET"})
+     *@Route("/ajax/get/ticket_amount_by_birthday.{_format}", defaults={"_format": "json"}, requirements={"_format": "json" }, name="ajax-get-ticket-amount-by-birthday", methods={"GET"})
      */
-    public function ticketTypeListAction(Request $request)
+    public function ajaxTicketAmountInfoAction(Request $request)
     {
-        $getDate = $request->get('birthday', null);
+        $getDate    = $request->get('birthday', null);
+        $getSpecialAmount  = (bool) $request->get('specialAmount', 0);
 
         if(null === $getDate){
             throw new ResourceNotFoundException("Resource not found!");
@@ -40,9 +61,11 @@ class TicketInfoController extends Controller
 
         $birthday = \DateTime::createFromFormat('Y-m-d H:i', $getDate.' 00:00');
 
-        $ticketInfo = $this->get('app.manager.ticket_information');
-        $amount = $ticketInfo->getTicketPriceByBirthday($birthday);
+        $ticketInfoManager = $this->get('app.manager.ticket_information');
 
-        return new JsonResponse($amount);
+        $ticket = $ticketInfoManager->getTicketByBirthday($birthday, $getSpecialAmount);
+
+        $serializer = $this->get('serializer');
+        return new JsonResponse($serializer->serialize($ticket, 'json'));
     }
 }

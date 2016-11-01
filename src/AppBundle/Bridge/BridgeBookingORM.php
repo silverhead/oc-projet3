@@ -118,16 +118,33 @@ class BridgeBookingORM implements BridgeBookingORMInterface
 		return $ticketAmount * $ticketQuantity;
 	}
 
-	public function getTicketAmountByTicketType(TicketType $ticketType, \DateTime $birthday = null)
+	public function getTicketAmountByTicketType(TicketType $ticketType, \DateTime $birthday = null, $specialAmount = false)
 	{
-		if(null === $birthday){
-			$ticketAmount   = $this->ticketAmount->findOneByDefault(true);
-		}
-		else{
-			$ticketAmount   = $this->ticketAmount->findOneByAge($birthday);
+		if(null !== $birthday){
+            $ticketAmount   = $this->ticketAmount->findOneByAge($birthday, $specialAmount);
 		}
 
+		if(null === $ticketAmount){
+            $ticketAmount   = $this->ticketAmount->findOneByDefault(true);
+        }
+
 		return $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
+	}
+
+	public function getTicketAmountEntityByTicketType(TicketType $ticketType, \DateTime $birthday = null, $specialAmount = false)
+	{
+		if(null !== $birthday){
+            $ticketAmount   = $this->ticketAmount->findOneByAge($birthday, $specialAmount);
+		}
+
+		if(null === $ticketAmount){
+            $ticketAmount   = $this->ticketAmount->findOneByDefault(true);
+        }
+
+        $amount = $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
+        $ticketAmount->setAmount($amount);
+
+		return $ticketAmount;
 	}
 
 	/**
@@ -138,7 +155,7 @@ class BridgeBookingORM implements BridgeBookingORMInterface
 	{
 		try{
 
-			$this->setTickets($booking);//if the booking has tickets save that
+//			$this->setTickets($booking);//if the booking has tickets save that
 
 			$this->em->persist($booking);
 			$this->em->flush();
