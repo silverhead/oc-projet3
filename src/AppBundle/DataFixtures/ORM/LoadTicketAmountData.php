@@ -5,9 +5,11 @@ namespace AppBundle\DataFixture\ORM;
 use AppBundle\Entity\TicketAmount;
 use AppBundle\Entity\TicketType;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadTicketAmountData implements FixtureInterface{
+class LoadTicketAmountData implements FixtureInterface, OrderedFixtureInterface
+{
 
 	public function load(ObjectManager $manager)
 	{
@@ -70,4 +72,9 @@ class LoadTicketAmountData implements FixtureInterface{
 
 		$manager->flush();
 	}
+
+	public function getOrder()
+    {
+        return 2;
+    }
 }

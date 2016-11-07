@@ -4,9 +4,11 @@ namespace AppBundle\DataFixture\ORM;
 
 use AppBundle\Entity\TicketType;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadTicketTypeData implements FixtureInterface{
+class LoadTicketTypeData implements FixtureInterface, OrderedFixtureInterface
+{
 
 	public function load(ObjectManager $manager)
 	{
@@ -37,4 +39,9 @@ class LoadTicketTypeData implements FixtureInterface{
 
 		$manager->flush();
 	}
+
+	public function getOrder()
+    {
+        return 1;
+    }
 }
