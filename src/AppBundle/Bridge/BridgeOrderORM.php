@@ -101,6 +101,10 @@ class BridgeOrderORM implements BridgeOrderORMInterface
 	    $this->session->remove('order');
     }
 
+    public function addAutoPromo(Order $order)
+    {
+        $ticketPromo = $this->em->getRepository("AppBundle:TicketPromoCondition")->findTicketPromoByNbTicketAmount($order);
+    }
 
     public function checkBelonging($email)
     {

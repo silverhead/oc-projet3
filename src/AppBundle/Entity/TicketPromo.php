@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="ticket_promo")
  */
-class TicketPromoCondition
+class TicketPromo
 {
     /**
      * @var integer
