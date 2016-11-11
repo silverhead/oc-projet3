@@ -2,7 +2,7 @@
 
 namespace AppBundle\DataFixture\ORM;
 
-use AppBundle\Entity\TicketPromoCondition;
+use AppBundle\Entity\TicketPromo;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -20,7 +20,7 @@ class LoadTicketPromoData implements FixtureInterface, OrderedFixtureInterface
 		];
 
 		foreach ($data as $ticketAmountFixture){
-			$ticketPromo = new TicketPromoCondition();
+			$ticketPromo = new TicketPromo();
 
 			$ticketPromo
 				->setLabel($ticketAmountFixture->label)

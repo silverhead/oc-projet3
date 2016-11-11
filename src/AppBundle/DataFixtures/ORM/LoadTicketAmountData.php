@@ -65,6 +65,7 @@ class LoadTicketAmountData implements FixtureInterface, OrderedFixtureInterface
 				->setAgeConditionStart($ticketAmountFixture->ageConditionStart)
 				->setAgeConditionEnd($ticketAmountFixture->ageConditionEnd)
 				->setDefault($ticketAmountFixture->default)
+				->setSpecialAmount($ticketAmountFixture->specialAmount)
 			;
 
 			$manager->persist($ticketAmount);

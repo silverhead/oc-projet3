@@ -9,12 +9,15 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\ORM\Mapping\UniqueConstraint;
+
 /**
  * Class TicketPromoCondition
  * @package AppBundle\Entity
  *
- * @ORM\Entity()
- * @ORM\Table(name="ticket_promo_condition")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TicketPromoConditionRepository")
+ * @ORM\Table(name="ticket_promo_condition", uniqueConstraints={@UniqueConstraint(name="unique_condition", columns={"ticket_amount_id", "ticket_promo_id"})})
+ *
  */
 class TicketPromoCondition
 {
@@ -88,11 +91,11 @@ class TicketPromoCondition
     /**
      * Set ticketPromo
      *
-     * @param \AppBundle\Entity\TicketPromoCondition $ticketPromo
+     * @param \AppBundle\Entity\TicketPromo $ticketPromo
      *
      * @return TicketPromoCondition
      */
-    public function setTicketPromo(\AppBundle\Entity\TicketPromoCondition $ticketPromo = null)
+    public function setTicketPromo(\AppBundle\Entity\TicketPromo $ticketPromo = null)
     {
         $this->ticketPromo = $ticketPromo;
 
@@ -102,7 +105,7 @@ class TicketPromoCondition
     /**
      * Get ticketPromo
      *
-     * @return \AppBundle\Entity\TicketPromoCondition
+     * @return \AppBundle\Entity\TicketPromo
      */
     public function getTicketPromo()
     {

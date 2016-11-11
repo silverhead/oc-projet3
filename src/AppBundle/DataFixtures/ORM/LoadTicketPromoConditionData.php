@@ -6,45 +6,51 @@ use AppBundle\Entity\TicketPromoCondition;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class LoadTicketPromoConditionData implements FixtureInterface, OrderedFixtureInterface
 {
 
 	public function load(ObjectManager $manager)
 	{
-        $ticketPromos = $manager->getRepository("TicketPromo")->findAll();
+        $ticketPromos = $manager->getRepository("AppBundle:TicketPromo")->findAll();
         $ticketPromo = $ticketPromos[0];
 
-        $birthdayAdulte = \DateTime::createFromFormat("Y-m-d", "1981-05-07");
-        $ticketAmountAdulte = $manager->getRepository("AppBundle:TicketAmount")->findOneByAge($birthdayAdulte);
+		$ticketAmounts = $manager->getRepository("AppBundle:TicketAmount")->findAll();
 
-        $birthdayEnfant = \DateTime::createFromFormat("Y-m-d", "2009-30-10");
-        $ticketAmountEnfant = $manager->getRepository("AppBundle:TicketAmount")->findOneByAge($birthdayEnfant);
-
-		$data = [
-			(object) [
-                'count'       => 2,
-                'ticketPromo' => $ticketPromo->getId(),
-                'ticketType' => $ticketAmountAdulte->getId(),
-			],
-			(object) [
-                'count'       => 2,
-                'ticketPromo' => $ticketPromo->getId(),
-                'ticketType' => $ticketAmountEnfant->getId(),
-            ]
-		];
-
-		foreach ($data as $ticketPromoConditionFixture){
+		foreach ($ticketAmounts as $ticketAmount){
 			$ticketPromoCondition = new TicketPromoCondition();
-
-            $ticketPromoCondition
-				->setLabel($ticketPromoConditionFixture->label)
-				->setAmount($ticketPromoConditionFixture->amount)
+			$ticketPromoCondition
+				->setCount( 0 )
+				->setTicketPromo( $ticketPromo )
+				->setTicketAmount( $ticketAmount )
 			;
 
 			$manager->persist($ticketPromoCondition);
 		}
+
+		$manager->flush();
+
+		$birthdayAdulte = \DateTime::createFromFormat("Y-m-d", "1981-05-07");
+		$ticketAmountAdulte = $manager->getRepository("AppBundle:TicketAmount")->findOneByAge($birthdayAdulte);
+
+		$ticketPromoCondition = $manager->getRepository("AppBundle:TicketPromoCondition")->findOneBy(array(
+			'ticketAmount' => $ticketAmountAdulte,
+			'ticketPromo' => $ticketPromo
+		));
+
+		var_dump($ticketPromoCondition);
+
+		$ticketPromoCondition->setCount(2);
+
+
+		$birthdayEnfant = \DateTime::createFromFormat("Y-m-d", "2009-30-10");
+		$ticketAmountEnfant = $manager->getRepository("AppBundle:TicketAmount")->findOneByAge($birthdayEnfant);
+
+		$ticketPromoCondition = $manager->getRepository("AppBundle:TicketPromoCondition")->findOneBy(array(
+			'ticketAmount' => $ticketAmountEnfant,
+			'ticketPromo' => $ticketPromo
+		));
+		$ticketPromoCondition->setCount(2);
 
 		$manager->flush();
 	}
