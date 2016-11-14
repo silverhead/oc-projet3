@@ -16,7 +16,19 @@ class TicketPromoConditionRepository extends EntityRepository
 {
     public function findTicketPromoByNbTicketAmount(Order $order)
     {
+        $promos = $this->_em->getRepository("AppBundle:TicketPromo")->findAll();
 
+        foreach($promos as $promos){
+            $testPromo = [];
+
+            $subQuery = "()";
+
+            $this->createQueryBuilder("tpc")
+                ->select("count(tpc.id)")
+                ->where("tpc.ticketPromo= :ticketPromo")->setParameter(":ticketPromo",$promos->getId())
+                ->andWhere("tpc.count >= ")
+            ;
+        }
 
 //       $qb=  $this->createQueryBuilder("tpc");
 //
