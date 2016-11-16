@@ -17,6 +17,13 @@ class OrderController extends Controller
 
         $formHandler = $this->get("app.form.handler.check_order");
 
+        $this->getDoctrine()
+            ->getRepository("AppBundle:TicketPromoCondition")
+            ->findTicketPromoByNbTicketAmount(
+                $checkOrderManager->getCurrentBooking()
+            );
+
+
         if($formHandler->process($request)){
             return $this->redirectToRoute("payment-choice");
         }
