@@ -14,6 +14,8 @@ class TicketPromoConditionRepository extends EntityRepository
 {
     public function findTicketPromoByNbTicketAmount(Booking $booking)
     {
+        $nbTickets = $this->_em->getRepository("AppBundle:TicketAmount")->countAllTicket();
+
         $promos = $this->_em->getRepository("AppBundle:TicketPromo")->findAll();
         $testPromo = [];
         foreach($promos as $promo){
@@ -26,7 +28,8 @@ class TicketPromoConditionRepository extends EntityRepository
                 ->getQuery()->getSingleScalarResult()
             ;
         }
-        dump($testPromo);
+
+
 
     }
 }

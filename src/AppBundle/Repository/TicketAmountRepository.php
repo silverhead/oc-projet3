@@ -24,4 +24,9 @@ class TicketAmountRepository extends \Doctrine\ORM\EntityRepository
 			->getQuery()->getOneOrNullResult()
 			;
 	}
+
+	public function countAllTicket()
+    {
+        return $this->createQueryBuilder("t")->select("count(t.id)")->getQuery()->getSingleScalarResult();
+    }
 }
