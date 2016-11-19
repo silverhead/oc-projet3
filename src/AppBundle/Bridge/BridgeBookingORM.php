@@ -88,6 +88,20 @@ class BridgeBookingORM implements BridgeBookingORMInterface
 		$this->getCurrentBooking();
 	}
 
+	public function getAutoPromo()
+	{
+		$booking = $this->getCurrent();
+		$nbTickets = $this->em->getRepository("AppBundle:TicketAmount")->countAllTicket();
+		$promos = $this->em->getRepository("AppBundle:TicketPromo")->findAll();
+
+		dump($booking);
+
+		$promosMatching = $this->em->getRepository("AppBundle:TicketPromoCondition")
+			->getMatchingTicketPromoByPromoAndBooking($promos, $booking);
+
+		dump($promosMatching);
+	}
+
 
 	public function getTicket()
 	{

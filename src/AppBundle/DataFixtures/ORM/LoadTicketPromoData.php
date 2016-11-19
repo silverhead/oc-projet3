@@ -14,8 +14,12 @@ class LoadTicketPromoData implements FixtureInterface, OrderedFixtureInterface
 	{
 		$data = [
 			(object) [
-				'label'     => 'Tarif spécial Grande famille',
+				'label'     => 'Tarif spécial grande famille',
 				'amount'   => 35
+			],
+			(object) [
+				'label'     => 'Tarif spécial très grande famille',
+				'amount'   => 45
 			]
 		];
 

@@ -15,13 +15,23 @@ class OrderController extends Controller
     public function checkOrderAction(Request $request){
         $checkOrderManager = $this->get('app.manager.check_order');
 
-        $formHandler = $this->get("app.form.handler.check_order");
+	    $em = $this->getDoctrine()->getManager();
 
-        $this->getDoctrine()
-            ->getRepository("AppBundle:TicketPromoCondition")
-            ->findTicketPromoByNbTicketAmount(
-                $checkOrderManager->getCurrentBooking()
-            );
+	    $ticketPromoCondRepo = $em->getRepository("AppBundle:TicketPromoCondition");
+
+	    $booking = $checkOrderManager->getCurrentBooking();
+
+	    $nbTickets = $em->getRepository("AppBundle:TicketAmount")->countAllTicket();
+
+	    $promos = $em->getRepository("AppBundle:TicketPromo")->findAll();
+	    $promosMatching = $ticketPromoCondRepo
+		                    ->getMatchingTicketPromoByPromoAndBooking($promos, $booking);
+
+	    $promosAvailable = array_keys($promosMatching, $nbTickets);
+	    $promoIdCorresponding = $ticketPromoCondRepo->getTicketPromoIdHavingMaxCountByIds($promosAvailable);
+
+
+        $formHandler = $this->get("app.form.handler.check_order");
 
 
         if($formHandler->process($request)){

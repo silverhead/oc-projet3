@@ -7,29 +7,46 @@
  */
 
 namespace AppBundle\Repository;
+
 use AppBundle\Entity\Booking;
 use Doctrine\ORM\EntityRepository;
 
 class TicketPromoConditionRepository extends EntityRepository
 {
-    public function findTicketPromoByNbTicketAmount(Booking $booking)
+	/**
+	 * @param $promos
+	 * @param $booking
+	 * @return array (key => id of ticketPromo and value => count matching ticketAmount
+	 */
+    public function getMatchingTicketPromoByPromoAndBooking($promos, $booking)
     {
-        $nbTickets = $this->_em->getRepository("AppBundle:TicketAmount")->countAllTicket();
-
-        $promos = $this->_em->getRepository("AppBundle:TicketPromo")->findAll();
-        $testPromo = [];
-        foreach($promos as $promo){
-            $testPromo[$promo->getId()] = $this->createQueryBuilder("tpc")
-                ->select("count(tpc)")
-                ->where("tpc.ticketPromo= :ticketPromo")->setParameter(":ticketPromo",$promo->getId())
-                ->andWhere("tpc.count <= (SELECT COUNT(DISTINCT(t)) FROM AppBundle\Entity\Booking b JOIN b.tickets t 
+	    $testPromo = [];
+	    foreach($promos as $promo){
+		    $testPromo[$promo->getId()] = $this->createQueryBuilder("tpc")
+			    ->select("count(tpc)")
+			    ->where("tpc.ticketPromo= :ticketPromo")->setParameter(":ticketPromo",$promo->getId())
+			    ->andWhere("tpc.count <= (SELECT COUNT(DISTINCT(t)) FROM AppBundle\Entity\Booking b JOIN b.tickets t 
                             WHERE b = :booking AND t.ticketAmount = tpc.ticketAmount)")
-                            ->setParameter(':booking', $booking)
-                ->getQuery()->getSingleScalarResult()
-            ;
-        }
+			    ->setParameter(':booking', $booking)
+			    ->getQuery()->getSingleScalarResult()
+		    ;
+	    }
 
+	    return $testPromo;
+    }
 
+    public function getTicketPromoIdHavingMaxCountByIds($ticketPromoIds)
+    {
+	    $qb = $this->createQueryBuilder("tpc")
+		    ->select("tp.id, SUM(tpc.count) as sumCount")
+		    ->join("tpc.ticketPromo", "tp")
+		    ->addGroupBy("tp.id")
+		    ->setMaxResults(1)
+		    ->addOrderBy("sumCount", "DESC")
+	    ;
 
+	    return $qb->add('where', $qb->expr()->in('tp.id', $ticketPromoIds))
+		    ->getQuery()->getOneOrNullResult()['id']
+	    ;
     }
 }
