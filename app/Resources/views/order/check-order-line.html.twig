@@ -1,10 +1,16 @@
 <li class="row">
     <div class="col-md-6">
         <h3>Musée du Louvre</h3>
-        <h5>{{ booking.ticketType.label }} {{ ticket.ticketAmount.label }}</h5>
-        <p>Tarif unique - {{ ticket.customer.firstName }} {{ ticket.customer.lastName }} - née le {{ ticket.customer.birthday|date('d/m/Y') }}</p>
+        <h5>{{ booking.ticketType.label }} {{ ticket.ticket.ticketAmount.label }}</h5>
+        <p>Tarif unique - {{ ticket.ticket.customer.firstName }} {{ ticket.ticket.customer.lastName }} - née le {{ ticket.ticket.customer.birthday|date('d/m/Y') }}</p>
     </div>
     <div class="col-md-6 text-right">
-        <h3>{{ ticket.amount|localizedcurrency('EUR') }}</h3>
+        <h3>
+            {% if ticket.striked == 1 %}<del>{% endif %}
+                {{ ticket.ticket.amount|localizedcurrency('EUR') }}
+            {% if ticket.striked == 1 %}
+            </del>
+            {% endif %}
+        </h3>
     </div>
 </li>

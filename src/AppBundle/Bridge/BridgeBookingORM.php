@@ -90,16 +90,42 @@ class BridgeBookingORM implements BridgeBookingORMInterface
 
 	public function getAutoPromo()
 	{
-		$booking = $this->getCurrent();
-		$nbTickets = $this->em->getRepository("AppBundle:TicketAmount")->countAllTicket();
+		$booking = $this->getCurrentBooking();
+
+        dump($booking);
+
+        if(null === $booking){
+            return null;
+        }
+
 		$promos = $this->em->getRepository("AppBundle:TicketPromo")->findAll();
 
-		dump($booking);
+        dump($promos);
 
-		$promosMatching = $this->em->getRepository("AppBundle:TicketPromoCondition")
+        if(count($promos)  == 0){
+            return null;
+        }
+
+		$ticketPromoConditionrepo = $this->em->getRepository("AppBundle:TicketPromoCondition");
+
+		$promosMatching = $ticketPromoConditionrepo
 			->getMatchingTicketPromoByPromoAndBooking($promos, $booking);
 
-		dump($promosMatching);
+        dump($promosMatching);
+
+		if(count($promosMatching) == 0){
+		    return null;
+        }
+
+       dump(array_flip($promosMatching) );
+
+        $promoId = $ticketPromoConditionrepo->getTicketPromoIdHavingMaxCountByIds( array_flip($promosMatching) );
+
+        if(null === $promoId){
+            return null;
+        }
+
+        return $this->em->getRepository("AppBundle:TicketPromo")->find($promoId);
 	}
 
 

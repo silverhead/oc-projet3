@@ -15,21 +15,42 @@ class OrderController extends Controller
     public function checkOrderAction(Request $request){
         $checkOrderManager = $this->get('app.manager.check_order');
 
-	    $em = $this->getDoctrine()->getManager();
+        $promo = $checkOrderManager->getAutoPromo();
 
-	    $ticketPromoCondRepo = $em->getRepository("AppBundle:TicketPromoCondition");
+        $booking = $checkOrderManager->getCurrentBooking();
 
-	    $booking = $checkOrderManager->getCurrentBooking();
+        $tickets = [];
+        $total = $booking->getAmount();
 
-	    $nbTickets = $em->getRepository("AppBundle:TicketAmount")->countAllTicket();
+        $ticketAmountsIncluded = [];
 
-	    $promos = $em->getRepository("AppBundle:TicketPromo")->findAll();
-	    $promosMatching = $ticketPromoCondRepo
-		                    ->getMatchingTicketPromoByPromoAndBooking($promos, $booking);
+        if(null !== $promo){
+            foreach ($promo->getTicketPromoConditions() as $ticketPromoCondition ){
+                $ticketAmountsIncluded[$ticketPromoCondition->getTicketAmount()->getId()] =  $ticketPromoCondition->getCount();
+            }
 
-	    $promosAvailable = array_keys($promosMatching, $nbTickets);
-	    $promoIdCorresponding = $ticketPromoCondRepo->getTicketPromoIdHavingMaxCountByIds($promosAvailable);
+            $total += $promo->getAmount();
+        }
 
+        foreach($booking->getTickets() as $ticket){
+            $idTicketAmount = $ticket->getTicketAmount()->getId();
+            $ticketAmount = $ticket->getAmount();
+            $strike = false;
+
+            if($ticketAmountsIncluded[$idTicketAmount] > 0){
+                $strike = true;
+
+                $total -= $ticketAmount;
+
+                $ticketAmountsIncluded[$idTicketAmount] -= 1;
+            }
+
+            $tickets[] = (object) [
+                'ticket' => $ticket,
+                'striked' => $strike
+            ];
+
+        }
 
         $formHandler = $this->get("app.form.handler.check_order");
 
@@ -39,8 +60,11 @@ class OrderController extends Controller
         }
 
         return $this->render('order/check-order.html.twig', [
-            'booking' => $checkOrderManager->getCurrentBooking(),
-            'form' => $formHandler->getForm()->createView()
+            'booking' => $booking,
+            'tickets' => $tickets,
+            'form' => $formHandler->getForm()->createView(),
+            'promo' => $promo,
+            'total' => $total,
         ]);
     }
 

@@ -12,16 +12,27 @@
             <div class="col-md-12">
                 <h2><i class="glyphicon glyphicon-check"></i> Vérifier votre commande</h2>
                 <ul>
-                    {% for ticket in booking.tickets %}
+                    {% for ticket in tickets %}
                         {% include 'order/check-order-line.html.twig' with {'ticket': ticket, 'booking': booking} %}
                     {% endfor %}
+                    {% if promo is defined %}
+                        <li class="row">
+                            <div class="col-md-6">
+                                <h3>Promo</h3>
+                                <h5>{{ promo.label }}</h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <h3>{{ promo.amount|localizedcurrency('EUR') }}</h3>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
                 <div class="row total-amount-line">
                     <div class="col-md-4 col-md-offset-4">
                         <h3>Montant de votre commande </h3>
                     </div>
                     <div class="col-md-4 text-right">
-                        <h3>{{ booking.amount|localizedcurrency('EUR') }}</h3>
+                        <h3>{% if promo is defined %}<del>{% endif %}{{ booking.amount|localizedcurrency('EUR') }}{% if promo is defined %}</del>{% endif %}{% if promo is defined %} {{ total|localizedcurrency('EUR') }}{% endif %}</h3>
                     </div>
                 </div>
                 {{ form_start(form) }}

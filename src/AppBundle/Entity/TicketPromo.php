@@ -7,6 +7,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,7 +40,18 @@ class TicketPromo
      */
     private $amount;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\TicketPromoCondition", mappedBy="ticketPromo")
+     */
+    private $ticketPromoConditions;
 
+
+    public function __construct()
+    {
+        $this->ticketPromoConditions = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -97,5 +109,53 @@ class TicketPromo
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Set ticketPromoConditions
+     *
+     * @param \AppBundle\Entity\TicketPromoCondition $ticketPromoConditions
+     *
+     * @return TicketPromo
+     */
+    public function setTicketPromoConditions(\AppBundle\Entity\TicketPromoCondition $ticketPromoConditions = null)
+    {
+        $this->ticketPromoConditions = $ticketPromoConditions;
+
+        return $this;
+    }
+
+    /**
+     * Get ticketPromoConditions
+     *
+     * @return \AppBundle\Entity\TicketPromoCondition
+     */
+    public function getTicketPromoConditions()
+    {
+        return $this->ticketPromoConditions;
+    }
+
+    /**
+     * Add ticketPromoCondition
+     *
+     * @param \AppBundle\Entity\TicketPromoCondition $ticketPromoCondition
+     *
+     * @return TicketPromo
+     */
+    public function addTicketPromoCondition(\AppBundle\Entity\TicketPromoCondition $ticketPromoCondition)
+    {
+        $this->ticketPromoConditions[] = $ticketPromoCondition;
+
+        return $this;
+    }
+
+    /**
+     * Remove ticketPromoCondition
+     *
+     * @param \AppBundle\Entity\TicketPromoCondition $ticketPromoCondition
+     */
+    public function removeTicketPromoCondition(\AppBundle\Entity\TicketPromoCondition $ticketPromoCondition)
+    {
+        $this->ticketPromoConditions->removeElement($ticketPromoCondition);
     }
 }

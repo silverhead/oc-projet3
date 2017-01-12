@@ -31,4 +31,6 @@ class BookingRepository extends EntityRepository
 	        ->getArrayResult()
         ;
     }
+
+
 }

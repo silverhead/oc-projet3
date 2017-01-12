@@ -8,6 +8,7 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Bridge\BridgeBookingORMInterface;
 use AppBundle\Entity\Order;
 use AppBundle\Helper\CanHaveErrorsInterface;
 use AppBundle\Service\FindBookingsInterface;
@@ -19,7 +20,7 @@ class CheckOrderManager implements CanHaveErrorsInterface
     /**
      * @var FindBookingsInterface
      */
-    private $findBookings;
+    private $bridgeBooking;
 
     /**
      * @var BridgeOrderORMInterface
@@ -33,17 +34,17 @@ class CheckOrderManager implements CanHaveErrorsInterface
 
     public function __construct
     (
-        FindBookingsInterface $findBookings,
+        BridgeBookingORMInterface $bridgeBookingORM,
         BridgeOrderORMInterface $bridgeOrder
     )
     {
-        $this->findBookings = $findBookings;
+        $this->bridgeBooking = $bridgeBookingORM;
         $this->bridgeOrder = $bridgeOrder;
     }
 
     public function getCurrentBooking()
     {
-        return $this->findBookings->getCurrentBooking();
+        return $this->bridgeBooking->getCurrentBooking();
     }
 
     public function getCurrentOrder()
@@ -58,7 +59,7 @@ class CheckOrderManager implements CanHaveErrorsInterface
 
     public function saveOrder(Order $order)
     {
-	    $booking = $this->findBookings->getCurrentBooking();
+	    $booking = $this->bridgeBooking->getCurrentBooking();
 
         if(!$this->bridgeOrder->save($order, $booking)){
             $this->errors = $this->bridgeOrder->getErrors();
@@ -66,6 +67,11 @@ class CheckOrderManager implements CanHaveErrorsInterface
         }
 
         return true;
+    }
+
+    public function getAutoPromo()
+    {
+        return $this->bridgeBooking->getAutoPromo();
     }
 
     /**

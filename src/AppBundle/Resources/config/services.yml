@@ -56,7 +56,7 @@ services:
       arguments: ["@session", "@doctrine.orm.entity_manager"]
     app.manager.check_order:
         class: AppBundle\Manager\CheckOrderManager
-        arguments: ["@app.service.find.booking", "@app.bridge.order"]
+        arguments: ["@app.bridge.booking", "@app.bridge.order"]
     app.form.type.order:
       class: AppBundle\Form\Type\OrderType
     app.form.handler.check_order:

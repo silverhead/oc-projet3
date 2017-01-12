@@ -49,7 +49,7 @@ class TicketPromoCondition
     /**
      * @var TicketPromoCondition
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TicketPromo")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TicketPromo", inversedBy="ticketPromoConditions")
      * @ORM\JoinColumn(name="ticket_promo_id", referencedColumnName="id")
      */
     private $ticketPromo;
