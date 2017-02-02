@@ -15,7 +15,7 @@
                     {% for ticket in tickets %}
                         {% include 'order/check-order-line.html.twig' with {'ticket': ticket, 'booking': booking} %}
                     {% endfor %}
-                    {% if promo is defined %}
+                    {% if promo is not null %}
                         <li class="row">
                             <div class="col-md-6">
                                 <h3>Promo</h3>
@@ -32,7 +32,7 @@
                         <h3>Montant de votre commande </h3>
                     </div>
                     <div class="col-md-4 text-right">
-                        <h3>{% if promo is defined %}<del>{% endif %}{{ booking.amount|localizedcurrency('EUR') }}{% if promo is defined %}</del>{% endif %}{% if promo is defined %} {{ total|localizedcurrency('EUR') }}{% endif %}</h3>
+                        <h3>{% if promo is not null %}<del>{% endif %}{{ booking.amount|localizedcurrency('EUR') }}{% if promo is not null %}</del>{% endif %}{% if promo is not null %} {{ total|localizedcurrency('EUR') }}{% endif %}</h3>
                     </div>
                 </div>
                 {{ form_start(form) }}

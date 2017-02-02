@@ -17,80 +17,80 @@ use AppBundle\Entity\BookingEntityInterface;
 
 class BridgeBookingORM implements BridgeBookingORMInterface
 {
-	/**
-	 * @var EntityManagerInterface
-	 */
-	private $em;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
-	/**
-	 * @var SessionInterface
-	 */
-	private $session;
-
-
-	/**
-	 * @var \AppBundle\Repository\BookingRepository|\Doctrine\Common\Persistence\ObjectRepository
-	 */
-	private $bookingRepo;
-
-	/**
-	 * @var \AppBundle\Repository\TicketTypeRepository|\Doctrine\Common\Persistence\ObjectRepository
-	 */
-	private $ticketTypeRepo;
+    /**
+     * @var SessionInterface
+     */
+    private $session;
 
 
-	/**
-	 * @var \AppBundle\Repository\TicketAmountRepository|\Doctrine\Common\Persistence\ObjectRepository
-	 */
-	private $ticketAmount;
+    /**
+     * @var \AppBundle\Repository\BookingRepository|\Doctrine\Common\Persistence\ObjectRepository
+     */
+    private $bookingRepo;
 
-	/**
-	 * @var array
-	 */
-	private $errors;
+    /**
+     * @var \AppBundle\Repository\TicketTypeRepository|\Doctrine\Common\Persistence\ObjectRepository
+     */
+    private $ticketTypeRepo;
 
 
-	public function __construct(EntityManagerInterface $em, SessionInterface $session)
-	{
+    /**
+     * @var \AppBundle\Repository\TicketAmountRepository|\Doctrine\Common\Persistence\ObjectRepository
+     */
+    private $ticketAmount;
 
-		$this->em  = $em;
-		$this->session = $session;
-		$this->bookingRepo      = $this->em->getRepository("AppBundle:Booking");
-		$this->ticketTypeRepo   = $this->em->getRepository("AppBundle:TicketType");
-		$this->ticketAmount     = $this->em->getRepository("AppBundle:TicketAmount");
-	}
+    /**
+     * @var array
+     */
+    private $errors;
 
-	public function find($id = null)
-	{
-		if(null === $id){
-			return new Booking();
-		}
 
-		if(null === $booking = $this->bookingRepo->find($id)){
+    public function __construct(EntityManagerInterface $em, SessionInterface $session)
+    {
 
-			$this->bridgeBookingORM->removeCurrent();//delete the id in session
+        $this->em  = $em;
+        $this->session = $session;
+        $this->bookingRepo      = $this->em->getRepository("AppBundle:Booking");
+        $this->ticketTypeRepo   = $this->em->getRepository("AppBundle:TicketType");
+        $this->ticketAmount     = $this->em->getRepository("AppBundle:TicketAmount");
+    }
 
-			throw new EntityNotFoundException("Not Booking Entity found with the id ".$id."!");
-		}
+    public function find($id = null)
+    {
+        if(null === $id){
+            return new Booking();
+        }
 
-		return $booking;
-	}
+        if(null === $booking = $this->bookingRepo->find($id)){
 
-	public function getCurrentBooking()
-	{
-		$bookingId = $this->session->get('booking', null);
+            $this->bridgeBookingORM->removeCurrent();//delete the id in session
 
-		return $this->find($bookingId);
-	}
+            throw new EntityNotFoundException("Not Booking Entity found with the id ".$id."!");
+        }
 
-	public function getCurrent()
-	{
-		$this->getCurrentBooking();
-	}
+        return $booking;
+    }
 
-	public function getAutoPromo()
-	{
-		$booking = $this->getCurrentBooking();
+    public function getCurrentBooking()
+    {
+        $bookingId = $this->session->get('booking', null);
+
+        return $this->find($bookingId);
+    }
+
+    public function getCurrent()
+    {
+        $this->getCurrentBooking();
+    }
+
+    public function getAutoPromo()
+    {
+        $booking = $this->getCurrentBooking();
 
         dump($booking);
 
@@ -98,151 +98,166 @@ class BridgeBookingORM implements BridgeBookingORMInterface
             return null;
         }
 
-		$promos = $this->em->getRepository("AppBundle:TicketPromo")->findAll();
+        $promos = $this->em->getRepository("AppBundle:TicketPromo")->findAll();
 
-        dump($promos);
+//        dump($promos);
 
         if(count($promos)  == 0){
             return null;
         }
 
-		$ticketPromoConditionrepo = $this->em->getRepository("AppBundle:TicketPromoCondition");
+        $ticketPromoConditionRepo = $this->em->getRepository("AppBundle:TicketPromoCondition");
 
-		$promosMatching = $ticketPromoConditionrepo
-			->getMatchingTicketPromoByPromoAndBooking($promos, $booking);
+        $promosMatching = $ticketPromoConditionRepo
+            ->getMatchingTicketPromoByPromoAndBooking($promos, $booking);
+
+//        dump($promosMatching);
+
+        if(count($promosMatching) == 0){
+            return null;
+        }
+
+        $nbTicketAmount = $this->em->getRepository("AppBundle:TicketAmount")->countAllTicket();
+//        dump($nbTicketAmount);
+
+        foreach($promosMatching as $promoId => $countTicketMatching){
+            if($nbTicketAmount > $countTicketMatching){
+                unset($promosMatching[$promoId]);
+            }
+        }
 
         dump($promosMatching);
 
-		if(count($promosMatching) == 0){
-		    return null;
+        if(count($promosMatching) == 0){
+            return null;
         }
 
-       dump(array_flip($promosMatching) );
 
-        $promoId = $ticketPromoConditionrepo->getTicketPromoIdHavingMaxCountByIds( array_flip($promosMatching) );
+
+        $promoId = $ticketPromoConditionRepo->getTicketPromoIdHavingMaxCountByIds( array_flip($promosMatching) );
 
         if(null === $promoId){
             return null;
         }
 
         return $this->em->getRepository("AppBundle:TicketPromo")->find($promoId);
-	}
+    }
 
 
-	public function getTicket()
-	{
-		return new Ticket();
-	}
+    public function getTicket()
+    {
+        return new Ticket();
+    }
 
-	public function findAllFullBookingInPeriod(\DateTime $start, \DateTime $end, $maxNumberOfBookedTickets)
-	{
-		return  $this->bookingRepo->findAllFullBookingInPeriod($start, $end, $maxNumberOfBookedTickets);
-	}
+    public function findAllFullBookingInPeriod(\DateTime $start, \DateTime $end, $maxNumberOfBookedTickets)
+    {
+        return  $this->bookingRepo->findAllFullBookingInPeriod($start, $end, $maxNumberOfBookedTickets);
+    }
 
-	/**
-	 * find ticket type available for the date and hour
-	 *
-	 * @param \DateTime $date
-	 * @return array
-	 */
-	public function findTicketTypeAvailableFor(\DateTime $date)
-	{
-		return $this->ticketTypeRepo->findTicketTypeAvailableFor($date->format('H'));
-	}
+    /**
+     * find ticket type available for the date and hour
+     *
+     * @param \DateTime $date
+     * @return array
+     */
+    public function findTicketTypeAvailableFor(\DateTime $date)
+    {
+        return $this->ticketTypeRepo->findTicketTypeAvailableFor($date->format('H'));
+    }
 
-	public function getBookingAmount($ticketTypeId, $ticketQuantity, \DateTime $birthday = null)
-	{
-		$ticketType     = $this->ticketTypeRepo->find($ticketTypeId);
+    public function getBookingAmount($ticketTypeId, $ticketQuantity, \DateTime $birthday = null)
+    {
+        $ticketType     = $this->ticketTypeRepo->find($ticketTypeId);
 
-		$ticketAmount = $this->getTicketAmountByTicketType($ticketType, $birthday);
+        $ticketAmount = $this->getTicketAmountByTicketType($ticketType, $birthday);
 
-		return $ticketAmount * $ticketQuantity;
-	}
+        return $ticketAmount * $ticketQuantity;
+    }
 
-	public function getTicketAmountByTicketType(TicketType $ticketType, \DateTime $birthday = null, $specialAmount = false)
-	{
-		if(null !== $birthday){
+    public function getTicketAmountByTicketType(TicketType $ticketType, \DateTime $birthday = null, $specialAmount = false)
+    {
+        if(null !== $birthday){
             $ticketAmount   = $this->ticketAmount->findOneByAge($birthday, $specialAmount);
-		}
+        }
 
-		if(null === $ticketAmount){
+        if(null === $ticketAmount){
             $ticketAmount   = $this->ticketAmount->findOneByDefault(true);
         }
 
-		return $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
-	}
+        return $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
+    }
 
-	public function getTicketAmountEntityByTicketType(TicketType $ticketType, \DateTime $birthday = null, $specialAmount = false)
-	{
-		if(null !== $birthday){
+    public function getTicketAmountEntityByTicketType(TicketType $ticketType, \DateTime $birthday = null, $specialAmount = false)
+    {
+        if(null !== $birthday){
             $ticketAmount   = $this->ticketAmount->findOneByAge($birthday, $specialAmount);
-		}
+        }
 
-		if(null === $ticketAmount){
+        if(null === $ticketAmount){
             $ticketAmount   = $this->ticketAmount->findOneByDefault(true);
         }
 
         $amount = $ticketAmount->getAmount() * ($ticketType->getPercent() / 100);
         $ticketAmount->setAmount($amount);
 
-		return $ticketAmount;
-	}
+        return $ticketAmount;
+    }
 
-	/**
-	 * @param BookingEntityInterface $booking
-	 * @return bool
-	 */
-	public function save(BookingEntityInterface $booking)
-	{
-		try{
+    /**
+     * @param BookingEntityInterface $booking
+     * @return bool
+     */
+    public function save(BookingEntityInterface $booking)
+    {
+        try{
 
 //			$this->setTickets($booking);//if the booking has tickets save that
 
-			$this->em->persist($booking);
-			$this->em->flush();
+            $this->em->persist($booking);
+            $this->em->flush();
 
-			$this->session->set('booking', $booking->getId());
+            $this->session->set('booking', $booking->getId());
 
-			return true;
-		}
-		catch(\Exception $e){
-			$this->errors[] = "Une erreur est intervenue lors de ".
-				"l'enregistrement dans la base ! Si le ".
-				"problème persiste veuillez contacter ".
-				"l'administrateur du site";
-			return false;
-		}
-	}
+            return true;
+        }
+        catch(\Exception $e){
+            $this->errors[] = "Une erreur est intervenue lors de ".
+                "l'enregistrement dans la base ! Si le ".
+                "problème persiste veuillez contacter ".
+                "l'administrateur du site";
+            return false;
+        }
+    }
 
-	public function setTickets($booking){
-		if(null !== $booking->getTickets()){
-			foreach ($booking->getTickets() as $ticket){
-				$ticketAmount = $this->em->getRepository("AppBundle:TicketAmount")->findOneByAge($ticket->getCustomer()->getBirthday());
-				$ticket->setTicketAmount($ticketAmount);
-			}
-		}
-	}
+    public function setTickets($booking){
+        if(null !== $booking->getTickets()){
+            foreach ($booking->getTickets() as $ticket){
+                $ticketAmount = $this->em->getRepository("AppBundle:TicketAmount")->findOneByAge($ticket->getCustomer()->getBirthday());
+                $ticket->setTicketAmount($ticketAmount);
+            }
+        }
+    }
 
-	public function deleteTickets(BookingEntityInterface $booking)
-	{
-		//delete all old tickets
-		foreach ($booking->getTickets() as $ticket){
-			$booking->removeTicket($ticket);
-		}
-		$this->em->persist($booking);
-		$this->em->flush();
-	}
+    public function deleteTickets(BookingEntityInterface $booking)
+    {
+        //delete all old tickets
+        foreach ($booking->getTickets() as $ticket){
+            $booking->removeTicket($ticket);
+        }
+        $this->em->persist($booking);
+        $this->em->flush();
+    }
 
-	/**
-	 * Return a array of error messages
-	 * @return array
-	 */
-	public function getErrors(){
-		return $this->errors;
-	}
+    /**
+     * Return a array of error messages
+     * @return array
+     */
+    public function getErrors(){
+        return $this->errors;
+    }
 
 
-	public function removeCurrent(){
-		$this->session->remove('booking');
-	}
+    public function removeCurrent(){
+        $this->session->remove('booking');
+    }
 }

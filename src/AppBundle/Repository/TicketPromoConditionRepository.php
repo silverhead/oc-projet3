@@ -25,8 +25,8 @@ class TicketPromoConditionRepository extends EntityRepository
 		    $testPromo[$promo->getId()] = $this->createQueryBuilder("tpc")
 			    ->select("count(tpc)")
 			    ->where("tpc.ticketPromo= :ticketPromo")->setParameter(":ticketPromo",$promo->getId())
-			    ->andWhere("tpc.count <= (SELECT COUNT(DISTINCT(t)) FROM AppBundle\Entity\Booking b JOIN b.tickets t 
-                            WHERE b = :booking AND t.ticketAmount = tpc.ticketAmount)")
+			    ->andWhere("tpc.count <= 0 OR tpc.count <= (SELECT COUNT(DISTINCT(t)) FROM AppBundle\Entity\Booking b JOIN b.tickets t 
+                            WHERE b = :booking AND t.ticketAmount = tpc.ticketAmount GROUP BY b)")
 			    ->setParameter(':booking', $booking)
 			    ->getQuery()->getSingleScalarResult()
 		    ;
@@ -34,6 +34,7 @@ class TicketPromoConditionRepository extends EntityRepository
 
 	    return $testPromo;
     }
+
 
     public function getTicketPromoIdHavingMaxCountByIds($ticketPromoIds)
     {

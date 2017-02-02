@@ -19,6 +19,7 @@ class OrderController extends Controller
 
         $booking = $checkOrderManager->getCurrentBooking();
 
+
         $tickets = [];
         $total = $booking->getAmount();
 
@@ -37,7 +38,7 @@ class OrderController extends Controller
             $ticketAmount = $ticket->getAmount();
             $strike = false;
 
-            if($ticketAmountsIncluded[$idTicketAmount] > 0){
+            if(isset($ticketAmountsIncluded[$idTicketAmount]) && $ticketAmountsIncluded[$idTicketAmount] > 0){
                 $strike = true;
 
                 $total -= $ticketAmount;
