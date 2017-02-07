@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
             new PaymentSuite\PaymentCoreBundle\PaymentCoreBundle(),
+            new PaymentSuite\PaypalExpressCheckoutBundle\PaypalExpressCheckoutBundle(),
             new AppBundle\AppBundle(),
         ];
 
