@@ -34,7 +34,10 @@
         "twig/extensions": "v1.3.0",
         "symfony/intl": "3.1.x-dev",
         "whiteoctober/tcpdf-bundle": "^1.0",
-        "paymentsuite/paypal-express_checkout-bundle": "dev-master"
+        "payum/payum-bundle": "^2.1",
+        "payum/offline": "^1.3",
+        "php-http/guzzle6-adapter": "^1.1",
+        "payum/paypal-express-checkout-nvp": "^1.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

@@ -16,8 +16,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
-            new PaymentSuite\PaymentCoreBundle\PaymentCoreBundle(),
-            new PaymentSuite\PaypalExpressCheckoutBundle\PaypalExpressCheckoutBundle(),
+            new Payum\Bundle\PayumBundle\PayumBundle(),
             new AppBundle\AppBundle(),
         ];
 

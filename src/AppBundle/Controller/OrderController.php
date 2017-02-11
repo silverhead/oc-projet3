@@ -76,40 +76,27 @@ class OrderController extends Controller
         $orderBridge = $this->get("app.bridge.order");
         $order = $orderBridge->getCurrent();
 
-//	    $config = [
-//		    'paypal_express_checkout' => [
-//			    'return_url' => 'https://example.com/return-url',
-//			    'cancel_url' => 'https://example.com/cancel-url',
-////			    'useraction' => 'commit',
-//		    ],
-//	    ];
-//
-//	    $formPayPal = $this->createForm(ChoosePaymentMethodType::class, null, [
-//		    'amount'          => number_format($order->getAmount(), 2),
-//		    'currency'        => 'EUR',
-//            'default_method' => 'payment_paypal',
-//		    'predefined_data' => $config,
-//	    ]);
-//
-//	    $formPayPal->handleRequest($request);
-//
-//	    if ($formPayPal->isSubmitted() && $formPayPal->isValid()) {
-//		    $ppc = $this->get('payment.plugin_controller');
-//		    $ppc->createPaymentInstruction($instruction = $formPayPal->getData());
-//
-//		    $checkOrderManager = $this->get("app.manager.check_order");
-//		    $order = $checkOrderManager->getCurrentOrder();
-//
-//		    $order->setPaymentInstruction($instruction);
-//
-//		    $em = $this->getDoctrine()->getManager();
-////		    $em->persist($order);
-//		    $em->flush($order);
-//
-//		    return $this->redirect($this->generateUrl('payment-create', [
-////			    'id' => $order->getId(),
-//		    ]));
-//	    }
+        $gatewayName = 'offline';
+
+        $storage = $this->get('payum')->getStorage('Acme\PaymentBundle\Entity\Payment');
+
+        $payment = $storage->create();
+        $payment->setNumber(uniqid());
+        $payment->setCurrencyCode('EUR');
+        $payment->setTotalAmount($order->getAmount()); // 1.23 EUR
+        $payment->setDescription('A description');
+        $payment->setClientId($order->getId());
+        $payment->setClientEmail($order->getEmail());
+
+        $storage->update($payment);
+
+        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
+            $gatewayName,
+            $payment,
+            'order-confirmed' // the route to redirect after capture
+        );
+
+        return $this->redirect($captureToken->getTargetUrl());
 
 
         return $this->render('order/payment-choice.html.twig', [
