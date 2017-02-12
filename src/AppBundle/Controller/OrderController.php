@@ -76,9 +76,9 @@ class OrderController extends Controller
         $orderBridge = $this->get("app.bridge.order");
         $order = $orderBridge->getCurrent();
 
-        $gatewayName = 'offline';
+        $gatewayName = 'paypal_express_checkout';
 
-        $storage = $this->get('payum')->getStorage('Acme\PaymentBundle\Entity\Payment');
+        $storage = $this->get('payum')->getStorage('AppBundle\Entity\Payment');
 
         $payment = $storage->create();
         $payment->setNumber(uniqid());
@@ -87,6 +87,9 @@ class OrderController extends Controller
         $payment->setDescription('A description');
         $payment->setClientId($order->getId());
         $payment->setClientEmail($order->getEmail());
+        $payment->setDetails(array(
+            'AUTHORIZE_TOKEN_USERACTION' => '',
+        ));
 
         $storage->update($payment);
 

@@ -76,9 +76,15 @@ swiftmailer:
 payum:
     security:
         token_storage:
-            App\PaymentBundle\Entity\PaymentToken: { doctrine: orm }
+            AppBundle\Entity\PaymentToken: { doctrine: orm }
     storages:
-        App\PaymentBundle\Entity\Payment: { doctrine: orm }
+        AppBundle\Entity\Payment: { doctrine: orm }
     gateways:
         offline:
             factory: offline
+        paypal_express_checkout:
+            factory: paypal_express_checkout
+            username:  'required'
+            password:  'required'
+            signature: 'required'
+            sandbox: true
