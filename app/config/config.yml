@@ -77,8 +77,10 @@ payum:
     security:
         token_storage:
             AppBundle\Entity\PaymentToken: { doctrine: orm }
+#    storages:
+#        AppBundle\Entity\Payment: { doctrine: orm }
     storages:
-        AppBundle\Entity\Payment: { doctrine: orm }
+        AppBundle\Entity\PaymentDetails: { doctrine: orm }
     gateways:
         offline:
             factory: offline
@@ -87,4 +89,4 @@ payum:
             username:  'required'
             password:  'required'
             signature: 'required'
-            sandbox: true
+            sandbox: false

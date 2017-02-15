@@ -16,6 +16,7 @@ class WorkFlowListener
 	const PAYMENT_CHOICE_ROUTE      = 'payment-choice';
 	const CHECK_AUTHOR_ORDER_ROUTE  = 'check-author-order';
 	const DOWNLOAD_BOOKING_ROUTE    = 'download-booking';
+	const PAYUM_TOKEN               = 'payum_capture_do';
 
 
     const WDT_ROUTE = '_wdt';
@@ -106,6 +107,8 @@ class WorkFlowListener
 		return 	(self::CHECK_ORDER_ROUTE === $lastRoute)
 				||
 				(self::PAYMENT_CHOICE_ROUTE === $lastRoute)
+                ||
+                (self::PAYMENT_CHOICE_ROUTE === $lastRoute)
 		;
 	}
 
