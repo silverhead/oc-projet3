@@ -10,6 +10,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Payum\Core\Model\ArrayObject;
 
 /**
  * Class Order
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Table(name="booking_order")
  */
-class Order
+class Order extends ArrayObject
 {
 	const STATE_STANDBY     = 0;
 	const STATE_PAYED       = 1;

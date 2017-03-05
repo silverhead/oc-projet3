@@ -13,9 +13,9 @@
                 <h2><i class="glyphicon glyphicon-credit-card"></i> Choisir votre moyen de paiement <span class="pull-right">{{ order.getAmount()|localizedcurrency('EUR') }}</span></h2>
                 <ul>
                     <li>
-                        <a href="{{ path('order-confirmed') }}"><img src="{{ asset('images/payment/PayPal.png') }}"></a>
+                        <a href="{{ path('order-payment', {'choice': 'paypal'}) }}"><img src="{{ asset('images/payment/PayPal.png') }}"></a>
                     </li>
-                    <li><a href="{{ path('order-canceled') }}"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
+                    <li><a href="{{ path('order-payment', {'choice': 'stripe'}) }}"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
                 </ul>
             </div>
         </div>

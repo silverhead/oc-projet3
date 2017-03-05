@@ -80,7 +80,7 @@ payum:
 #    storages:
 #        AppBundle\Entity\Payment: { doctrine: orm }
     storages:
-        AppBundle\Entity\PaymentDetails: { doctrine: orm }
+        AppBundle\Entity\Order: { doctrine: orm }
     gateways:
         offline:
             factory: offline

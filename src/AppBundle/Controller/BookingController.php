@@ -52,6 +52,7 @@ class BookingController extends Controller
         $date = \DateTime::createFromFormat('Y-m-d H:i', $getDate.' 00:00');
 
         $bookingManager = $this->get('app.manager.booking');
+
         $ticketTypes = $bookingManager->getTicketTypeAvailableFor($date);
 
         $serializer = $this->get('serializer');
@@ -75,6 +76,7 @@ class BookingController extends Controller
         }
 
         $bookingManager = $this->get('app.manager.booking');
+
         $amount = $bookingManager->getBookingAmount($ticketTypeId, $ticketQuantity);
 
         return new JsonResponse($amount);

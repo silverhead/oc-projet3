@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Order;
 use AppBundle\Entity\PaymentDetails;
+use AppBundle\Form\PaymentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,80 +78,27 @@ class OrderController extends Controller
     public function paymentChoiceAction(Request $request){
         $orderBridge = $this->get("app.bridge.order");
         $order = $orderBridge->getCurrent();
+        return $this->render('order/payment-choice.html.twig', [
+            'order' => $order
+        ]);
+    }
 
-        $gatewayName = 'paypal_express_checkout';
-//
-        $storage = $this->get('payum')->getStorage(PaymentDetails::class);
+    /**
+     * @Route("/paiement/{choice}", name="order-payment", methods={"GET"})
+     */
+    public function orderPaymentAction(Request $request, $choice)
+    {
+        dump($choice);
 
-//        $storage = $this->getPayum()->getStorage(PaymentDetails::class);
+        $response = $this->redirect('payment-choice');//return to the payment choice if nothing corresponding
 
-        /** @var $payment PaymentDetails */
-        $payment = $storage->create();
-        $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = 'EUR';
-        $payment['PAYMENTREQUEST_0_AMT'] = $order->getAmount();
-        $payment['AUTHORIZE_TOKEN_USERACTION'] = '';
-        $storage->update($payment);
+        switch ($choice){
+            case 'paypal':
+                $response = $this->paypalPayment();
+                break;
+        }
 
-        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-            $gatewayName,
-            $payment,
-            'order-confirmed'
-        );
-
-//        $payment['INVNUM'] = $payment->getId();
-//        $storage->update($payment);
-
-        return $this->redirect($captureToken->getTargetUrl());
-//
-//        $payment = $storage->create();
-//        $payment->setNumber(uniqid());
-//        $payment->setCurrencyCode('EUR');
-//        $payment->setTotalAmount($order->getAmount()); // 1.23 EUR
-//        $payment->setDescription('A description');
-//        $payment->setClientId($order->getId());
-//        $payment->setClientEmail($order->getEmail());
-//        $payment->setDetails(array(
-//            'AUTHORIZE_TOKEN_USERACTION' => '',
-//        ));
-//
-//        $storage->update($payment);
-//
-//        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-//            $gatewayName,
-//            $payment,
-//            'order-confirmed' // the route to redirect after capture
-//        );
-//
-//        return $this->redirect($captureToken->getTargetUrl());
-
-
-//        $gatewayName = 'paypal_express_checkout';
-//
-//        $storage = $this->get('payum')->getStorage('AppBundle\Entity\PaymentDetails');
-//
-//        /** @var \AppBundle\Entity\PaymentDetails $details */
-//        $details = $storage->create();
-//        $details['PAYMENTREQUEST_0_CURRENCYCODE'] = 'EUR';
-//        $details['PAYMENTREQUEST_0_AMT'] = $order->getAmount();
-//        $storage->update($details);
-//
-//        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-//            $gatewayName,
-//            $details,
-//            'order-confirmed' // the route to redirect after capture;
-//        );
-//
-//        dump($captureToken->getTargetUrl());
-//
-//        return $this->redirect($captureToken->getTargetUrl());
-
-
-
-
-//        return $this->render('order/payment-choice.html.twig', [
-//            'order' => $order,
-////        	'formPayPal' => $formPayPal->createView()
-//        ]);
+        return $response;
     }
 
     /**
@@ -200,5 +149,33 @@ class OrderController extends Controller
 	    $bookingBridge->removeCurrent();
 
 	    return $this->redirect($this->generateUrl('homepage'));
+    }
+
+    private function paypalPayment()
+    {
+        $orderBridge = $this->get("app.bridge.order");
+        $order = $orderBridge->getCurrent();
+
+        $gatewayName = 'paypal_express_checkout';
+
+        $storage = $this->get('payum')->getStorage(Order::class);
+
+        /** @var $payment Order */
+        $payment = $storage->create();
+        $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = 'EUR';
+        $payment['PAYMENTREQUEST_0_AMT'] = $order->getAmount();
+        $payment['AUTHORIZE_TOKEN_USERACTION'] = '';
+        $storage->update($payment);
+
+        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
+            $gatewayName,
+            $payment,
+            'order-confirmed'
+        );
+
+//        $payment['INVNUM'] = $payment->getId();
+//        $storage->update($payment);
+
+        return $this->redirect($captureToken->getTargetUrl());
     }
 }
