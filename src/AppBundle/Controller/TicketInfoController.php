@@ -17,6 +17,8 @@ class TicketInfoController extends Controller
         $ticketInfoManager = $this->get('app.manager.ticket_information');
         $formHandler = $this->get('app.form.handler.ticket_information');
 
+//        dump($ticketInfoManager->getCurrentBooking());
+
         if($formHandler->process($request)){
             return $this->redirectToRoute('check-order');
         }

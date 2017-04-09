@@ -46,7 +46,7 @@ class BookingSave implements BookingSaveAndGetErrorsInterface
     public function save(BookingEntityInterface $booking)
     {
 
-        dump($booking);
+//        dump($booking);
 
         try{
 

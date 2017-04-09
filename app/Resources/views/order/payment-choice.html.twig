@@ -1,5 +1,118 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ parent() }} - Choisir votre mode de paiement {% endblock  %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <script type="text/javascript">
+        var handler = StripeCheckout.configure({
+            key: '{{ stripePublishableKey }}',
+//            image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+            locale: 'auto',
+            token: function(token) {
+                var $form = $('#stripePayment').parents('form');
+                $form.append($('<input>').attr({ type: 'hidden', name: 'stripeToken', value: token.id })).submit();
+
+            }
+        });
+
+        $('#stripePayment').on('click', function(e) {
+            // Open Checkout with further options:
+            handler.open({
+                currency: 'eur',
+                amount: {{ order.getAmount() * 100 }},
+
+            });
+            e.preventDefault();
+        });
+
+        // Close Checkout on page navigation:
+        window.addEventListener('popstate', function() {
+            handler.close();
+        });
+
+
+        //---- PayPal ----//
+        paypal.Button.render({
+
+            env: 'sandbox', // Optional: specify 'sandbox' environment //production
+            client: {
+                sandbox:    'AT-tg7GItcnYZU0e0JorYyuZmIChSWmLqaOHtdIiVKhQJWYsICDlDvqEVNMNLJkp55QEkIjWp1RviCS1',
+//                production: 'xxxxxxxxx'
+            },
+
+            payment: function() {
+                var env    = this.props.env;
+                var client = this.props.client;
+
+                return paypal.rest.payment.create(env, client, {
+                    transactions: [
+                        {
+                            amount: { total: '{{ order.getAmount() }}', currency: 'EUR' }
+                        }
+                    ]
+                });
+            },
+            commit: true,
+            onAuthorize: function(data, actions) {
+                // Execute the payment here, when the buyer approves the transaction
+            }
+
+        }, '#paypal-button');
+
+        //
+//
+//        // Render the PayPal button
+//
+//        paypal.Button.render({
+//
+//            // Set your environment
+//
+//            env: 'sandbox', // sandbox | production
+//
+//            // Specify the style of the button
+//
+//            style: {
+//                label: 'checkout', // checkout || credit
+//                size:  'small',    // tiny | small | medium
+//                shape: 'pill',     // pill | rect
+//                color: 'blue'      // gold | blue | silver
+//            },
+//
+//            // PayPal Client IDs - replace with your own
+//            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+//
+//            client: {
+//                sandbox:    'AT-tg7GItcnYZU0e0JorYyuZmIChSWmLqaOHtdIiVKhQJWYsICDlDvqEVNMNLJkp55QEkIjWp1RviCS1',
+//                production: 'Aco85QiB9jk8Q3GdsidqKVCXuPAAVbnqm0agscHCL2-K2Lu2L6MxDU2AwTZa-ALMn_N0z-s2MXKJBxqJ'
+//            },
+//
+//            // Wait for the PayPal button to be clicked
+//
+//            payment: function() {
+//
+//                // Make a client-side call to the REST api to create the payment
+//
+//                return paypal.rest.payment.create(this.props.env, this.props.client, {
+//                    transactions: [
+//                        {
+//                            amount: { total: '40.00', currency: 'eur' }
+//                        }
+//                    ]
+//                });
+//            },
+//
+//            // Wait for the payment to be authorized by the customer
+//
+//            onAuthorize: function(data, actions) {
+//                return actions.payment.execute().then(function() {
+//                    document.querySelector('#paypal-button-container').innerText = 'Payment Complete!';
+//                });
+//            }
+//
+//        }, '#paypal-button-container');
+    </script>
+{% endblock %}
 {% block body %}
     <div class="body-content" id="paymentchoice">
         <div class="row">
@@ -11,12 +124,28 @@
         <div class="row">
             <div class="col-md-12">
                 <h2><i class="glyphicon glyphicon-credit-card"></i> Choisir votre moyen de paiement <span class="pull-right">{{ order.getAmount()|localizedcurrency('EUR') }}</span></h2>
-                <ul>
-                    <li>
-                        <a href="{{ path('order-payment', {'choice': 'paypal'}) }}"><img src="{{ asset('images/payment/PayPal.png') }}"></a>
-                    </li>
-                    <li><a href="{{ path('order-payment', {'choice': 'stripe'}) }}"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
-                </ul>
+                    <ul>
+                        <li>
+                            <div id="paypal-button"></div>
+                            {#<a href="{{ path('order-payment', {'choice': 'paypal'}) }}"><img src="{{ asset('images/payment/PayPal.png') }}"></a>#}
+                        </li>
+                        <li>
+                            <form action="{{ path('order-payment', {'choice': 'stripe'}) }}">
+                            {#<button type="submit" id="stripePayment"><img src="{{ asset('images/payment/stripe.png') }}"></button>#}
+
+                                {#<script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"#}
+                                        {#data-key="{{ stripePublishableKey }}"#}
+                                        {#data-amount="{{ order.getAmount() * 100 }}"#}
+                                        {#data-description=""#}
+                                        {#data-currency="eur"#}
+                                        {#data-image="https://www.shareicon.net/data/256x256/2015/09/25/107225_card_512x512.png"#}
+                                {#></script>#}
+
+                            {# {{ path('order-payment', {'choice': 'stripe'}) }} #}
+                            <a href="#" id="stripePayment"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
+                        </form>
+                    </ul>
+
             </div>
         </div>
         <div class="row">

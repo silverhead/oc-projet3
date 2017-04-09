@@ -92,7 +92,7 @@ class BridgeBookingORM implements BridgeBookingORMInterface
     {
         $booking = $this->getCurrentBooking();
 
-        dump($booking);
+//        dump($booking);
 
         if(null === $booking){
             return null;
@@ -126,7 +126,7 @@ class BridgeBookingORM implements BridgeBookingORMInterface
             }
         }
 
-        dump($promosMatching);
+//        dump($promosMatching);
 
         if(count($promosMatching) == 0){
             return null;

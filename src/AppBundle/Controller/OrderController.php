@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order;
+use AppBundle\Entity\Payment;
 use AppBundle\Entity\PaymentDetails;
 use AppBundle\Form\PaymentType;
+use PayPal\Service\PayPalAPIInterfaceServiceService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,7 +81,8 @@ class OrderController extends Controller
         $orderBridge = $this->get("app.bridge.order");
         $order = $orderBridge->getCurrent();
         return $this->render('order/payment-choice.html.twig', [
-            'order' => $order
+            'order' => $order,
+            'stripePublishableKey' => $this->container->getParameter('stripe.publishable_key')
         ]);
     }
 
@@ -88,13 +91,16 @@ class OrderController extends Controller
      */
     public function orderPaymentAction(Request $request, $choice)
     {
-        dump($choice);
+//        dump($choice);
 
         $response = $this->redirect('payment-choice');//return to the payment choice if nothing corresponding
 
         switch ($choice){
             case 'paypal':
                 $response = $this->paypalPayment();
+                break;
+            case 'stripe':
+                $response = $this->stripePayment($request);
                 break;
         }
 
@@ -156,26 +162,81 @@ class OrderController extends Controller
         $orderBridge = $this->get("app.bridge.order");
         $order = $orderBridge->getCurrent();
 
-        $gatewayName = 'paypal_express_checkout';
-
-        $storage = $this->get('payum')->getStorage(Order::class);
-
-        /** @var $payment Order */
-        $payment = $storage->create();
-        $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = 'EUR';
-        $payment['PAYMENTREQUEST_0_AMT'] = $order->getAmount();
-        $payment['AUTHORIZE_TOKEN_USERACTION'] = '';
-        $storage->update($payment);
-
-        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-            $gatewayName,
-            $payment,
-            'order-confirmed'
+        $config = array(
+            'mode' => 'sandbox',
+            'acct1.UserName' => 'jb-us-seller_api1.paypal.com',
+            'acct1.Password' => 'WX4WTU3S8MY44S7F'
         );
+        $service  = new PayPalAPIInterfaceServiceService($config);
 
-//        $payment['INVNUM'] = $payment->getId();
+
+//        $gatewayName = 'paypal_express_checkout';
+//
+//        $storage = $this->get('payum')->getStorage(PaymentDetails::class);
+//
+//
+//        /** @var $payment Order */
+//        $payment = $storage->create();
+//        $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = 'EUR';
+//        $payment['PAYMENTREQUEST_0_AMT'] = $order->getAmount();
+//        $payment['AUTHORIZE_TOKEN_USERACTION'] = '';
 //        $storage->update($payment);
+//
+//        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
+//            $gatewayName,
+//            $payment,
+//            'order-confirmed'
+//        );
+//
+////        $payment['INVNUM'] = $payment->getId();
+////        $storage->update($payment);
+//
+//        return $this->redirect($captureToken->getTargetUrl());
+    }
 
-        return $this->redirect($captureToken->getTargetUrl());
+    private function stripePayment($request)
+    {
+        $orderBridge = $this->get("app.bridge.order");
+        $order = $orderBridge->getCurrent();
+
+        $token = $request->get('stripeToken');
+//        $type = $request->get('stripeTokenType');
+//        $customerEmail = $request->get('stripeEmail');
+//        dump($request);exit();
+
+        $stripeSK = $this->container->getParameter('stripe.secret_key');
+        $amount = $order->getAmount() * 100;
+
+        $test = \Stripe\Stripe::setApiKey($stripeSK);
+
+        $charge = \Stripe\Charge::create(array('amount' => $amount, 'currency' => 'eur', 'source' => $token));
+
+        dump($charge);exit();
+
+        return new Response($charge);
+
+
+
+//        $gatewayName = 'stripe';
+//
+//        $payum = $this->get('payum');
+//
+//        $storage = $payum->getStorage(PaymentDetails::class);
+//
+//        /** @var $payment PaymentDetails */
+//        $payment = $storage->create();
+//        $payment["amount"] = $order->getAmount() * 100;// in centime
+//        $payment["currency"] = 'EUR';
+////        $payment["local"] = ['save_card' => true, 'customer' => ['plan' => 'gold']];
+//        $storage->update($payment);
+//
+//        $captureToken = $payum->getTokenFactory()->createCaptureToken(
+//            $gatewayName,
+//            $payment,
+//            'order-confirmed'
+//        );
+
+//        return $this->redirect($captureToken->getTargetUrl());
+
     }
 }

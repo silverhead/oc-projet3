@@ -77,10 +77,10 @@ payum:
     security:
         token_storage:
             AppBundle\Entity\PaymentToken: { doctrine: orm }
-#    storages:
-#        AppBundle\Entity\Payment: { doctrine: orm }
     storages:
-        AppBundle\Entity\Order: { doctrine: orm }
+        AppBundle\Entity\PaymentDetails: { doctrine: orm }
+#    storages:
+#        AppBundle\Entity\Order: { doctrine: orm }
     gateways:
         offline:
             factory: offline
@@ -90,3 +90,7 @@ payum:
             password:  '%paypal_password%'
             signature: '%paypal_signature%'
             sandbox: true
+        stripe:
+            factory: stripe_checkout
+            publishable_key: "%stripe.publishable_key%"
+            secret_key: "%stripe.secret_key%"
