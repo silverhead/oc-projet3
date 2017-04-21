@@ -2,14 +2,19 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Order;
-use AppBundle\Entity\Payment;
-use AppBundle\Entity\PaymentDetails;
-use AppBundle\Form\PaymentType;
-use PayPal\Service\PayPalAPIInterfaceServiceService;
+use PayPal\Api\Payment;
+use PayPal\Api\Amount;
+use PayPal\Api\Payer;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Transaction;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Exception\PayPalConnectionException;
+use PayPal\Rest\ApiContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class OrderController extends Controller
 {
@@ -87,7 +92,7 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route("/paiement/{choice}", name="order-payment", methods={"GET"})
+     * @Route("/paiement/{choice}", name="order-payment", methods={"GET", "POST"})
      */
     public function orderPaymentAction(Request $request, $choice)
     {
@@ -97,7 +102,7 @@ class OrderController extends Controller
 
         switch ($choice){
             case 'paypal':
-                $response = $this->paypalPayment();
+                $response = $this->paypalPayment($request);
                 break;
             case 'stripe':
                 $response = $this->stripePayment($request);
@@ -157,44 +162,61 @@ class OrderController extends Controller
 	    return $this->redirect($this->generateUrl('homepage'));
     }
 
-    private function paypalPayment()
+    private function paypalPayment(Request $request)
     {
-        $orderBridge = $this->get("app.bridge.order");
-        $order = $orderBridge->getCurrent();
-
-        $config = array(
-            'mode' => 'sandbox',
-            'acct1.UserName' => 'jb-us-seller_api1.paypal.com',
-            'acct1.Password' => 'WX4WTU3S8MY44S7F'
+        $apiContext = new ApiContext(
+            new OAuthTokenCredential(
+                $this->getParameter('paypal_client_id'),     // ClientID
+                $this->getParameter('paypal_client_secret')      // ClientSecret
+            )
         );
-        $service  = new PayPalAPIInterfaceServiceService($config);
 
+        // Get payment object by passing paymentId
+        $paymentId = $request->get('paymentID');
+        $payerId = $request->get('payerID');
 
-//        $gatewayName = 'paypal_express_checkout';
-//
-//        $storage = $this->get('payum')->getStorage(PaymentDetails::class);
-//
-//
-//        /** @var $payment Order */
-//        $payment = $storage->create();
-//        $payment['PAYMENTREQUEST_0_CURRENCYCODE'] = 'EUR';
-//        $payment['PAYMENTREQUEST_0_AMT'] = $order->getAmount();
-//        $payment['AUTHORIZE_TOKEN_USERACTION'] = '';
-//        $storage->update($payment);
-//
-//        $captureToken = $this->get('payum')->getTokenFactory()->createCaptureToken(
-//            $gatewayName,
-//            $payment,
-//            'order-confirmed'
-//        );
-//
-////        $payment['INVNUM'] = $payment->getId();
-////        $storage->update($payment);
-//
-//        return $this->redirect($captureToken->getTargetUrl());
+        $payment = Payment::get($paymentId, $apiContext);
+
+        // Execute payment with payer id
+        $execution = new PaymentExecution();
+        $execution->setPayerId($payerId);
+
+        try {
+            // Execute payment
+            $result = json_decode($payment->execute($execution, $apiContext));
+
+            $state = $result->state;
+
+            $orderBridge = $this->get('app.bridge.order');
+
+            if($state != 'approved'){
+
+                //todo voir les autres possibilités
+                // par exemple gérer -> PAYMENT_ALREADY_DONE
+
+                $orderBridge->cancelPayment('paypal', $paymentId);
+
+                return $this->redirectToRoute('order-canceled');
+            }
+
+            $orderBridge->validPayment('paypal', $paymentId);
+
+            return $this->redirectToRoute('order-confirmed');
+
+        } catch (PayPalConnectionException $ex) {
+            $data = json_decode($ex->getData());
+            $this->addFlash("error", "<strong>".$ex->getCode()." :".$data->name."</strong><p>".$data->message."</p>");
+
+            return $this->redirectToRoute('payment-choice');
+
+        } catch (Exception $ex) {
+            $this->addFlash("error", "<strong>".$ex->getCode()."</strong><p>".$ex->getMessage()."</p>");
+
+            return $this->redirectToRoute('payment-choice');
+        }
     }
 
-    private function stripePayment($request)
+    private function stripePayment(Request $request)
     {
         $orderBridge = $this->get("app.bridge.order");
         $order = $orderBridge->getCurrent();

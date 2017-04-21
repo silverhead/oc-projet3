@@ -1,5 +1,5 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
-payum_all:
-    resource: "@PayumBundle/Resources/config/routing/all.xml"
+#payum_all:
+#    resource: "@PayumBundle/Resources/config/routing/all.xml"

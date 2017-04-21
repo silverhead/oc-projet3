@@ -13,6 +13,7 @@ use AppBundle\Entity\BookingEntityInterface;
 use AppBundle\Entity\Order;
 use AppBundle\Entity\OrderDetail;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BridgeOrderORM implements BridgeOrderORMInterface
@@ -110,6 +111,38 @@ class BridgeOrderORM implements BridgeOrderORMInterface
 	    ]);
 
 	    return (null !== $order);//if not object is returned then the checking has failed
+    }
+
+    public function validPayment($method, $id)
+    {
+        $order = $this->getCurrent();
+
+        if(null === $order->getId()){
+            throw new Exception("The order cannot empty!");
+        }
+
+        $order->setPaymentMethod($method)
+            ->setPaymentId($id)
+            ->setState(Order::STATE_PAYED)
+        ;
+
+        $this->em->flush();
+    }
+
+    public function cancelPayment($method, $id)
+    {
+        $order = $this->getCurrent();
+
+        if(null === $order->getId()){
+            throw new Exception("The order cannot empty!");
+        }
+
+        $order->setPaymentMethod($method)
+            ->setPaymentId($id)
+            ->setState(Order::STATE_CANCELED)
+        ;
+
+        $this->em->flush();
     }
 
 	public function isStandby($order)

@@ -19,7 +19,7 @@ use Payum\Core\Model\ArrayObject;
  * @ORM\Entity()
  * @ORM\Table(name="booking_order")
  */
-class Order extends ArrayObject
+class Order
 {
 	const STATE_STANDBY     = 0;
 	const STATE_PAYED       = 1;
@@ -60,6 +60,18 @@ class Order extends ArrayObject
 	 * @ORM\Column(type="integer", nullable=false)
 	 */
 	protected $state;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+	protected $paymentMethod;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+	protected $paymentId;
 
     /**
      * Set date
@@ -195,5 +207,43 @@ class Order extends ArrayObject
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * @param string $paymentMethod
+     * @return Order
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentId()
+    {
+        return $this->paymentId;
+    }
+
+    /**
+     * @param string $paymentId
+     * @return Order
+     */
+    public function setPaymentId($paymentId)
+    {
+        $this->paymentId = $paymentId;
+
+        return $this;
     }
 }

@@ -32,7 +32,14 @@
         });
 
 
-        //---- PayPal ----//
+        {#//---- PayPal ----//#}
+//        window.paypalCheckoutReady = function () {
+//            paypal.checkout.setup('AT-tg7GItcnYZU0e0JorYyuZmIChSWmLqaOHtdIiVKhQJWYsICDlDvqEVNMNLJkp55QEkIjWp1RviCS1', {
+//                container: 'paypal-button', //{String|HTMLElement|Array} where you want the PayPal button to reside
+//                environment: 'sandbox' //or 'production' depending on your environment
+//            });
+//        };
+
         paypal.Button.render({
 
             env: 'sandbox', // Optional: specify 'sandbox' environment //production
@@ -55,7 +62,19 @@
             },
             commit: true,
             onAuthorize: function(data, actions) {
-                // Execute the payment here, when the buyer approves the transaction
+                var $form = $('#paypal-button').parents('form');
+
+                $form
+                    .append($('<input>').attr({ type: 'hidden', name: 'paymentID', value: data.paymentID }))
+                    .append($('<input>').attr({ type: 'hidden', name: 'payerID', value: data.payerID }))
+                    .submit();
+//                var EXECUTE_PAYMENT_URL = $form.attr('action');
+
+//                return paypal.request.post(EXECUTE_PAYMENT_URL,
+//                    { paymentID: data.paymentID, payerID: data.payerID });
+//
+//                    .then(function(data) { /* Go to a success page */ })
+//                    .catch(function(err) { /* Go to an error page  */ });
             }
 
         }, '#paypal-button');
@@ -110,7 +129,7 @@
 //                });
 //            }
 //
-//        }, '#paypal-button-container');
+//        }, '#paypal-button-container')
     </script>
 {% endblock %}
 {% block body %}
@@ -126,8 +145,9 @@
                 <h2><i class="glyphicon glyphicon-credit-card"></i> Choisir votre moyen de paiement <span class="pull-right">{{ order.getAmount()|localizedcurrency('EUR') }}</span></h2>
                     <ul>
                         <li>
-                            <div id="paypal-button"></div>
-                            {#<a href="{{ path('order-payment', {'choice': 'paypal'}) }}"><img src="{{ asset('images/payment/PayPal.png') }}"></a>#}
+                            <form action="{{ path('order-payment', {'choice': 'paypal'}) }}">
+                                <div id="paypal-button"></div>
+                            </form>
                         </li>
                         <li>
                             <form action="{{ path('order-payment', {'choice': 'stripe'}) }}">
@@ -142,8 +162,10 @@
                                 {#></script>#}
 
                             {# {{ path('order-payment', {'choice': 'stripe'}) }} #}
-                            <a href="#" id="stripePayment"><img src="{{ asset('images/payment/stripe.png') }}"></a></li>
-                        </form>
+                            <a href="#" id="stripePayment"><img src="{{ asset('images/payment/stripe.png') }}"></a>
+                            </form>
+                        </li>
+
                     </ul>
 
             </div>
