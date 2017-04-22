@@ -209,7 +209,7 @@ class OrderController extends Controller
 
             return $this->redirectToRoute('payment-choice');
 
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->addFlash("error", "<strong>".$ex->getCode()."</strong><p>".$ex->getMessage()."</p>");
 
             return $this->redirectToRoute('payment-choice');
@@ -222,43 +222,50 @@ class OrderController extends Controller
         $order = $orderBridge->getCurrent();
 
         $token = $request->get('stripeToken');
-//        $type = $request->get('stripeTokenType');
-//        $customerEmail = $request->get('stripeEmail');
-//        dump($request);exit();
-
         $stripeSK = $this->container->getParameter('stripe.secret_key');
+        $stripePK = $this->container->getParameter('stripe.publishable_key');
         $amount = $order->getAmount() * 100;
 
-        $test = \Stripe\Stripe::setApiKey($stripeSK);
+        $stripe = array(
+            "secret_key"      => $stripeSK,
+            "publishable_key" => $stripePK
+        );
 
-        $charge = \Stripe\Charge::create(array('amount' => $amount, 'currency' => 'eur', 'source' => $token));
+        try {
+            \Stripe\Stripe::setApiKey($stripe['secret_key']);
 
-        dump($charge);exit();
+            $customer = \Stripe\Customer::create(array(
+                'email' => $order->getEmail(),
+                'card'  => $token
+            ));
 
-        return new Response($charge);
+            $charge = \Stripe\Charge::create(array(
+                'customer' => $customer->id,
+                'amount'   => $amount,
+                'currency' => 'eur'
+            ));
 
+            $data = (object) $charge->jsonSerialize();
+            $paymentId = $data->id;
+            $state = $data->status;
 
+            $orderBridge = $this->get('app.bridge.order');
 
-//        $gatewayName = 'stripe';
-//
-//        $payum = $this->get('payum');
-//
-//        $storage = $payum->getStorage(PaymentDetails::class);
-//
-//        /** @var $payment PaymentDetails */
-//        $payment = $storage->create();
-//        $payment["amount"] = $order->getAmount() * 100;// in centime
-//        $payment["currency"] = 'EUR';
-////        $payment["local"] = ['save_card' => true, 'customer' => ['plan' => 'gold']];
-//        $storage->update($payment);
-//
-//        $captureToken = $payum->getTokenFactory()->createCaptureToken(
-//            $gatewayName,
-//            $payment,
-//            'order-confirmed'
-//        );
+            if($state != 'succeeded'){
+                //todo voir les autres possibilités
+                $orderBridge->cancelPayment('stripe', $paymentId);
 
-//        return $this->redirect($captureToken->getTargetUrl());
+                return $this->redirectToRoute('order-canceled');
+            }
 
+            $orderBridge->validPayment('stripe', $paymentId);
+
+            return $this->redirectToRoute('order-confirmed');
+
+        } catch (\Exception $ex) {
+            $this->addFlash("error", "<strong>".$ex->getCode()."</strong><p>".$ex->getMessage()."</p>");
+
+            return $this->redirectToRoute('payment-choice');
+        }
     }
 }
